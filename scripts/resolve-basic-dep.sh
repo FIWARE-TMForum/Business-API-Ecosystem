@@ -5,18 +5,15 @@ if [[ -z "$WORKSPACE" ]]
     export WORKSPACE=`pwd`
 fi
 
-DIST=""
-VER=""
-
 if [ -f "/etc/centos-release" ]; then
-    DIST="rhel"
+    export DIST="rhel"
     CONT=$(cat /etc/centos-release)
 
     if [[ $CONT == *7* ]]; then
         echo "7"
-        VER="7"
+        export VER="7"
     else
-        VER="6"
+        export VER="6"
     fi
 
 elif [ -f "/etc/issue" ]; then
@@ -24,12 +21,12 @@ elif [ -f "/etc/issue" ]; then
     CONTENT=$(cat /etc/issue)
 
     if [[ $CONTENT == *CentOS* ]]; then
-        DIST="rhel"
-        VER="6"
+        export DIST="rhel"
+        export VER="6"
     elif [[ $CONTENT == *Ubuntu* || $CONTENT == *Debian* ]]; then
-        DIST="deb"
+        export DIST="deb"
         if [[ $CONTENT == *Debian* ]]; then
-            VER="d"
+            export VER="d"
         fi
     fi
 fi
