@@ -28,6 +28,9 @@ elif [ -f "/etc/issue" ]; then
         VER="6"
     elif [[ $CONTENT == *Ubuntu* || $CONTENT == *Debian* ]]; then
         DIST="deb"
+        if [[ $CONTENT == *Debian* ]]; then
+            VER="d"
+        fi
     fi
 fi
 
