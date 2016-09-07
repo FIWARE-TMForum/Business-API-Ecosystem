@@ -13,7 +13,7 @@ wget http://download.java.net/glassfish/4.1.1/release/glassfish-4.1.1.zip
 unzip glassfish-4.1.1.zip
 
 # Install MySQL
-apt-get install mysql-server mysql-client
+apt-get install -y mysql-server mysql-client
 
 # Deploy MySQL connector
 wget http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.39.tar.gz
