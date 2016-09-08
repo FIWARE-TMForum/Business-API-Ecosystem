@@ -122,7 +122,7 @@ def maveninstall():
 def createtable(name, user, pwd):
     try:
         print("Creating MySQL table: {}".format(name))
-        mysql("-u", user, "-p{}".format(pwd), "-e", "\"CREATE DATABASE IF NOT EXISTS {};\"".format(name))
+        mysql("-u", user, "-p{}".format(pwd), "-e", "CREATE DATABASE IF NOT EXISTS {};".format(name))
         print("MySQL table created")
         return 0
     except:
