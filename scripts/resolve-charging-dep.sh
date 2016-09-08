@@ -21,38 +21,15 @@ elif [[  $DIST == "rhel" ]]; then
     # Install dependencies
     yum groupinstall "Development tools"
 
-    yum install -y  zlib-devel
+    yum install -y zlib-devel
     yum install -y bzip2-devel
     yum install -y openssl-devel
     yum install -y ncurses-devel
     yum install -y libffi-devel libssl-devel
 
-    # Download and compile python 2.7
-    if [[ $VER == "6" ]]; then
-        cd /opt/biz-ecosystem/
-
-        wget --no-check-certificate https://www.python.org/ftp/python/2.7.6/Python-2.7.6.tar.xz
-        tar xf Python-2.7.6.tar.xz
-        cd Python-2.7.6
-        ./configure --prefix=/usr/local --enable-shared
-        make && make altinstall
-
-        echo "/usr/local/lib" >> /etc/ld.so.conf
-        /sbin/ldconfig
-
-        # Install python 2.7 setup tools
-        cd /opt
-        wget https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py
-        /usr/local/bin/python2.7 ez_setup.py
-        /usr/local/bin/easy_install-2.7 pip
-
-        ln -s /usr/local/bin/python2.7 /usr/bin/python2.7
-        ln -s /usr/local/bin/pip2.7 /usr/bin/pip2.7
-    else
-        rpm -iUvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
-        yum -y update
-        yum install -y python-pip
-    fi
+    rpm -iUvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
+    yum -y update
+    yum install -y python-pip
 
     yum install libxml2-devel libxslt-devel python-devel
 
@@ -69,22 +46,13 @@ enabled=1" > /etc/yum.repos.d/mongodb.repo
     service mongod start
 
     # Get wkhtmltopdf package download version 0.12.1
-    if [[ $VER == "7" ]]; then
-        wget http://download.gna.org/wkhtmltopdf/0.12/0.12.1/wkhtmltox-0.12.1_linux-centos7-amd64.rpm
-        rpm -ivh wkhtmltox-0.12.1_linux-centos7-amd64.rpm
-    else
-        wget http://download.gna.org/wkhtmltopdf/0.12/0.12.1/wkhtmltox-0.12.1_linux-centos6-amd64.rpm
-        rpm -ivh wkhtmltox-0.12.1_linux-centos6-amd64.rpm
-    fi
+    wget http://download.gna.org/wkhtmltopdf/0.12/0.12.1/wkhtmltox-0.12.1_linux-centos7-amd64.rpm
+    rpm -ivh wkhtmltox-0.12.1_linux-centos7-amd64.rpm
 
     yum install xorg-x11-server-Xvfb
 
     # Install virtualenv
-    if [[ $VER == "6" ]]; then
-        pip2.7 install virtualenv
-    else
-        pip install virtualenv
-    fi
+    pip install virtualenv
 fi
 
 cd $WORKSPACE
