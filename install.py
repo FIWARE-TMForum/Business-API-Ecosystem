@@ -228,6 +228,9 @@ def redeployall(directory):
     if not isfile("/etc/default/rss/database.properties"):
         cp(rss.get("url").split("/")[-1][:-4] + "/properties/database.properties", "/etc/default/rss/database.properties")
 
+    if not isfile("/etc/default/rss/oauth.properties"):
+        cp(rss.get("url").split("/")[-1][:-4] + "/properties/oauth.properties", "/etc/default/rss/oauth.properties")
+
     for api in get_apis_default(directory, APIS + [rss]):
         url = api.get("url")
         name = url.split("/")[-1][:-4]
