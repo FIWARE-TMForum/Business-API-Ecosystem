@@ -8,9 +8,6 @@ if [[ $DIST ==  "deb" ]]; then
     apt-get install -y mongodb
     apt-get install -y wkhtmltopdf
     apt-get install -y xvfb
-    # Install lxml dependencies
-    apt-get install -y gcc
-    apt-get install -y libxml2-dev libxslt1-dev zlib1g-dev python-dev libffi-dev libssl-dev
 
     # Install virtualenv
     pip install virtualenv
@@ -19,19 +16,9 @@ elif [[  $DIST == "rhel" ]]; then
 
     # Install python 2.7 which is required
     # Install dependencies
-    yum groupinstall "Development tools"
-
-    yum install -y zlib-devel
-    yum install -y bzip2-devel
-    yum install -y openssl-devel
-    yum install -y ncurses-devel
-    yum install -y libffi-devel libssl-devel
-
     rpm -iUvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
     yum -y update
     yum install -y python-pip
-
-    yum install libxml2-devel libxslt-devel python-devel
 
     # Install MongoDB repository
     echo "[mongodb]
