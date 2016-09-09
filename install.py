@@ -250,7 +250,7 @@ def chargingbackend(proxyhost, proxyport, port, ctx):
 
     virtualenv("virtenv")
 
-    bash("resolve-python-dep.sh")
+    bash("python-dep-install.sh")
     cd("..")
 
 
