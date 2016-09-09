@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-from sh import git, cd, mvn, mysql, asadmin, npm
+from sh import git, cd, mvn, mysql, asadmin, npm, cp
+from os.path import isfile
 import click
 import os.path
 import shutil
@@ -219,25 +220,14 @@ def deploy(war, root, force=False):
     asadmin("deploy", "--force", "true" if force else "false", "--contextroot", root, "--name", root, war)
 
 
-@cli.command("deploy")
-@click.option('--directory', "-d", multiple=True)
-def deployall(directory):
-    print("Deploying")
-    for api in get_apis_default(directory, APIS + [rss]):
-        url = api.get("url")
-        name = url.split("/")[-1][:-4]
-        print("cd {}".format(name))
-        cd(name)
-        print("Deploy {}".format(api.get("war")))
-        deploy(api.get("war"), api.get("root"))
-        print("End deploy")
-        cd("..")
-
-
 @cli.command("redeploy")
 @click.option('--directory', "-d", multiple=True)
 def redeployall(directory):
     print("Redeploying")
+    # Check if the RSS configuration file exists
+    if not isfile("/etc/default/rss/database.properties"):
+        cp(rss.get("url").split("/")[-1][:-4] + "properties/database.properties", "/etc/default/rss/database.properties")
+
     for api in get_apis_default(directory, APIS + [rss]):
         url = api.get("url")
         name = url.split("/")[-1][:-4]
