@@ -218,7 +218,7 @@ In CentOS the Wkhtmltopdf RPM package has to be downloaded for installing it ::
 Logic Proxy Dependencies
 ++++++++++++++++++++++++
 
-For installing Node and NPM it is needed to doanload the binaries from the official site and uncompress them ::
+For installing Node and NPM it is needed to download the binaries from the official site and uncompress them ::
 
     $ wget https://nodejs.org/dist/v4.5.0/node-v4.5.0-linux-x64.tar.xz
     $ tar -xvf node-v4.5.0-linux-x64.tar.xz
@@ -250,11 +250,13 @@ Otherwise, you can install Python 3 using the following commands:
     $ sudo rpm -Uvh https://www.softwarecollections.org/en/scls/rhscl/python33/epel-7-x86_64/download/rhscl-python33-epel-7-x86_64.noarch.rpm
     $ sudo yum -y install python33
 
-Additionally, *install.py* specs the binaries of Glassfish and Node to be included in the PATH. This can be done with the
-following commands (Note that the commands are supposing both or them are installed at */opt/biz-ecosystem*) ::
+Additionally, *install.py* specs the binaries of Glassfish and Node to be included in the PATH, and need to be accessible
+by the user using the script. This can be done with the following commands (Note that the commands are supposing both or them are installed at */opt/biz-ecosystem*) ::
 
     $ export PATH=$PATH:/opt/biz-ecosystem/glassfish4/glassfish/bin
     $ export PATH=$PATH:/opt/biz-ecosystem/node-v4.5.0-linux-x64/bin
+
+    $ sudo chown -R <your_user>:<your_user> /opt/biz-ecosystem
 
 .. note::
     Including the previous command is your .bashrc file, prevents you to have to execute them each time
@@ -274,6 +276,13 @@ Moreover, *install.py* requires Glassfish, MySQL and MongoDB to be up and runnin
     $ sudo systemctl start mongod
 
 
+Finally, during the deployment of the RSS API, the script saves the properties file in the default RSS properties directory.
+Since this directory is */etc/default/rss*, it is required to have root privileges to create it. In this way, this directory
+must exist and must be accessible by the user executing the script. To do that ::
+
+    $ sudo mkdir /etc/default/rss
+    $ sudo chown <your_user>:<your_user> /etc/default/rss
+
 To make a complete installation of the Business API Ecosystem, execute the following command ::
 
     $ ./install.py all
@@ -287,7 +296,7 @@ process, so you can have more control over it. Concretely, the script provides t
 * **persistence**: Builds persistence.xml files of the different APIs
 * **pools**: Creates database pools in Glassfish
 * **resources**: Creates database resources in Glassfish
-* **redeploy**: Deploys APIs and RSS was files in Glassfish
+* **redeploy**: Deploys APIs and RSS war files in Glassfish
 * **proxy**: Installs proxy Node libs
 * **charging**: Installs charging Python libs
 
@@ -296,6 +305,74 @@ Installing the Business API Ecosystem Manually
 
 Installing TM Forum APIs
 ++++++++++++++++++++++++
+
+The different reference implementations of the TM Forum APIs used in the Business API Ecosystem are available in GitHub:
+
+* `Catalog Management API <https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2>`__
+* `Product Ordering Management API <https://github.com/FIWARE-TMForum/DSPRODUCTORDERING>`__
+* `Product Inventory Management API <https://github.com/FIWARE-TMForum/DSPRODUCTINVENTORY>`__
+* `Party Management API <https://github.com/FIWARE-TMForum/DSPARTYMANAGEMENT>`__
+* `Customer Management API <https://github.com/FIWARE-TMForum/DSCUSTOMER>`__
+* `Billing Management API <https://github.com/FIWARE-TMForum/DSBILLINGMANAGEMENT>`__
+* `Usage Management API <https://github.com/FIWARE-TMForum/DSUSAGEMANAGEMENT>`__
+
+The installation for all of them is similar. The first step is cloning the repository and moving to the correct relesase ::
+
+    $ git clone https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2.git
+    $ cd DSPRODUCTCATALOG2
+    $ git checkout v5.4.0
+
+Once the software has been downloaded, it is needed to create the connection to the database. To do that, the first step
+is editing the *src/main/resources/META-INF/persistence.xml* to have something similar to the following: ::
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+        <persistence-unit name="DSProductCatalogPU" transaction-type="JTA">
+            <jta-data-source>jdbc/pcatv2</jta-data-source>
+            <exclude-unlisted-classes>false</exclude-unlisted-classes>
+            <properties>
+                <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+            </properties>
+        </persistence-unit>
+    </persistence>
+
+
+Note that you should provide in the tag *jta-data-source* the name you want for your database connection resource, taking into account
+that it must be unique for each API.
+
+The next step is creating the database for you API. ::
+
+    $ mysql-u <user> -p<passwd> "CREATE DATABASE IF NOT EXISTS <database>"
+
+.. note::
+    You have to provide your own credentials and selected database name to the previuos command.
+
+Once that that database has been created, the next step is creating the connection pool in Glassfish. To do that, you can
+use the following command: ::
+
+    $ asadmin create-jdbc-connection-pool --restype java.sql.Driver --driverclassname com.mysql.jdbc.Driver --property user=<user>:password=<passwd>:URL=jdbc:mysql://<host>:<port>/<database> <poolname>
+
+.. note::
+    You have to provide you own database credentials, database host, database port, the database name of the one created previously, and a name for your pool
+
+The last step for creating the database connection is creating the connection resource. To do that, execute the following command: ::
+
+    # asadmin create-jdbc-resource --connectionpoolid <poolname> <jndiname>
+
+.. note::
+    You have to provide the name of the pool you have previously created and a name for your resource, which has to be the same
+    as the included in the *jta-data-source* tag of the *persistence.xml* file of the API.
+
+When the database connection has been created, the next step is compiling the API sources with Maven ::
+
+    $ mvn install
+
+Finally, the last step is deploying the generated war file in Glassfish ::
+
+    $ asadmin deploy --contextroot <root> --name <root> target/<WAR.war>
+
+.. note::
+    You have to provide the wanted context root for the API, a name for it, and the path to the war file
 
 Installing the RSS
 ++++++++++++++++++
