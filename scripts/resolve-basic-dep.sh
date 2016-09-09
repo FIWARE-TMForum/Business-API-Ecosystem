@@ -38,9 +38,9 @@ if [[ $DIST ==  "deb" ]]; then
     apt-get install -y python3-pip
     apt-get install unzip
 elif [[  $DIST == "rhel" ]]; then
-    yum install python3 -y
-    yum install python3-pip -y
-    yum install unzip
+    yum -y install scl-utils
+    rpm -Uvh https://www.softwarecollections.org/en/scls/rhscl/python33/epel-7-x86_64/download/rhscl-python33-epel-7-x86_64.noarch.rpm
+    yum -y install python33
 fi
 
 pip3 install sh
