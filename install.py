@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from sh import git, cd, mvn, mysql, asadmin, npm, cp
+from sh import git, cd, mvn, mysql, asadmin, npm, cp, virtualenv, bash
 from os.path import isfile
 import click
 import os.path
@@ -239,13 +239,20 @@ def redeployall(directory):
         cd("..")
 
 
-# @cli.command("charging")
-# @click.option("--proxyhost", "-H", default="localhost", type=str)
-# @click.option("--proxyport", "-P", default=8000, type=int)
-# @click.option("--port", "-p", default=8004, type=int)
-# @click.pass_context
-# def chargingbackend(proxyhost, proxyport, port, ctx):
-#     clone_and_checkout(charg.get("url"), charg.get("branch"))
+@cli.command("charging")
+@click.option("--proxyhost", "-H", default="localhost", type=str)
+@click.option("--proxyport", "-P", default=8000, type=int)
+@click.option("--port", "-p", default=8004, type=int)
+@click.pass_context
+def chargingbackend(proxyhost, proxyport, port, ctx):
+    name = charg.get("url").split("/")[-1][:-4]
+    cd(name)
+
+    virtualenv("virtenv")
+
+    bash("resolve-python-dep.sh")
+    cd("..")
+
 
 
 def generate_endpoints(port, cport):
@@ -259,9 +266,8 @@ def generate_endpoints(port, cport):
 @click.option("--port", "-p", default=8000, type=int)
 @click.option("--chargingport", "-c", default=8004, type=int)
 @click.option("--glassfishport", "-P", default=8080, type=int)
-def chargingbackend(host, port, chargingport, glassfishport):
+def proxy(host, port, chargingport, glassfishport):
     name = proxy.get("url").split("/")[-1][:-4]
-    clone_and_checkout(proxy.get("url"), proxy.get("branch"))
     cd(name)
     npm("install")
     if not os.path.isfile("config.js"):
@@ -313,7 +319,10 @@ def doall(ctx):
     ctx.invoke(createpools)
     ctx.invoke(createresources)
     ctx.invoke(redeployall, directory=tuple())
-    print("All APIs are deployed in glassfish, now finish the instructions to execute the Business Charging Backend and the Business Ecosystem Logic Proxy.\nInstructions: {}".format("https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy/blob/develop/INSTALLATION.md#business-charging-backend"))
+    print("All APIs are deployed in glassfish")
+
+    ctx.invoke(chargingbackend)
+    ctx.invoke(proxy)
 
 if __name__ == "__main__":
     cli()
