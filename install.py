@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from sh import git, cd, mvn, mysql, asadmin, npm, cp, virtualenv, bash
+from sh import git, cd, mvn, mysql, asadmin, npm, cp, virtualenv, bash, mkdir
 from os.path import isfile
 import click
 import os.path
@@ -226,7 +226,8 @@ def redeployall(directory):
     print("Redeploying")
     # Check if the RSS configuration file exists
     if not isfile("/etc/default/rss/database.properties"):
-        cp(rss.get("url").split("/")[-1][:-4] + "properties/database.properties", "/etc/default/rss/database.properties")
+        mkdir("/etc/default/rss/")
+        cp(rss.get("url").split("/")[-1][:-4] + "/properties/database.properties", "/etc/default/rss/database.properties")
 
     for api in get_apis_default(directory, APIS + [rss]):
         url = api.get("url")
