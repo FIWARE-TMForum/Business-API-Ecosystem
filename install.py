@@ -226,7 +226,6 @@ def redeployall(directory):
     print("Redeploying")
     # Check if the RSS configuration file exists
     if not isfile("/etc/default/rss/database.properties"):
-        mkdir("/etc/default/rss/")
         cp(rss.get("url").split("/")[-1][:-4] + "/properties/database.properties", "/etc/default/rss/database.properties")
 
     for api in get_apis_default(directory, APIS + [rss]):
@@ -253,7 +252,6 @@ def chargingbackend(proxyhost, proxyport, port, ctx):
 
     bash("python-dep-install.sh")
     cd("..")
-
 
 
 def generate_endpoints(port, cport):
