@@ -226,6 +226,86 @@ For installing Node and NPM it is needed to doanload the binaries from the offic
 Installing the Business API Ecosystem
 =====================================
 
+As stated previously, the Business API Ecosystem is composed of different systems that need to be installed separately.
+In order to easy this process, it has been created an script **install.py** which can be used to automate the installation.
+
+Installing the Business API Ecosystem using the script
+------------------------------------------------------
+
+The script *install.py* is located at the root of the Business API Ecosystem project. This script provides functionality
+to automate the installation of the software. Concretely, it downloads all the APIs and components, compiles and deploys,
+the APIs, and installs python and node libraries.
+
+This script depends on Python3 to work. If you have used the *resolve-basic-dep.sh* script, Python 3 is already installed.
+Otherwise, you can install Python 3 using the following commands:
+
+**Debian/Ubuntu** ::
+
+    $ sudo apt-get install -y python3
+    $ sudo apt-get install -y python3-pip
+
+**CentOS 7** ::
+
+    $ sudo yum -y install scl-utils
+    $ sudo rpm -Uvh https://www.softwarecollections.org/en/scls/rhscl/python33/epel-7-x86_64/download/rhscl-python33-epel-7-x86_64.noarch.rpm
+    $ sudo yum -y install python33
+
+Additionally, *install.py* specs the binaries of Glassfish and Node to be included in the PATH. This can be done with the
+following commands (Note that the commands are supposing both or them are installed at */opt/biz-ecosystem*) ::
+
+    $ export PATH=$PATH:/opt/biz-ecosystem/glassfish4/glassfish/bin
+    $ export PATH=$PATH:/opt/biz-ecosystem/node-v4.5.0-linux-x64/bin
+
+.. note::
+    Including the previous command is your .bashrc file, prevents you to have to execute them each time
+
+Moreover, *install.py* requires Glassfish, MySQL and MongoDB to be up and running.
+
+**Debian/Ubuntu** ::
+
+    $ asadmin start-domain
+    $ sudo service mysql restart
+    $ sudo service mongodb restart
+
+**CentOS 7** ::
+
+    $ asadmin start-domain
+    $ sudo systemctl start mysqld
+    $ sudo systemctl start mongod
+
+
+To make a complete installation of the Business API Ecosystem, execute the following command ::
+
+    $ ./install.py all
+
+In addition to the *all* option, *install.py* provides also several options that allows to execute parts of the installation
+process, so you can have more control over it. Concretely, the script provides the following options:
+
+* **clone**: Downloads from GitHub the different components of the Business API Ecosystem
+* **maven**: Compiles the downloaded APIs using Maven
+* **tables**: Creates the required databases in MySQL
+* **persistence**: Builds persistence.xml files of the different APIs
+* **pools**: Creates database pools in Glassfish
+* **resources**: Creates database resources in Glassfish
+* **redeploy**: Deploys APIs and RSS was files in Glassfish
+* **proxy**: Installs proxy Node libs
+* **charging**: Installs charging Python libs
+
+Installing the Business API Ecosystem Manually
+----------------------------------------------
+
+Installing TM Forum APIs
+++++++++++++++++++++++++
+
+Installing the RSS
+++++++++++++++++++
+
+Installing the Charging Backend
++++++++++++++++++++++++++++++++
+
+Installing the Logic Proxy
+++++++++++++++++++++++++++
+
 -------------
 Configuration
 -------------
