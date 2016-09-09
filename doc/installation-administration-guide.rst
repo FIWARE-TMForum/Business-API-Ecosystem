@@ -93,7 +93,7 @@ APIs dependencies
 **Java 8 Debian/Ubuntu**
 
 To install Java 8 in a Debian or Ubuntu system, it is needed to include the *webupd8team* repository. In an Ubuntu system this can be done
- directly with the following command::
+directly with the following command::
 
     $ sudo add-apt-repository ppa:webupd8team/java
 
@@ -169,6 +169,59 @@ Finally, it is required to download the MySQL connector for Glassfish and includ
 Charging Backend dependencies
 +++++++++++++++++++++++++++++
 
+**Python 2.7 Debian/Ubuntu**
+
+To install Python 2.7 and Pip in a Debian/Ubuntu distribution, execute the following command ::
+
+    $ sudo apt-get install -y python python-pip
+
+**Python 2.7 CentOS**
+
+Python 2.7 is included by default in CentOS 7. To install Pip it is required to include EPEL repository.
+All this stuff can be done executing the following commands ::
+
+    $ sudo rpm -iUvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
+    $ sudo yum -y update
+    $ sudo yum install -y python-pip
+
+**MongoDB Debian/Ubuntu**
+
+To install MongoDB in a Debian/Ubuntu distribution, execute the following command ::
+
+    $ sudo apt-get install -y mongodb
+
+**MongoDB CentOS 7**
+
+To install MongoDB in CentOS it is needed to include its repository first. MongoDB can be installed executing the following commands ::
+
+    $ sudo echo "[mongodb]
+    name=MongoDB Repository
+    baseurl=http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/
+    gpgcheck=0
+    enabled=1" > /etc/yum.repos.d/mongodb.repo
+
+    $ sudo yum install -y mongodb-org
+
+**Wkhtmltopdf Debian/Ubuntu**
+
+In Debian and Ubuntu Wkhtmltopdf is included in a package, so it can be directly installed with the following command ::
+
+    $ sudo apt-get install -y wkhtmltopdf
+
+**Wkhtmltopdf CentOS 7**
+
+In CentOS the Wkhtmltopdf RPM package has to be downloaded for installing it ::
+
+    $ wget http://download.gna.org/wkhtmltopdf/0.12/0.12.1/wkhtmltox-0.12.1_linux-centos7-amd64.rpm
+    $ sudo rpm -ivh wkhtmltox-0.12.1_linux-centos7-amd64.rpm
+
+Logic Proxy Dependencies
+++++++++++++++++++++++++
+
+For installing Node and NPM it is needed to doanload the binaries from the official site and uncompress them ::
+
+    $ wget https://nodejs.org/dist/v4.5.0/node-v4.5.0-linux-x64.tar.xz
+    $ tar -xvf node-v4.5.0-linux-x64.tar.xz
 
 Installing the Business API Ecosystem
 =====================================
