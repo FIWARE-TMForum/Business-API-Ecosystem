@@ -266,7 +266,7 @@ def generate_endpoints(port, cport):
 @click.option("--port", "-p", default=8000, type=int)
 @click.option("--chargingport", "-c", default=8004, type=int)
 @click.option("--glassfishport", "-P", default=8080, type=int)
-def proxy(host, port, chargingport, glassfishport):
+def proxyCommand(host, port, chargingport, glassfishport):
     name = proxy.get("url").split("/")[-1][:-4]
     cd(name)
     npm("install")
@@ -322,7 +322,7 @@ def doall(ctx):
     print("All APIs are deployed in glassfish")
 
     ctx.invoke(chargingbackend)
-    ctx.invoke(proxy)
+    ctx.invoke(proxyCommand)
 
 if __name__ == "__main__":
     cli()
