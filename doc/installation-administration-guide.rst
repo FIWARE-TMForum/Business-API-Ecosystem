@@ -316,7 +316,7 @@ The different reference implementations of the TM Forum APIs used in the Busines
 * `Billing Management API <https://github.com/FIWARE-TMForum/DSBILLINGMANAGEMENT>`__
 * `Usage Management API <https://github.com/FIWARE-TMForum/DSUSAGEMANAGEMENT>`__
 
-The installation for all of them is similar. The first step is cloning the repository and moving to the correct relesase ::
+The installation for all of them is similar. The first step is cloning the repository and moving to the correct release ::
 
     $ git clone https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2.git
     $ cd DSPRODUCTCATALOG2
@@ -357,7 +357,7 @@ use the following command: ::
 
 The last step for creating the database connection is creating the connection resource. To do that, execute the following command: ::
 
-    # asadmin create-jdbc-resource --connectionpoolid <poolname> <jndiname>
+    $ asadmin create-jdbc-resource --connectionpoolid <poolname> <jndiname>
 
 .. note::
     You have to provide the name of the pool you have previously created and a name for your resource, which has to be the same
@@ -377,11 +377,87 @@ Finally, the last step is deploying the generated war file in Glassfish ::
 Installing the RSS
 ++++++++++++++++++
 
+The RSS sources can be found in `GitHub <https://github.com/FIWARE-TMForum/business-ecosystem-rss>`__
+
+The first step for installing the RSS component is downloading it and moving to the correct release ::
+
+    $ git clone https://github.com/FIWARE-TMForum/business-ecosystem-rss.git
+    $ cd business-ecosystem-rss
+    $ git checkout v5.4.0
+
+Then, the next step is coping, *database.properties* and *oauth.properties* files to its default location at */etc/default/rss* ::
+
+    $ sudo mkdir /etc/default/rss
+    $ sudo chown <your_user>:<your_user> /etc/default/rss
+    $ cp properties/database.properties /etc/default/rss/database.properties
+    $ cp properties/oauth.properties /etc/default/rss/ouath.properties
+
+.. note::
+    You have to include your user when changing *rss* directory owner
+
+Once the properties files have been copied, they should be edited in order to provide the correct configuration params:
+
+database.properties ::
+
+    database.url=jdbc:mysql://localhost:3306/RSS
+    database.username=root
+    database.password=root
+    database.driverClassName=com.mysql.jdbc.Driver
+
+oauth.properties ::
+
+    config.grantedRole=Provider
+    config.sellerRole=Seller
+    config.aggregatorRole=aggregator
+
+.. note::
+    The different params included in the configuration file are explained in detail in the Configuration section
+
+Once the properties files have been edited, the next step is compiling the sources with Maven ::
+
+    $ mvn install
+
+Finally, the last step is deploying the generated war file in Glassfish ::
+
+    $ asadmin deploy --contextroot DSRevenueSharing --name DSRevenueSharing fiware-rss/target/DSRevenueSharing.war
+
 Installing the Charging Backend
 +++++++++++++++++++++++++++++++
 
+The Charging Backend sources can be found in in `GitHub <https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend>`__
+
+The first step for installing the charging backend component is downloading it and moving to the correct release ::
+
+    $ git clone https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend.git
+    $ cd business-ecosystem-charging-backend
+    $ git checkout v5.4.0
+
+Once the code has been downloaded, it is recommended to create a virtualenv for installing python dependencies (This is not mandatory). ::
+
+    $ virtualenv virtenv
+    $ source virtenv/bin/activate
+
+To install python libs, execute the *python-dep-install.sh* script ::
+
+    $ ./python-dep-install.sh
+
+.. note::
+    If you have not created and activated a virtualenv you will need to execute the script using sudo
+
 Installing the Logic Proxy
 ++++++++++++++++++++++++++
+
+The Charging Backend sources can be found in in `GitHub <https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy>`__
+
+The first step for installing the logic proxy component is downloading it and moving to the correct release ::
+
+    $ git clone https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy.git
+    $ cd business-ecosystem-logic-proxy
+    $ git checkout v5.4.0
+
+Once the code has been downloaded, Node dependencies can be installed with npm asd follows ::
+
+    $ npm install
 
 -------------
 Configuration
