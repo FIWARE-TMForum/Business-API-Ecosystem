@@ -228,6 +228,14 @@ def redeployall(directory):
     if not isfile("/etc/default/rss/database.properties"):
         cp(rss.get("url").split("/")[-1][:-4] + "/properties/database.properties", "/etc/default/rss/database.properties")
 
+        # Setting RSS database configuration
+        with open("/etc/default/rss/database.properties") as f:
+            text = f.read()
+
+            text.replace("database.url=jdbc:mysql://localhost:3306/RSS", "database.url=jdbc:mysql://{}:{}/{}".format(DBHOST, DBPORT, rss.get('bbdd')))\
+                .replace("database.username=root", "database.username={}".format(DBUSER))\
+                .replace("database.password=root", "database.password={}".format(DBPWD))
+
     if not isfile("/etc/default/rss/oauth.properties"):
         cp(rss.get("url").split("/")[-1][:-4] + "/properties/oauth.properties", "/etc/default/rss/oauth.properties")
 
