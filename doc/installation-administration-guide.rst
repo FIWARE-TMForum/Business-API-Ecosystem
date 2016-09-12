@@ -609,16 +609,176 @@ Certificate and the private Key to be used by providing its path in the followin
     NOTIF_CERT_FILE = None
     NOTIF_CERT_KEY_FILE = None
 
+Finally, the last step is creating the context of the Charging Backend by creating two sites using the provided command.
+First, create the external site by executing the following command. Note that you have to provide the real URL where the
+proxy will be running. ::
+
+    $ ./manage.py createsite external http://<proxy_path>:<proxy_port>/
+
+Then, you have to create the local site by providing the real URL where the Charging Backend will be running as follows ::
+
+    $ ./manage.py createsite local http://localhost:<charging_port>/
+
 Configuring the Logic Proxy
 ---------------------------
+
+The first step for configuring the proxy is creating the configuration file by coping *config.js.template* to *config.js* ::
+
+    $ cp config.js.template config.js
+
+The first setting to be configured is the port where the proxy is going to run, this setting is located in *config.js* ::
+
+    config.port = 80;
+
+If you want to run the proxy in HTTPS you can update *config.https* setting ::
+
+    config.https = {
+        enabled: false,
+        certFile: 'cert/cert.crt',
+        keyFile: 'cert/key.key',
+        caFile: 'cert/ca.crt',
+        port: 443
+    };
+
+In this case you have to set *enabled* to true, and provide the paths to certificate (*certFile*), to the private key (*keyFile*),
+and to the CA certificate (*caFile*).
+
+Then, it is possible to modify some of the URLs of the system. Concretely, it is possible to provide a prefix for the API,
+a prefix for the portal, and modifying the login and logout URLS ::
+
+    config.proxyPrefix = '';
+    config.portalPrefix = '';
+    config.logInPath = '/login';
+    config.logOutPath = '/logOut';
+
+
+Additionally, the proxy is the component that acts as the front end of the Business API Ecosystem, both providing a web portal,
+and providing the endpoint for accessing to the different APIs. In this regard, the Proxy has to have the OAUth2 configuration
+of the FIWARE IDM.
+
+To provide OAUth2 configuration, an application has to be created in an instance of the FIWARE IdM (e.g `https://account.lab.fiware.org`),
+providing the following information:
+
+* URL: http|https://<proxy_host>:<proxy_port>
+* Callback URL: http|https://<PROXY_HOST>:<PROXY_PORT>/auth/fiware/callback
+* Create a role *Seller*
+
+Once the application has been created in the IdM, it is possible to provide OAuth2 configuration by modifying the following settings ::
+
+    config.oauth2 = {
+        'server': 'https://account.lab.fiware.org',
+        'clientID': '<client_id>',
+        'clientSecret': '<client_secret>',
+        'callbackURL': 'http://<proxy_host>:<proxy_port>/auth/fiware/callback',
+        'roles': {
+            'admin': 'provider',
+            'customer': 'customer',
+            'seller': 'seller'
+        }
+    };
+
+In this settings, it is needed to include the IDM instance being used (*server*), the client id given by the IdM (*clientID*),
+the client secret given by the IdM (*clientSecret*), and the callback URL configured in the IdM (*callbackURL*)
+
+Moreover, the Proxy uses MongoDB for maintaining some info, such as the current shopping cart of a user. you can configure
+the connection to MongoDB by updating the following setting: ::
+
+    config.mongoDb = {
+        server: 'localhost',
+        port: 27017,
+        user: '',
+        password: '',
+        db: 'belp'
+    };
+
+In this setting you can configure the host (*server*), the port (*port*), the database user (*user*), the database user password
+(*password*), and the database name (*db*).
+
+As already stated, the Proxy is the component that acts as the endpoint for accessing the different APIs. In this way,
+the proxy needs to know the URLs of them in order to redirect the different requests. This endpoints can be configured using the
+following settings ::
+
+    config.appHost = 'localhost';
+
+    config.endpoints = {
+        'catalog': {
+            'path': 'DSProductCatalog',
+            'port': '8080'
+        },
+        'ordering': {
+             'path': 'DSProductOrdering',
+            'port': '8080'
+        },
+
+        ...
+
+The setting *config.appHost* contain the host where the APIs are running. On the other hand, *config.endpoints* contains
+the specific configuration of each of the APIs, including its *path*, and its *port*.
+
+.. note::
+    The default configuration included in the config file is the one used by the installation script, so if you have used the script for
+    installing the Business API Ecosystem you do not need to modify this fields
+
+
+Finally, there are two fields that allow to configure the behaviour of the system while running. On the one hand, *config.revenueModel*
+allows to configure the default percentage that the Business API Ecosystem is going to retrieve in all the transactions.
+On the other hand, *config.usageChartURL* allows to configure the URL of the chart to be used to display product usage to
+customers in the web portal.
 
 -----------
 Final steps
 -----------
 
+The Business API Ecosystem, allows to upload some product attachments and assets to be sold. These assets are uploaded
+by the Charging Backend that saves them in the file system, jointly with the generated PDF invoices.
+
+In this regard, the directories *src/medi*a and *src/media/bills* must exists within the Charging Backend directory, and must
+be writable by the user executing the Charging Backend. ::
+
+    $ mkdir src/media
+    $ mkdir src/media/bills
+    $ chown -R <your_user>:<your_user> src/media
+
 ----------------------------------
 Running the Business API Ecosystem
 ----------------------------------
+
+Running the APIs and the RSS
+----------------------------
+
+Both the TM Forum APIs and the RSS are deployed in Glassfish; in this regard, the only step for running them is starting
+Glassfish ::
+
+    $ asadmin start-domain
+
+Running the Charging Backend
+----------------------------
+
+The Charging Backend creates some objects and connections on startup; in this way, the Glassfish APIs must be up an running
+before starting it.
+
+The Charging Backend can be started using the *runserver* command as follows ::
+
+    $ ./manage.py runserver 127.0.0.1:<charging_port>
+
+Or in backgound ::
+
+    $ nohup ./manage.py runserver 127.0.0.1:<charging_port> &
+
+.. note::
+    If you have created a virtualenv when installing the backend or used the installation script, you will need to activate the
+    virtualenv before starting the Charging Backend
+
+Running the Logic Proxy
+-----------------------
+
+The Logic Proxy can be started using Node as follows ::
+
+    $ node server.js
+
+Or if you want to start it in background: ::
+
+    $ nohup node server.js &
 
 ------------------------
 Installing Asset Plugins
