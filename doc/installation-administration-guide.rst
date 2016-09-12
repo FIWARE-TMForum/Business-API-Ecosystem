@@ -966,13 +966,27 @@ of this section.
 Resource Availability
 =====================
 
+Memory use depends on the number of concurrent users as well as the free memory available and the hard disk.
+The Business API Ecosystem requires a minimum of 1024 MB of available RAM memory, but 2048 MB of free memory are recomended.
+Moreover, the Business API Ecosystem requires at least 15 GB of hard disk space.
+
 Remote Service Access
 =====================
+
+N/A
 
 Resource Consumption
 ====================
 
+Resource consumption strongly depends on the load, especially on the number of concurrent users logged in.
+
+* Glassfish main memory consumption should be between 500 MB and 2048 MB
+* MongoDB main memory consumption should be between 30 MB and 500 MB
+* Pyhton main memory consumption should be between 30 MB and 200 MB
+* Node main memory consumption should be between 30 MB and 200 MB
+* MySQL main memory consumption should be between 30 MB and 500 MB
+
 I/O Flows
 =========
 
-The only expected I/O flow is of type HTTP, on port defined in Apache Web Server configuration files.
+The only expected I/O flow is of type HTTP, on port defined in the Logic Proxy configuration file
