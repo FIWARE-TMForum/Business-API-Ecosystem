@@ -761,7 +761,7 @@ The Charging Backend can be started using the *runserver* command as follows ::
 
     $ ./manage.py runserver 127.0.0.1:<charging_port>
 
-Or in backgound ::
+Or in background ::
 
     $ nohup ./manage.py runserver 127.0.0.1:<charging_port> &
 
@@ -783,6 +783,41 @@ Or if you want to start it in background: ::
 ------------------------
 Installing Asset Plugins
 ------------------------
+
+The Business API Ecosystem is intended to support the monetization of different kind of digital assets. The different
+kind of assets that may be wanted to be monetized will be heterogeneous and potentially very different between them.
+
+Additionally, for each type of asset different validations and activation mechanisms will be required. For example, if the
+asset is a CKAN dataset, it will be required to validate that the provider is the owner of the dataset. Moreover, when a customer
+acquires the dataset, it will be required to notify CKAN that a new user has access to it.
+
+The huge differences between the different types of assets that can be monetized in the Business API Ecosystem makes
+impossible to include its validations and characteristics as part of the core software. For this reason, it has been created
+a plugin based solution, where all the characteristics of an asset type are implemented in a plugin that can be loaded
+in the Business API Ecosystem.
+
+To include an asset plugin execute the following command in the Charging Backend: ::
+
+    $ ./manage.py loadplugin ckandataset.zip
+
+It is possible to list the existing plugins with the following command: ::
+
+    $ ./manage.py listplugins
+
+To remove an asset plugin, execute the following command providing the plugin id given by the *listplugins* command ::
+
+    $ ./manage.py removeplugin ckan-dataset
+
+
+.. note::
+    For specific details on how to create a plugin and its internal structure, have a look at the Business API Ecosystem Programmer Guide
+
+At the time of writing, the following plugins are available:
+
+* `WireCloud Component <https://github.com/FIWARE-TMForum/wstore-wirecloud-plugin>`__: Allows the monetization of WireCloud components, including Widgets, operators, and mashups
+* `Accountable Service <https://github.com/FIWARE-TMForum/wstore-orion-plugin>`__ : Allows the monetization of services protected by the `Accounting Proxy <https://github.com/FIWARE-TMForum/Accounting-Proxy>`__, including Orion Context Broker queries
+* `CKAN Dataset <https://github.com/FIWARE-TMForum/wstore-ckan-plugin>`__ : Allows the monetization of CKAN datasets
+
 
 -----------------------
 Sanity check Procedures
