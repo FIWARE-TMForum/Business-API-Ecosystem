@@ -478,7 +478,7 @@ so they are already configured. Nevertheless, this section contains an explanati
 settings of the RSS properties files.
 
 Configuring the RSS
--------------------
+===================
 
 The RSS has its settings included in two files located at */etc/default/rss*. The file *database.properties*  contains
 by default the following fields: ::
@@ -508,7 +508,7 @@ This file contains the name of the roles (registered in the idm) that are going 
 * config.aggregatorRole: Role of the users who are admins of an store instance. In the context of the Business API Ecosystem there is only a single store instance, so you can safely ignore this flag
 
 Configuring the Charging Backend
---------------------------------
+================================
 
 The Charging Backend creates some objects and connections in the different APIs while working, so the first step is
 configuring the different URLs of the Business API Ecosystem components by modifying the file *services_settings.py*,
@@ -522,6 +522,7 @@ which by default contains the following content: ::
     AUTHORIZE_SERVICE = 'http://localhost:8004/authorizeService/apiKeys'
 
 This settings points to the different APIs accessed by the charging backend. Concretely:
+
 * INVENTORY: URL of the inventory API including its path
 * ORDERING: URL of the ordering API including its path
 * BILLING: URL of the billing API including its path
@@ -546,6 +547,7 @@ MongoDB, and its connection can be configured modifying the *DATABASES* setting 
     }
 
 This setting contains the following fields:
+
 * ENGINE: Database engine, must be fixed to django_mongodb_engine
 * NAME: Name of the database to be used
 * USER: User of the database. If empty the software creates a non authenticated connection
@@ -562,6 +564,7 @@ updating *settings.py* ::
     CUSTOMER_ROLE = 'customer'
 
 This settings contain the following values:
+
 * ADMIN_ROLE: IDM role of the system admin
 * PROVIDER_ROLE: IDM role of the users with seller privileges
 * CUSTOMER_ROLE: IDM role of the users with customer privileges
@@ -597,6 +600,7 @@ Then, it is required to provide PayPal application credentials by updating the f
     MODE = 'sandbox'  # sandbox or live
 
 This settings contain the following values:
+
 * PAYPAL_CLIENT_ID: Id of the application provided by PayPal
 * PAYPAL_CLIENT_SECRET: Secret of the application provided by PayPal
 * MODE: Mode of the connection. It can be *sandbox* if using the PayPal sandbox for testing the system. Or *live* if using the real PayPal APIs
@@ -619,8 +623,9 @@ Then, you have to create the local site by providing the real URL where the Char
 
     $ ./manage.py createsite local http://localhost:<charging_port>/
 
+
 Configuring the Logic Proxy
----------------------------
+===========================
 
 The first step for configuring the proxy is creating the configuration file by coping *config.js.template* to *config.js* ::
 
@@ -744,7 +749,7 @@ Running the Business API Ecosystem
 ----------------------------------
 
 Running the APIs and the RSS
-----------------------------
+============================
 
 Both the TM Forum APIs and the RSS are deployed in Glassfish; in this regard, the only step for running them is starting
 Glassfish ::
@@ -752,7 +757,7 @@ Glassfish ::
     $ asadmin start-domain
 
 Running the Charging Backend
-----------------------------
+============================
 
 The Charging Backend creates some objects and connections on startup; in this way, the Glassfish APIs must be up an running
 before starting it.
@@ -770,7 +775,7 @@ Or in background ::
     virtualenv before starting the Charging Backend
 
 Running the Logic Proxy
------------------------
+=======================
 
 The Logic Proxy can be started using Node as follows ::
 
@@ -828,7 +833,7 @@ to be tested. This is therefore a preliminary set of tests to ensure that obviou
 proceeding to unit tests, integration tests and user validation.
 
 End to End Testing
-------------------
+==================
 
 Please note that the following information is required before starting with the process:
 * The host and port where the Proxy is running
@@ -878,13 +883,76 @@ To Check if the Business API Ecosystem is running, follow the next steps:
 .. image:: /images/installation/sanity13.png
 
 List of Running Processes
--------------------------
+=========================
+
+We need to check that Java for the Glassfish server (APIs and RSS), python (Charging Backend) and Node (Proxy) are running,
+as well as MongoDB and MySQL databases. If we execute the following command: ::
+
+    ps -ewF | grep 'java\|mongodb\|mysql\|python\|node' | grep -v grep
+
+It should show something similar to the following: ::
+
+    mongodb   1014     1  0 3458593 49996 0 sep08 ?        00:22:30 /usr/bin/mongod --config /etc/mongodb.conf
+    mysql     1055     1  0 598728 64884  2 sep08 ?        00:02:21 /usr/sbin/mysqld
+    francis+ 15932 27745  0 65187 39668   0 14:53 pts/24   00:00:08 python ./manage.py runserver 0.0.0.0:8006
+    francis+ 15939 15932  1 83472 38968   0 14:53 pts/24   00:00:21 /home/user/business-ecosystem-charging-backend/src/virtenv/bin/python ./manage.py runserver 0.0.0.0:8006
+    francis+ 16036 15949  0 330473 163556 0 14:54 pts/25   00:00:08 node server.js
+    root      1572     1  0 1142607 1314076 3 sep08 ?      00:37:40 /usr/lib/jvm/java-8-oracle/bin/java -cp /opt/biz-ecosystem/glassfish ...
 
 Network interfaces Up & Open
-----------------------------
+============================
+
+To check the ports in use and listening, execute the command: ::
+
+    $ sudo netstat -nltp
+
+The expected results must be something similar to the following: ::
+
+    Active Internet connections (only servers)
+    Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+    tcp        0      0 127.0.0.1:8006          0.0.0.0:*               LISTEN      15939/python
+    tcp        0      0 127.0.0.1:27017         0.0.0.0:*               LISTEN      1014/mongod
+    tcp        0      0 127.0.0.1:28017         0.0.0.0:*               LISTEN      1014/mongod
+    tcp        0      0 127.0.0.1:3306          0.0.0.0:*               LISTEN      1055/mysqld
+    tcp6       0      0 :::80                   :::*                    LISTEN      16036/node
+    tcp6       0      0 :::8686                 :::*                    LISTEN      1572/java
+    tcp6       0      0 :::4848                 :::*                    LISTEN      1572/java
+    tcp6       0      0 :::8080                 :::*                    LISTEN      1572/java
+    tcp6       0      0 :::8181                 :::*                    LISTEN      1572/java
 
 Databases
----------
+=========
+
+The last step in the sanity check, once we have identified the processes and ports, is to check that MySQL and MongoDB
+databases are up and accepting queries. We can check that MySQL is working, with the following command: ::
+
+    $ mysql -u <user> -p<password>
+
+You should see something similar to: ::
+
+    Welcome to the MySQL monitor.  Commands end with ; or \g.
+    Your MySQL connection id is 174
+    Server version: 5.5.47-0ubuntu0.14.04.1 (Ubuntu)
+
+    Copyright (c) 2000, 2015, Oracle and/or its affiliates. All rights reserved.
+
+    Oracle is a registered trademark of Oracle Corporation and/or its
+    affiliates. Other names may be trademarks of their respective
+    owners.
+
+    Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+    mysql>
+
+For MongoDB, execute the following command: ::
+
+    $ mongo <database> -u <user> -p <password>
+
+You should see something similar to: ::
+
+    MongoDB shell version: 2.4.9
+    connecting to: <database>
+    >
 
 --------------------
 Diagnosis Procedures
@@ -896,15 +964,15 @@ and specific testing to pinpoint the exact point of error and a possible solutio
 of this section.
 
 Resource Availability
----------------------
+=====================
 
 Remote Service Access
----------------------
+=====================
 
 Resource Consumption
---------------------
+====================
 
 I/O Flows
----------
+=========
 
 The only expected I/O flow is of type HTTP, on port defined in Apache Web Server configuration files.
