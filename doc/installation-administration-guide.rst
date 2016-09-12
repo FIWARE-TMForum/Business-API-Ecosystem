@@ -283,6 +283,15 @@ must exist and must be accessible by the user executing the script. To do that :
     $ sudo mkdir /etc/default/rss
     $ sudo chown <your_user>:<your_user> /etc/default/rss
 
+The script *install.py* creates the different databases as well as the connection pools and resources. In this regard,
+after the execution of the script, all the APIs are already configured. You can specify the database settings by modifying the
+script and updating DBUSER, DBPWD, DBHOST, and DBPORT, which by default contains the following configuration. ::
+
+    DBUSER = "root"
+    DBPWD = "toor"
+    DBHOST = "localhost"
+    DBPORT = 3306
+
 To make a complete installation of the Business API Ecosystem, execute the following command ::
 
     $ ./install.py all
@@ -463,6 +472,146 @@ Once the code has been downloaded, Node dependencies can be installed with npm a
 Configuration
 -------------
 
+At this step, the different components of the Business API Ecosystem are installed. In the case of the TMForum APIs and
+the RSS, this installation process has already required to configure their database connection before their deployment,
+so they are already configured. Nevertheless, this section contains an explanation of the function of the different
+settings of the RSS properties files.
+
+Configuring the RSS
+-------------------
+
+The RSS has its settings included in two files located at */etc/default/rss*. The file *database.properties*  contains
+by default the following fields: ::
+
+    database.url=jdbc:mysql://localhost:3306/RSS
+    database.username=root
+    database.password=root
+    database.driverClassName=com.mysql.jdbc.Driver
+
+This file contains the configuration required in order to connect to the database.
+
+* database.url: URL used to connect to the database, this URL includes the host and port of the database as well as the concrete database to be used
+* database.username: User to be used to connect to the database
+* database.password: Password of the database user
+* database.driverClassName: Driver class of the database. By default MySQL
+
+The file *oauth.properties* contains by default the following fields (It is recommended not to modify them) ::
+
+    config.grantedRole=Provider
+    config.sellerRole=Seller
+    config.aggregatorRole=aggregator
+
+This file contains the name of the roles (registered in the idm) that are going to be used by the RSS.
+
+* config.grantedRole: Role in the IDM of the users with admin privileges
+* config.sellerRole: Role in the IDM of the users with seller privileges
+* config.aggregatorRole: Role of the users who are admins of an store instance. In the context of the Business API Ecosystem there is only a single store instance, so you can safely ignore this flag
+
+Configuring the Charging Backend
+--------------------------------
+
+The Charging Backend creates some objects and connections in the different APIs while working, so the first step is
+configuring the different URLs of the Business API Ecosystem components by modifying the file *services_settings.py*,
+which by default contains the following content: ::
+
+    INVENTORY = 'http://localhost:8080/DSProductInventory'
+    ORDERING = 'http://localhost:8080/DSProductOrdering'
+    BILLING = 'http://localhost:8080/DSBillingManagement'
+    RSS = 'http://localhost:8080/DSRevenueSharing'
+    USAGE = 'http://localhost:8080/DSUsageManagement'
+    AUTHORIZE_SERVICE = 'http://localhost:8004/authorizeService/apiKeys'
+
+This settings points to the different APIs accessed by the charging backend. Concretely:
+* INVENTORY: URL of the inventory API including its path
+* ORDERING: URL of the ordering API including its path
+* BILLING: URL of the billing API including its path
+* RSS: URL of the RSS including its path
+* USAGE: URL of the Usage API including its path
+* AUTHORIZE_SERVICE: Complete URL of the usage authorization service. This service is provided by the logic proxy, and is used to generate API Keys to be used by accounting systems when providing usage information.
+
+
+Once the services has been configured, the next step is configuring the database. In this case, the charging backend uses
+MongoDB, and its connection can be configured modifying the *DATABASES* setting of the *settings.py* file. ::
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django_mongodb_engine',
+            'NAME': 'wstore_db',
+            'USER': '',
+            'PASSWORD': '',
+            'HOST': '',
+            'PORT': '',
+            'TEST_NAME': 'test_database',
+        }
+    }
+
+This setting contains the following fields:
+* ENGINE: Database engine, must be fixed to django_mongodb_engine
+* NAME: Name of the database to be used
+* USER: User of the database. If empty the software creates a non authenticated connection
+* PASSWORD: Database user password. If empty the software creates a non authenticated connection
+* HOST: Host of the database. If empty it uses the default *localhost* host
+* PORT: Port of the database. If empty it uses the default *27017* port
+* TEST_NAME: Name of the database to be used when running the tests
+
+Once the database connection has been configured, the next step is configuring the name of the IdM roles to be used by
+updating *settings.py* ::
+
+    ADMIN_ROLE = 'provider'
+    PROVIDER_ROLE = 'seller'
+    CUSTOMER_ROLE = 'customer'
+
+This settings contain the following values:
+* ADMIN_ROLE: IDM role of the system admin
+* PROVIDER_ROLE: IDM role of the users with seller privileges
+* CUSTOMER_ROLE: IDM role of the users with customer privileges
+
+The Charging Backend component is able to send email notifications to the users when they are charged or receive a payment.
+In this way, it is possible to provide email configuration in the *settings.py* file by modifying the following fields: ::
+
+    WSTOREMAILUSER = 'email_user'
+    WSTOREMAIL = 'wstore_email'
+    WSTOREMAILPASS = 'wstore_email_passwd'
+    SMTPSERVER = 'wstore_smtp_server'
+    SMTPPORT = 587
+
+This settings contain the following values:
+* WSTOREMAILUSER: Username used for authenticating in the email server
+* WSTOREMAIL: Email to be used as the sender of the notifications
+* WSTOREMAILPASS: Password of the user for authenticating in the email server
+* SMTPSERVER: Email server host
+* SMTPPORT: Email server port
+
+.. note::
+    The email configuration in optional. However, the field WSTOREMAIL must be provided since it is used internally for RSS configuration
+
+Additionally, the Charging Backend is the component that charges customers and pays providers. For this purpose it uses
+PayPal. For configuring paypal, the first step is setting *PAYMENT_METHOD* to *paypal* in the *settings.py* file ::
+
+    PAYMENT_METHOD = 'paypal'
+
+Then, it is required to provide PayPal application credentials by updating the file *src/wstore/charging_engine/payment_client/paypal_client.py* ::
+
+    PAYPAL_CLIENT_ID = ''
+    PAYPAL_CLIENT_SECRET = ''
+    MODE = 'sandbox'  # sandbox or live
+
+This settings contain the following values:
+* PAYPAL_CLIENT_ID: Id of the application provided by PayPal
+* PAYPAL_CLIENT_SECRET: Secret of the application provided by PayPal
+* MODE: Mode of the connection. It can be *sandbox* if using the PayPal sandbox for testing the system. Or *live* if using the real PayPal APIs
+
+Moreover, the Charging Backend is the component that activates the purchased services. In this regard, the Charging Backend
+has the possibility of signing its acquisition notifications with a certificate, so the external system being offered can
+validate that is the Charging Backend the one making the request. To use this functionality it is needed to configure the
+Certificate and the private Key to be used by providing its path in the following settings of the *settings.py* file ::
+
+    NOTIF_CERT_FILE = None
+    NOTIF_CERT_KEY_FILE = None
+
+Configuring the Logic Proxy
+---------------------------
+
 -----------
 Final steps
 -----------
@@ -470,6 +619,10 @@ Final steps
 ----------------------------------
 Running the Business API Ecosystem
 ----------------------------------
+
+------------------------
+Installing Asset Plugins
+------------------------
 
 -----------------------
 Sanity check Procedures
