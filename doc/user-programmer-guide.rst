@@ -130,17 +130,56 @@ Then edit the corresponding fields and click on *Update*.
 .. image:: /images/user/cat7.png
    :align: center
 
-Service Provider
-================
+Seller
+======
 
-List Provider Catalogs
-----------------------
+If the user of the Business API Ecosystem has the *Seller* role, he will be able to monetize his products by creating,
+catalogs, product specifications and product offerings. All these objects are managed accessing *My Stock* section.
 
-Create Catalog
---------------
+.. image:: /images/user/catalog1.png
+   :align: center
 
-Update Catalog
---------------
+Manage Catalogs
+---------------
+
+The *Catalogs* section is the one that is open by default when the seller accesses *My Stock* section. This section
+contains the catalogs the seller has created.
+
+.. image:: /images/user/catalog2.png
+   :align: center
+
+Additionally, it is possible to filter the shown catalogs by status and the role you are playing by clicking on *Filters*,
+choosing the required ones, and clicking on *Close*
+
+.. image:: /images/user/catalog8.png
+   :align: center
+
+.. image:: /images/user/catalog9.png
+   :align: center
+
+To create a new catalog click on the *New* button.
+
+.. image:: /images/user/catalog3.png
+   :align: center
+
+Then, provide a name and an optional description for the catalog. Once you have filled the fields, click on *Next*, and then on *Create*
+
+.. image:: /images/user/catalog4.png
+   :align: center
+
+.. image:: /images/user/catalog5.png
+   :align: center
+
+Sellers, can also update their catalogs. To do that, click on the name of the catalog to open the update view.
+
+.. image:: /images/user/catalog6.png
+   :align: center
+
+Then update the fields you want to modify and click on *Update*. In this view, it is possible to change the *Status* of the
+catalog. To start monetizing the catalog, and make it appear in the *Home* you have to change its status to *Launched*
+
+.. image:: /images/user/catalog7.png
+   :align: center
 
 List Provider Product Specs
 ---------------------------
