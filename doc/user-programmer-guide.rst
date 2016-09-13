@@ -494,8 +494,55 @@ Manage Received Orders
 Customer
 ========
 
+All of the users of the system have by default the *Customer* role. Customers are able to create orders for acquiring
+offerings.
+
 List Available Offerings
 ------------------------
+
+All the available (*Launched*) offerings appear in the *Home* page of the Business API Ecosystem, so they can be seen by
+customers.
+
+.. image:: /images/user/search1.png
+   :align: center
+
+Additionally, customers can select an specific catalog of offerings by clicking on it.
+
+.. image:: /images/user/search2.png
+   :align: center
+
+.. image:: /images/user/search3.png
+   :align: center
+
+Moreover, customers can filter the shown offerings by category using the categories dropdown and choosing the wanted one.
+
+.. image:: /images/user/search4.png
+   :align: center
+
+Finally, customers can also filter bundle or single offerings using the *Filters* modal.
+
+.. image:: /images/user/search5.png
+   :align: center
+
+.. image:: /images/user/search6.png
+   :align: center
+
+Customers can open the details of an offering by clicking on it
+
+.. image:: /images/user/search7.png
+   :align: center
+
+In the displayed view, it is shown the general info about the offering and its included product, the characteristics of
+the product, the price plans of the offering, and the existing relationships.
+
+.. image:: /images/user/search8.png
+   :align: center
+
+.. image:: /images/user/search9.png
+   :align: center
+
+.. image:: /images/user/search10.png
+   :align: center
 
 Create Order
 ------------
