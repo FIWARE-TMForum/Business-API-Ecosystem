@@ -491,6 +491,67 @@ Manage Transactions
 Manage Received Orders
 ----------------------
 
+Sellers can manage the orders they have received in order to see the chosen characteristics, read customer notes, or
+process the order in case it has been acquired a physical product.
+
+To view your received orders go to *My inventory* section, click on *Product orders*, and open the *Received* section.
+
+.. image:: /images/user/provord1.png
+   :align: center
+
+.. image:: /images/user/provord2.png
+   :align: center
+
+.. image:: /images/user/provord3.png
+   :align: center
+
+You can view the details of a received order clicking on the order date
+
+.. image:: /images/user/provord4.png
+   :align: center
+
+In the displayed view you can review the details of the order and the details of your products acquired by the customer,
+including the chosen characteristics.
+
+Additionally, you can view the customer notes clicking on the *Notes* tab
+
+.. image:: /images/user/provord5.png
+   :align: center
+
+You can also give a reply to customer notes including it in the text area and clicking on the send button
+
+.. image:: /images/user/provord6.png
+   :align: center
+
+If the acquired product is not digital, the order needs to be processed manually by the seller, in the sense that the
+seller will have to send the acquired product to the customer. To deal with this situation, the order details view allows
+sellers to manually change the status of the order.
+
+To reject a received order you have to click in the *Reject* button located in the search or in the details view of the order.
+
+.. image:: /images/user/provord7.png
+   :align: center
+
+.. image:: /images/user/provord8.png
+   :align: center
+
+In case you accept the order and send the product to the customer, you have to put it as *inProgress* clicking on the *Sent* button
+
+.. image:: /images/user/provord9.png
+   :align: center
+
+.. image:: /images/user/provord10.png
+   :align: center
+
+Finally, when the product arrives at its destination, you have to put it as *Completed* clicking on the *Delivered* button
+
+.. image:: /images/user/provord11.png
+   :align: center
+
+.. image:: /images/user/provord12.png
+   :align: center
+
+
 Customer
 ========
 
