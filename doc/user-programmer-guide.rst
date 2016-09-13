@@ -822,4 +822,118 @@ To leave a note, write it in the provided text area and click on the send button
 Programmer Guide
 ----------------
 
+The Business API Ecosystem allows to offer any kind of digital asset. In this regard, some kind of digital assets may
+require to perform specific actions and validations that require to know the format of the asset. To deal with this
+issue the Business API Ecosystem allows to register types of assets by creating plugins. This section explains how these plugins are created.
 
+Additionally, the Business API Ecosystem exposes an API that can be used by developers in order to integrate the monetization
+features offered with their own solutions. The complete description of this API can be found in:
+
+
+* `Apiary <http://docs.fiwaretmfbizecosystem.apiary.io>`__
+* `GitHub Pages <https://fiware-tmforum.github.io/Business-API-Ecosystem/>`__
+
+
+Plugin Package
+==============
+
+Business API Ecosystem plugins must be packaged in a zip. This file will contain all the sources of the plugin and a
+configuration file called *package.json* in the root of the zip. This configuration file allows to specify some aspects
+of the behaviour of the plugin and contains the following fields:
+
+* name: Name given to the resource type. This is the field that will be shown to providers
+* author: Author of the plugin.
+* formats: List that specify the different allowed formats for providing an asset of the given type. This list can contain the values "URL" and "FILE".
+* module: This field is used to specify the main class of the Plugin.
+* version: Current version of the plugin.
+* media_types: List of allowed media types that can be selected when providing an asset of the given type
+
+Following you can find an example of a *package.json* file:
+
+::
+
+    {
+        "name": "Test Resource",
+        "author": "fdelavega",
+        "formats": ["FILE"],
+        "module": "plugin.TestPlugin",
+        "version": "1.0",
+        "media_types": ["application/zip"]
+    }
+
+The source code of the plugin must be written in Python and must contain a main class that must be a child class of
+the Plugin class defined in the Charging Backend of the Business API Ecosystem. Following you can find an example of a plugin main class.
+
+::
+
+    from wstore.asset_manager.resource_plugins.plugin import Plugin
+
+    class TestPlugin(Plugin):
+        def on_pre_product_spec_validation(self, provider, asset_t, media_type, url):
+            pass
+
+        def on_post_product_spec_validation(self, provider, asset):
+            pass
+
+        def on_pre_product_spec_attachment(self, asset, asset_t, product_spec):
+            pass
+
+        def on_post_product_spec_attachment(self, asset, asset_t, product_spec):
+            pass
+
+        def on_pre_product_offering_validation(self, asset, product_offering):
+            pass
+
+        def on_post_product_offering_validation(self, asset, product_offering):
+            pass
+
+        def on_product_acquisition(self, asset, contract, order):
+            pass
+
+        def on_product_suspension(self, asset, contract, order):
+            pass
+
+
+
+Implementing Event Handlers
+===========================
+
+It can be seen in the previous section that the main class of a plugin can implement some methods that are inherited from
+the Charging Backend Plugin class. This methods can be used to implement handlers of the different events of the life cycle
+of a product containing the asset. Concretely, the following events have been defined:
+
+* **on_pre_product_spec_validation**: This method is executed when creating a new digital product containing an asset of the given type, before validating the product spec contents and saving the asset info in the database. This method can be used for validating the asset format or the seller permissions to sell the asset.
+* **on_post_product_spec_validation**: This method is executed when creating a new digital product containing an asset of the given type, after validating the product spec and saving the asset info in the database. This method can be used if the plugin require to know some specific info of the asset model
+* **on_pre_product_spec_attachment**: This method is executed when creating a new digital product containing an asset of the given type, after saving the product spec in the catalog API database but before attaching the product spec id to the asset model. This method can be used if the plugin require to know the id in the catalog of the product spec
+* **on_post_product_spec_attachment**: This method is executed when creating a new digital product containing an asset of the given type, after saving the product spec in the catalog API database and after attaching the product spec id to the asset model. This method can be used if the plugin require to know the id in the catalog of the product spec
+* **on_pre_product_offering_validation**: This method is executed when creating a new product offering containing an asset of the given type, before validating its pricing model. This method can be used to make extra validations on the pricing model, for example check if the unit of an usage model is supported by the given asset
+* **on_post_product_offering_validation**: This method is executed when creating a new product offering containing an asset of the given type, after validating its pricing model. This method can be used to make extra validations on the pricing model, for example check if the unit of an usage model is supported by the given asset
+* **on_product_acquisition**: This method is called when a product containing an asset of the given type has been acquired. This method can be used to activate the service for the customer and give him access rights.
+* **on_product_suspension**: This method is called when a product containing an asset of the given type has been suspended for a customer (e.g he has not paid). Tjis method can be used to suspend the service for the customer and remove his access rights
+
+Managing Plugins
+================
+
+Once the plugin has been packaged in a zip file, the Charging Backend of the Business API Ecosystem offers some management
+command that can be used to manage the plugins.
+
+When a new plugin is registered, The Business API Ecosystem automatically generates an id for the plugin that is used for
+managing it. To register a new plugin the following command is used:
+
+::
+
+    python manage.py loadplugin TestPlugin.zip
+
+
+It is also possible to list the existing plugins in order to retrieve the generated ids:
+
+::
+
+    python manage.py listplugins
+
+
+To remove a plugin it is needed to provide the plugin id. This can be done using the following command:
+
+::
+
+    python manage.py removeplugin test-plugin
