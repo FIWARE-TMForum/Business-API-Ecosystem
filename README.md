@@ -40,6 +40,8 @@ general [GitHub issues](https://github.com/FIWARE-TMForum/Business-API-Ecosystem
 
 # GEi Overall Description
 
+The Business API Ecosystem is a joint component made up of the FIWARE Business Framework and a set of APIs (and its reference implementations) provided by the TMForum. This component allows the monetization of different kind of assets (both digital and physical) during the whole service life cycle, from offering creation to its charging, accounting and revenue settlement and sharing. The Business API Ecosystem exposes its complete functionality through TMForum standard APIs; concretely, it includes the catalog management, ordering management, inventory management, usage management, billing, customer, and party APIs.
+
 # Installation
 
 The instructions to install the Business API Ecosystem can be found at the [Installation Guide](http://business-api-ecosystem.readthedocs.io/en/latest/installation-administration-guide.html). You can install the software in three different ways:
@@ -50,9 +52,81 @@ The instructions to install the Business API Ecosystem can be found at the [Inst
 
 # API Overview
 
+The Business API Ecosystem API is build up using the APIs of the different components each exposing its own resources.
+
+## Catalog API
+
+The Catalog API is available under /DSProductCatalog/api/ and its main resources are:
+
+* Categories
+* Catalogs
+* Product Specifications
+* Product Offerings
+
+## Ordering API
+
+The Ordering API is available under /DSProductOrdering/api/ and its main resources are:
+
+* Product Order
+
+## Inventory API
+
+The Inventory API is available under /DSProductInventory/api/ and its main resources are:
+
+* Product
+
+## Party API
+
+The Party API is available under /DSPartyManagement/api/ and its main resources are:
+
+* Individual
+* Organization
+
+## Customer API
+
+The Customer API is available under /DSCustomerManagement/api/ and its main resources are:
+
+* Customer
+* Customer Account
+
+## Billing API
+
+The Billing API is available under /DSBillingManagement/api/ and its main resources are:
+
+* Billing Account
+* Applied Billing Charge
+
+## Usage API
+
+The Usage API is available under /DSUsageManagement/api/ and its main resources are:
+
+* Usage
+* Usage Specification
+
+## RSS API
+
+The RSS API is available under /DSRevenueSharing/rss/ and its main resources are:
+
+* Revenue Sharing Model
+* Transaction
+* Revenue Sharing Report
+
 # API Reference
 
+For further documentation, you can check the API Reference available at:
+
+* [Apiary](http://docs.fiwaretmfbizecosystem.apiary.io) 
+* [Github Pages](https://fiware-tmforum.github.io/Business-API-Ecosystem/)
+
 # Testing
+
+## End-to-End tests
+
+End-to-End tests are described in the [Installation Guide](http://business-api-ecosystem.readthedocs.io/en/latest/installation-administration-guide.html#end-to-end-testing)
+
+## Unit tests
+
+The way of executing the unit tests is described in each of the components repositories
 
 # Advanced Topics
 
