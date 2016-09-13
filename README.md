@@ -1,5 +1,7 @@
 # Business-API-Ecosystem
 
+[![License](https://img.shields.io/badge/license-AGPLv3%201.1-blue.svg?style=flat)](http://www.gnu.org/licenses/agpl.html) [![Docs](https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat)](http://business-api-ecosystem.readthedocs.io/en/latest/) [![Docker](https://img.shields.io/docker/pulls/fiware/biz-ecosystem.svg)](https://hub.docker.com/r/fiware/biz-ecosystem) [![Support](https://img.shields.io/badge/support-askbot-yellowgreen.svg)](https://ask.fiware.org)
+
  * [Introduction](#introduction)
  * [GEi Overall Description](#gei-overall-description)
  * [Installation](#build-and-install)
