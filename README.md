@@ -1,6 +1,6 @@
 # Business-API-Ecosystem
 
-[![License](https://img.shields.io/badge/license-AGPL%20v3-blue.svg?style=flat)](http://www.gnu.org/licenses/agpl.html) [![Docs](https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat)](http://business-api-ecosystem.readthedocs.io/en/latest/) [![Docker](https://img.shields.io/docker/pulls/fiware/biz-ecosystem.svg)](https://hub.docker.com/r/fiware/biz-ecosystem) [![Support](https://img.shields.io/badge/support-askbot-yellowgreen.svg)](https://ask.fiware.org)
+[![License](https://img.shields.io/badge/license-AGPL%20v3-blue.svg?style=flat)](http://www.gnu.org/licenses/agpl.html) [![Docs](https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat)](http://business-api-ecosystem.readthedocs.io/en/latest/) [![Docker](https://img.shields.io/docker/pulls/fiware/business-api-ecosystem.svg)](https://hub.docker.com/r/fiware/business-api-ecosystem) [![Support](https://img.shields.io/badge/support-askbot-yellowgreen.svg)](https://ask.fiware.org)
 
  * [Introduction](#introduction)
  * [GEi Overall Description](#gei-overall-description)
@@ -49,7 +49,7 @@ The Business API Ecosystem is a joint component made up of the FIWARE Business F
 The instructions to install the Business API Ecosystem can be found at the [Installation Guide](http://business-api-ecosystem.readthedocs.io/en/latest/installation-administration-guide.html). You can install the software in three different ways:
 
 * Using the provided scripts
-* Using a [Docker Container]()
+* Using a [Docker Container](https://hub.docker.com/r/fiware/business-api-ecosystem)
 * Manually
 
 # API Overview
