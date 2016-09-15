@@ -58,11 +58,66 @@ fi
 
 ############################################################################################
 
+function create_tables {
+
+    echo "Creating Database tables"
+    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS DSPRODUCTCATALOG2;"
+
+    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS DSPRODUCTORDERING;"
+
+    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS DSPRODUCTINVENTORY;"
+
+    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS DSPARTYMANAGEMENT;"
+
+    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS DSBILLINGMANAGEMENT;"
+
+    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS DSCUSTOMER;"
+
+    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS DSUSAGEMANAGEMENT;"
+
+    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS RSS;"
+}
+
+function glassfish_related {
+    echo "Deploying APIs"
+    python /apis-entrypoint.py
+    python /rss-entrypoint.py
+}
+
+function done_mongo {
+
+    cd business-ecosystem-charging-backend/src
+
+    sed -i "s|PAYPAL_CLIENT_ID = ''|PAYPAL_CLIENT_ID = '$PAYPAL_CLIENT_ID'|g" ./wstore/charging_engine/payment_client/paypal_client.py
+
+    sed -i "s|PAYPAL_CLIENT_SECRET = ''|PAYPAL_CLIENT_SECRET = '$PAYPAL_CLIENT_SECRET'|g" ./wstore/charging_engine/payment_client/paypal_client.py
+
+
+    sed -i "s|WSTOREMAIL = 'wstore_email'|WSTOREMAIL = '$ADMIN_EMAIL'|g" ./settings.py
+
+    sed -i "s|PAYMENT_METHOD = None|PAYMENT_METHOD = 'paypal'|g" ./settings.py
+
+    sed -i "s|AUTHORIZE_SERVICE = 'http://localhost:8004/authorizeService/apiKeys'|AUTHORIZE_SERVICE = 'http://$BIZ_ECOSYS_HOST:$BIZ_ECOSYS_PORT/authorizeService/apiKeys'|g" ./services_settings.py
+
+    python /charging-entrypoint.py
+
+    echo "Starting charging server"
+    python ./manage.py runserver 0.0.0.0:8004 &
+
+    cd ../../business-ecosystem-logic-proxy
+
+    python /proxy-entrypoint.py
+
+    cd ..
+}
+
+########################################################################################
+
 set -o monitor
 
 service mongodb start
 
-asadmin start-domain &
+asadmin start-domain
 
 i=1
 
@@ -78,7 +133,23 @@ exec 10<>/dev/tcp/127.0.0.1/27017
 mongodbStatus=$?
 doneMongo=1
 
-while [[ $mysqlStatus -ne 0 || $glassfishStatus -ne 0 || $mongodbStatus -ne 0 && $i -lt 20 ]]; do
+if [[ $mysqlStatus -eq 0 ]]; then
+    create_tables
+    doneTables=0
+fi
+
+if [[ $glassfishStatus -eq 0 && $mysqlStatus -eq 0 ]]; then
+    glassfish_related
+    doneGlassfish=0
+fi
+
+if [[ $mongodbStatus -eq 0 ]]; then
+    done_mongo
+    doneMongo=0
+fi
+
+
+while [[ ($mysqlStatus -ne 0 || $glassfishStatus -ne 0 || $mongodbStatus -ne 0) && $i -lt 20 ]]; do
     sleep 2
     i=$i+1
 
@@ -92,7 +163,7 @@ while [[ $mysqlStatus -ne 0 || $glassfishStatus -ne 0 || $mongodbStatus -ne 0 &&
 
     fi
 
-    if [[ $glassfishStatus -eq 0 && $doneGlassfish -eq 1 ]]; then
+    if [[ $glassfishStatus -eq 0 && $doneGlassfish -eq 1 && $mysqlStatus -eq 0 && $doneTables -eq 0 ]]; then
 	    glassfish_related
 	    doneGlassfish=0
 
@@ -119,6 +190,7 @@ then
     exit 1
 fi
 
+
 exec 8>&- # close output connection
 exec 8<&- # close input connection
 exec 9>&- # close output connection
@@ -126,53 +198,7 @@ exec 9<&- # close input connection
 exec 10>&- # close output connection
 exec 10<&- # close input connection
 
-function create_tables {
 
-    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS DSPRODUCTCATALOG2;"
+cd /apis/business-ecosystem-logic-proxy/
 
-    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS DSPRODUCTORDERING;"
-
-    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS DSPRODUCTINVENTORY;"
-
-    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS DSPARTYMANAGEMENT;"
-
-    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS DSBILLINGMANAGEMENT;"
-
-    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS DSCUSTOMER;"
-
-    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS DSUSAGEMANAGEMENT;"
-
-    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS RSS;"
-}
-
-function glassfish_related {
-    python /apis-entrypoint.py
-    python /rss-entrypoint.py
-}
-
-function done_mongo {
-
-    cd business-api-ecosystem-charging-backend/src
-
-    sed -i "s|PAYPAL_CLIENT_ID = ''|PAYPAL_CLIENT_ID = '$PAYPAL_CLIENT_ID'|g" ./wstore/charging_engine/payment_client/paypal_client.py
-
-    sed -i "s|PAYPAL_CLIENT_SECRET = ''|PAYPAL_CLIENT_SECRET = '$PAYPAL_CLIENT_SECRET'|g" ./wstore/charging_engine/payment_client/paypal_client.py
-
-
-    sed -i "s|WSTOREMAIL = 'wstore_email'|WSTOREMAIL = '$ADMIN_EMAIL'|g" ./settings.py
-
-    sed -i "s|PAYMENT_METHOD = None|PAYMENT_METHOD = 'paypal'|g" ./settings.py
-
-    sed -i "s|AUTHORIZE_SERVICE = 'http://localhost:8004/authorizeService/apiKeys'|AUTHORIZE_SERVICE = 'http://$BIZ_ECOSYS_HOST:$BIZ_ECOSYS_PORT/authorizeService/apiKeys'|g" ./services_settings.py
-
-    python /charging-entrypoint.py
-
-    echo "Starting charging server"
-    python ./manage.py runserver 0.0.0.0:8004 &
-
-    cd ../..
-
-    python /proxy-entrypoint.py
-}
-
-./business-ecosystem-logic-proxy/node-v4.5.0-linux-x64/bin/node server.js
+./node-v4.5.0-linux-x64/bin/node server.js

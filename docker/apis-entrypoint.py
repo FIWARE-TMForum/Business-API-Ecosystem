@@ -10,37 +10,37 @@ DBPORT = "3306"
 
 APIS = [{
          "bbdd": "DSPRODUCTCATALOG2",
-         "war": "target/DSPRODUCTCATALOG2.war",
+         "war": "DSPRODUCTCATALOG2.war",
          "root": "DSProductCatalog",
          "resourcename": "jdbc/pcatv2"},
         {
          "bbdd": "DSPRODUCTORDERING",
-         "war": "target/productOrdering.war",
+         "war": "productOrdering.war",
          "root": "DSProductOrdering",
          "resourcename": "jdbc/podbv2"},
         {
          "bbdd": "DSPRODUCTINVENTORY",
-         "war": "target/productInventory.war",
+         "war": "productInventory.war",
          "root": "DSProductInventory",
          "resourcename": "jdbc/pidbv2"},
         {
          "bbdd": "DSPARTYMANAGEMENT",
-         "war": "target/party.war",
+         "war": "party.war",
          "root": "DSPartyManagement",
          "resourcename": "jdbc/partydb"},
         {
          "bbdd": "DSBILLINGMANAGEMENT",
-         "war": "target/billingManagement.war",
+         "war": "billingManagement.war",
          "root": "DSBillingManagement",
          "resourcename": "jdbc/bmdbv2"},
         {
          "bbdd": "DSCUSTOMER",
-         "war": "target/customer.war",
+         "war": "customer.war",
          "root": "DSCustomerManagement",
          "resourcename": "jdbc/customerdbv2"},
         {
          "bbdd": "DSUSAGEMANAGEMENT",
-         "war": "target/usageManagement.war",
+         "war": "usageManagement.war",
          "root": "DSUsageManagement",
          "resourcename": "jdbc/usagedbv2"}]
 
@@ -68,18 +68,15 @@ def generate_mysql_url(db):
 # if "install" in sys.argv:
 for api in APIS:
     pool(api.get("bbdd"), DBUSER, DBPWD, generate_mysql_url(api.get("bbdd")))
-    url = api.get("url")
-    con = url.split("/")[-1][:-4]
-    resource(api.get("resourcename"), con)
+    resource(api.get("resourcename"), api.get("bbdd"))
 
 cd("wars")
 for api in APIS:
-    cd(api.get('bbdd'))
     try:
         asadmin("deploy", "--force", "false", "--contextroot", api.get('root'), "--name", api.get('root'), api.get('war'))
-    except:
+    except Exception as e:
+        print(unicode(e))
         print('API {} could not be deployed'.format(api.get('bbdd')))
 
-    cd('..')
-
+cd("..")
 

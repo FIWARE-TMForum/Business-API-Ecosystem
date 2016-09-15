@@ -11,6 +11,9 @@ RUN tar -xvf mysql-connector-java-5.1.39.tar.gz
 
 RUN cp ./mysql-connector-java-5.1.39/mysql-connector-java-5.1.39-bin.jar glassfish/domains/domain1/lib
 
+RUN mkdir /apis
+WORKDIR /apis
+
 RUN mkdir wars
 
 RUN git clone https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2.git
@@ -18,11 +21,6 @@ RUN git clone https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2.git
 WORKDIR DSPRODUCTCATALOG2
 
 RUN git checkout v5.4.0
-
-# Create WAR file
-RUN mvn install
-
-RUN mv ./target/DSPRODUCTCATALOG2.war ../wars/
 
 # Fixing reloading the database everytime the API is restarted
 RUN sed -i 's/jdbc\/sample/jdbc\/pcatv2/g' ./src/main/resources/META-INF/persistence.xml
@@ -35,6 +33,11 @@ RUN if [ -f "./DSPRODUCTORDERING/src/main/java/org/tmf/dsmapi/settings.propertie
 # Add condition if not present in properties. This was as pain to write as it is to read
 RUN grep -F "<property name=\"javax.persistence.schema-generation.database.action\" value=\"drop-and-create\"/>" ./src/main/resources/META-INF/persistence.xml || sed -i 's/<\/properties>/\t<property name=\"javax.persistence.schema-generation.database.action\" value=\"drop-and-create\"\/>\n\t\t<\/properties>/g' ./src/main/resources/META-INF/persistence.xml
 
+# Create WAR file
+RUN mvn install
+
+RUN mv ./target/DSPRODUCTCATALOG2.war ../wars/
+
 WORKDIR ../
 
 # Next api Docker
@@ -43,11 +46,6 @@ RUN git clone https://github.com/FIWARE-TMForum/DSPRODUCTORDERING.git
 WORKDIR DSPRODUCTORDERING
 
 RUN git checkout v5.4.0
-
-# Create WAR file
-RUN mvn install
-
-RUN mv ./target/productOrdering.war ../wars/
 
 # Fixing reloading the database everytime the API is restarted
 RUN sed -i 's/jdbc\/sample/jdbc\/podbv2/g' ./src/main/resources/META-INF/persistence.xml
@@ -60,6 +58,11 @@ RUN if [ -f "./DSPRODUCTORDERING/src/main/java/org/tmf/dsmapi/settings.propertie
 # Add condition if not present in properties. This was as pain to write as it is to read
 RUN grep -F "<property name=\"javax.persistence.schema-generation.database.action\" value=\"drop-and-create\"/>" ./src/main/resources/META-INF/persistence.xml || sed -i 's/<\/properties>/\t<property name=\"javax.persistence.schema-generation.database.action\" value=\"drop-and-create\"\/>\n\t\t<\/properties>/g' ./src/main/resources/META-INF/persistence.xml
 
+# Create WAR file
+RUN mvn install
+
+RUN mv ./target/productOrdering.war ../wars/
+
 WORKDIR ../
 
 # Next api Docker
@@ -68,11 +71,6 @@ RUN git clone https://github.com/FIWARE-TMForum/DSPRODUCTINVENTORY.git
 WORKDIR DSPRODUCTINVENTORY
 
 RUN git checkout v5.4.0
-
-# Create WAR file
-RUN mvn install
-
-RUN mv ./target/productInventory.war ../wars/
 
 # Fixing reloading the database everytime the API is restarted
 RUN sed -i 's/jdbc\/sample/jdbc\/pidbv2/g' ./src/main/resources/META-INF/persistence.xml
@@ -85,6 +83,11 @@ RUN if [ -f "./DSPRODUCTORDERING/src/main/java/org/tmf/dsmapi/settings.propertie
 # Add condition if not present in properties. This was as pain to write as it is to read
 RUN grep -F "<property name=\"javax.persistence.schema-generation.database.action\" value=\"drop-and-create\"/>" ./src/main/resources/META-INF/persistence.xml || sed -i 's/<\/properties>/\t<property name=\"javax.persistence.schema-generation.database.action\" value=\"drop-and-create\"\/>\n\t\t<\/properties>/g' ./src/main/resources/META-INF/persistence.xml
 
+# Create WAR file
+RUN mvn install
+
+RUN mv ./target/productInventory.war ../wars/
+
 WORKDIR ../
 
 # Next api Docker
@@ -93,11 +96,6 @@ RUN git clone https://github.com/FIWARE-TMForum/DSPARTYMANAGEMENT.git
 WORKDIR DSPARTYMANAGEMENT
 
 RUN git checkout v5.4.0
-
-# Create WAR file
-RUN mvn install
-
-RUN mv ./target/party.war ../wars/
 
 # Fixing reloading the database everytime the API is restarted
 RUN sed -i 's/jdbc\/sample/jdbc\/partydb/g' ./src/main/resources/META-INF/persistence.xml
@@ -110,6 +108,11 @@ RUN if [ -f "./DSPRODUCTORDERING/src/main/java/org/tmf/dsmapi/settings.propertie
 # Add condition if not present in properties. This was as pain to write as it is to read
 RUN grep -F "<property name=\"javax.persistence.schema-generation.database.action\" value=\"drop-and-create\"/>" ./src/main/resources/META-INF/persistence.xml || sed -i 's/<\/properties>/\t<property name=\"javax.persistence.schema-generation.database.action\" value=\"drop-and-create\"\/>\n\t\t<\/properties>/g' ./src/main/resources/META-INF/persistence.xml
 
+# Create WAR file
+RUN mvn install
+
+RUN mv ./target/party.war ../wars/
+
 WORKDIR ../
 
 # Next api Docker
@@ -118,11 +121,6 @@ RUN git clone https://github.com/FIWARE-TMForum/DSBILLINGMANAGEMENT.git
 WORKDIR DSBILLINGMANAGEMENT
 
 RUN git checkout v5.4.0
-
-# Create WAR file
-RUN mvn install
-
-RUN mv ./target/billingManagement.war ../wars/
 
 # Fixing reloading the database everytime the API is restarted
 RUN sed -i 's/jdbc\/sample/jdbc\/bmdbv2/g' ./src/main/resources/META-INF/persistence.xml
@@ -135,6 +133,11 @@ RUN if [ -f "./DSPRODUCTORDERING/src/main/java/org/tmf/dsmapi/settings.propertie
 # Add condition if not present in properties. This was as pain to write as it is to read
 RUN grep -F "<property name=\"javax.persistence.schema-generation.database.action\" value=\"drop-and-create\"/>" ./src/main/resources/META-INF/persistence.xml || sed -i 's/<\/properties>/\t<property name=\"javax.persistence.schema-generation.database.action\" value=\"drop-and-create\"\/>\n\t\t<\/properties>/g' ./src/main/resources/META-INF/persistence.xml
 
+# Create WAR file
+RUN mvn install
+
+RUN mv ./target/billingManagement.war ../wars/
+
 WORKDIR ../
 
 # Next api Docker
@@ -143,11 +146,6 @@ RUN git clone https://github.com/FIWARE-TMForum/DSCUSTOMER.git
 WORKDIR DSCUSTOMER
 
 RUN git checkout v5.4.0
-
-# Create WAR file
-RUN mvn install
-
-RUN mv ./target/customer.war ../wars/
 
 # Fixing reloading the database everytime the API is restarted
 RUN sed -i 's/jdbc\/sample/jdbc\/customerdbv2/g' ./src/main/resources/META-INF/persistence.xml
@@ -160,6 +158,11 @@ RUN if [ -f "./DSPRODUCTORDERING/src/main/java/org/tmf/dsmapi/settings.propertie
 # Add condition if not present in properties. This was as pain to write as it is to read
 RUN grep -F "<property name=\"javax.persistence.schema-generation.database.action\" value=\"drop-and-create\"/>" ./src/main/resources/META-INF/persistence.xml || sed -i 's/<\/properties>/\t<property name=\"javax.persistence.schema-generation.database.action\" value=\"drop-and-create\"\/>\n\t\t<\/properties>/g' ./src/main/resources/META-INF/persistence.xml
 
+# Create WAR file
+RUN mvn install
+
+RUN mv ./target/customer.war ../wars/
+
 WORKDIR ../
 
 # Next api Docker
@@ -168,11 +171,6 @@ RUN git clone https://github.com/FIWARE-TMForum/DSUSAGEMANAGEMENT.git
 WORKDIR DSUSAGEMANAGEMENT
 
 RUN git checkout v5.4.0
-
-# Create WAR file
-RUN mvn install
-
-RUN mv ./target/usageManagement.war ../wars/
 
 # Fixing reloading the database everytime the API is restarted
 RUN sed -i 's/jdbc\/sample/jdbc\/usagedbv2/g' ./src/main/resources/META-INF/persistence.xml
@@ -184,6 +182,11 @@ RUN if [ -f "./DSPRODUCTORDERING/src/main/java/org/tmf/dsmapi/settings.propertie
 
 # Add condition if not present in properties. This was as pain to write as it is to read
 RUN grep -F "<property name=\"javax.persistence.schema-generation.database.action\" value=\"drop-and-create\"/>" ./src/main/resources/META-INF/persistence.xml || sed -i 's/<\/properties>/\t<property name=\"javax.persistence.schema-generation.database.action\" value=\"drop-and-create\"\/>\n\t\t<\/properties>/g' ./src/main/resources/META-INF/persistence.xml
+
+# Create WAR file
+RUN mvn install
+
+RUN mv ./target/usageManagement.war ../wars/
 
 WORKDIR ../
 
@@ -205,9 +208,11 @@ COPY database.properties /etc/default/rss/database.properties
 COPY oauth.properties /etc/default/rss/oauth.properties
 
 
+WORKDIR ../
+
 # Deploy charging backend
 
-RUN apt-get install -y --fix-missing mongodb wkhtmltopdf xvfb python-dev
+RUN apt-get install -y --fix-missing mongodb wkhtmltopdf xvfb python-dev build-essential libssl-dev libffi-dev
 
 RUN git clone https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend.git
 
@@ -254,5 +259,8 @@ COPY ./entrypoint.sh /
 COPY ./rss-entrypoint.py /
 COPY ./charging-entrypoint.py /
 COPY ./proxy-entrypoint.py /
+COPY ./apis-entrypoint.py /
 
+EXPOSE 8000
 ENTRYPOINT ["/entrypoint.sh"]
+

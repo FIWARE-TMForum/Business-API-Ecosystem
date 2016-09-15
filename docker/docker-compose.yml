@@ -13,6 +13,8 @@ biz_ecosystem:
         - "8000:8000"
     links:
         - biz_db
+    volumes:
+        - /your/path/media:/apis/business-ecosystem-charging-backend/src/media
     environment:
         - MYSQL_ROOT_PASSWORD=my-secret-pw
         - MYSQL_HOST=rss_db
