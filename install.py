@@ -259,6 +259,7 @@ def redeployall(directory):
 @cli.command("charging")
 @click.pass_context
 def chargingbackend(ctx):
+    print("Installing charging backend")
     name = charg.get("url").split("/")[-1][:-4]
     cd(name)
 
@@ -280,6 +281,7 @@ def generate_endpoints(port, cport):
 @click.option("--chargingport", "-c", default=8004, type=int)
 @click.option("--glassfishport", "-P", default=8080, type=int)
 def proxyCommand(host, port, chargingport, glassfishport):
+    print("Installing logic proxy")
     name = proxy.get("url").split("/")[-1][:-4]
     cd(name)
     npm("install")
