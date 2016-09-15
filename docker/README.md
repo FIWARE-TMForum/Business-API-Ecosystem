@@ -44,7 +44,7 @@ biz_ecosystem:
         - biz_db
     environment:
         - MYSQL_ROOT_PASSWORD=my-secret-pw
-        - MYSQL_HOST=rss_db
+        - MYSQL_HOST=biz_db
         - OAUTH2_CLIENT_ID=your-client-id
         - OAUTH2_CLIENT_SECRET=your-client-secret
         - PAYPAL_CLIENT_ID=your-paypal-client-id
