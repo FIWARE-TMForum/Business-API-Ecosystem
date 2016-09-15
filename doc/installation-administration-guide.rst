@@ -623,6 +623,25 @@ Then, you have to create the local site by providing the real URL where the Char
 
     $ ./manage.py createsite local http://localhost:<charging_port>/
 
+ The Charging Backend uses a Cron task to check the status of recurring and usage subscriptions, and for paying sellers. The periodicity of this tasks can be configured using the CRONJOBS setting of settings.py using the standard Cron format. ::
+ 
+    CRONJOBS = [
+        ('0 5 * * *', 'django.core.management.call_command', ['pending_charges_daemon']),
+        ('0 6 * * *', 'django.core.management.call_command', ['resend_cdrs'])
+    ]
+
+Once the Cron task has been configured, it is necessary to include it in the Cron tasks using the command:
+::
+
+    $ ./manage.py crontab add
+
+It is also possible to show current jobs or remove jobs using the commands:
+::
+
+$ ./manage.py crontab show
+
+$ ./manage.py crontab remove
+
 
 Configuring the Logic Proxy
 ===========================
