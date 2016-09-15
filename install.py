@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from sh import git, cd, mvn, mysql, asadmin, npm, cp, virtualenv, bash, mkdir
+from sh import git, cd, mvn, mysql, asadmin, npm, cp, virtualenv, bash, mkdir, rm
 from os.path import isfile
 import click
 import os.path
@@ -226,16 +226,21 @@ def deploy(war, root, force=False):
 def redeployall(directory):
     print("Redeploying")
     # Check if the RSS configuration file exists
-    if not isfile("/etc/default/rss/database.properties"):
-        cp(rss.get("url").split("/")[-1][:-4] + "/properties/database.properties", "/etc/default/rss/database.properties")
+    if isfile("/etc/default/rss/database.properties"):
+        rm("/etc/default/rss/database.properties")
 
-        # Setting RSS database configuration
-        with open("/etc/default/rss/database.properties") as f:
-            text = f.read()
+    cp(rss.get("url").split("/")[-1][:-4] + "/properties/database.properties", "/etc/default/rss/database.properties")
 
-            text.replace("database.url=jdbc:mysql://localhost:3306/RSS", "database.url=jdbc:mysql://{}:{}/{}".format(DBHOST, DBPORT, rss.get('bbdd')))\
-                .replace("database.username=root", "database.username={}".format(DBUSER))\
-                .replace("database.password=root", "database.password={}".format(DBPWD))
+    # Setting RSS database configuration
+    with open("/etc/default/rss/database.properties") as f:
+        text = f.read()
+
+        text = text.replace("database.url=jdbc:mysql://localhost:3306/RSS", "database.url=jdbc:mysql://{}:{}/{}".format(DBHOST, DBPORT, rss.get('bbdd')))\
+            .replace("database.username=root", "database.username={}".format(DBUSER))\
+            .replace("database.password=root", "database.password={}".format(DBPWD))
+
+    with open("/etc/default/rss/database.properties", "w+") as f:
+        f.write(text)
 
     if not isfile("/etc/default/rss/oauth.properties"):
         cp(rss.get("url").split("/")[-1][:-4] + "/properties/oauth.properties", "/etc/default/rss/oauth.properties")
@@ -252,11 +257,8 @@ def redeployall(directory):
 
 
 @cli.command("charging")
-@click.option("--proxyhost", "-H", default="localhost", type=str)
-@click.option("--proxyport", "-P", default=8000, type=int)
-@click.option("--port", "-p", default=8004, type=int)
 @click.pass_context
-def chargingbackend(proxyhost, proxyport, port, ctx):
+def chargingbackend(ctx):
     name = charg.get("url").split("/")[-1][:-4]
     cd(name)
 

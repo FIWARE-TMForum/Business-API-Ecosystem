@@ -8,6 +8,7 @@ if [[ $DIST ==  "deb" ]]; then
     apt-get install -y mongodb
     apt-get install -y wkhtmltopdf
     apt-get install -y xvfb
+    apt-get install -y build-essential libssl-dev libffi-dev python-dev
 
     # Install virtualenv
     pip install virtualenv
@@ -19,6 +20,7 @@ elif [[  $DIST == "rhel" ]]; then
     rpm -iUvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
     yum -y update
     yum install -y python-pip
+    yum install -y gcc libffi-devel python-devel openssl-devel
 
     # Install MongoDB repository
     echo "[mongodb]
