@@ -6,7 +6,7 @@ User and Programmer Guide
 Introduction
 ------------
 
-This user and programmer guide covers the Business API Ecosystem version 0.1, corresponding to FIWARE release 5.4.3.
+This user and programmer guide covers the Business API Ecosystem version 5.4.0, corresponding to FIWARE release 5.
 Any feedback on this document is highly welcomed, including bugs, typos or things you think should be included but aren't. Please send them to the "Contact Person" email that appears in the `Catalogue page for this GEi`_.
 Or create an issue at `GitHub Issues`_
 
