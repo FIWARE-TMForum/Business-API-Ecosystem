@@ -1,0 +1,25 @@
+biz_db:
+    image: mysql:latest
+    ports:
+        - "3333:3306"
+    volumes:
+        - /var/lib/mysql
+    environment:
+        - MYSQL_ROOT_PASSWORD=my-secret-pw
+
+biz_ecosystem:
+    image: conwetlab/business-api-ecosystem
+    ports:
+        - "8000:8000"
+    links:
+        - biz_db
+    environment:
+        - MYSQL_ROOT_PASSWORD=my-secret-pw
+        - MYSQL_HOST=rss_db
+        - OAUTH2_CLIENT_ID=your-client-id
+        - OAUTH2_CLIENT_SECRET=your-client-secret
+        - PAYPAL_CLIENT_ID=your-paypal-client-id
+        - PAYPAL_CLIENT_SECRET=your-paypal-client-secret
+        - ADMIN_EMAIL=your@email.com
+        - BIZ_ECOSYS_PORT=your-port
+        - BIZ_ECOSYS_HOST=your-host

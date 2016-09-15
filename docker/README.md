@@ -36,7 +36,7 @@ biz_db:
     environment:
         - MYSQL_ROOT_PASSWORD=my-secret-pw
 
-rss:
+biz_ecosystem:
     image: conwetlab/business-api-ecosystem
     ports:
         - "8000:8000"
