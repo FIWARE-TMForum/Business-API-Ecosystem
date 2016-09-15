@@ -244,7 +244,7 @@ RUN echo "export PATH=$PATH:/business-ecosystem-logic-proxy/node-v4.5.0-linux-x6
 
 RUN git checkout v5.4.0
 
-RUN /business-ecosystem-logic-proxy/node-v4.5.0-linux-x64/bin/npm install
+RUN ./node-v4.5.0-linux-x64/bin/npm install
 
 RUN cp config.js.template config.js
 
