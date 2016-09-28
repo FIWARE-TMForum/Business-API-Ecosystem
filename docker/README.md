@@ -52,6 +52,10 @@ biz_ecosystem:
         - PAYPAL_CLIENT_ID=your-paypal-client-id
         - PAYPAL_CLIENT_SECRET=your-paypal-client-secret
         - ADMIN_EMAIL=your@email.com
+        - EMAIL_USER=your
+        - EMAIL_PASSWD=your-passwd
+        - EMAIL_SERVER=smtp.gmail.com
+        - EMAIL_SERVER_PORT=587
         - BIZ_ECOSYS_PORT=your-port
         - BIZ_ECOSYS_HOST=your-host
 
@@ -79,6 +83,14 @@ Note in the previous commands, that it is needed to provide some environment var
 * **ADMIN_EMAIL**: Valid email required for administration
 * **BIZ_ECOSYS_PORT**: Port where the Business API Ecosystem is going to run
 * **BIZ_ECOSYS_HOST**: Host where the Business API Ecosystem is going to run
+
+Additionally, it is possible to provide some optional variables that enable the software sending
+email notifications:
+
+* **EMAIL_USER**: User of the email account to be used for notifications
+* **EMAIL_PASSWD**: Password of the email account to be used for notifications
+* **EMAIL_SERVER**: SMTP server host of the email account to be used for notifications
+* **EMAIL_SERVER_PORT**: SMTP server port of the email account to be used for notifications
 
 ## Build the image
 

@@ -92,8 +92,27 @@ function done_mongo {
 
     sed -i "s|PAYPAL_CLIENT_SECRET = ''|PAYPAL_CLIENT_SECRET = '$PAYPAL_CLIENT_SECRET'|g" ./wstore/charging_engine/payment_client/paypal_client.py
 
-
     sed -i "s|WSTOREMAIL = 'wstore_email'|WSTOREMAIL = '$ADMIN_EMAIL'|g" ./settings.py
+
+    if [[ ! -z $EMAIL_USER ]];
+    then
+        sed -i "s|WSTOREMAILUSER = 'email_user'|WSTOREMAILUSER = '$EMAIL_USER'|g" ./settings.py
+    fi
+
+    if [[ ! -z $EMAIL_PASSWD ]];
+    then
+        sed -i "s|WSTOREMAILPASS = 'wstore_email_passwd'|WSTOREMAILPASS = '$EMAIL_PASSWD'|g" ./settings.py
+    fi
+
+    if [[ ! -z $EMAIL_SERVER ]];
+    then
+        sed -i "s|SMTPSERVER = 'wstore_smtp_server'|SMTPSERVER = '$EMAIL_SERVER'|g" ./settings.py
+    fi
+
+    if [[ ! -z $EMAIL_SERVER_PORT ]];
+    then
+        sed -i "s|SMTPPORT = 587|SMTPPORT = $EMAIL_SERVER_PORT|g" ./settings.py
+    fi
 
     sed -i "s|PAYMENT_METHOD = None|PAYMENT_METHOD = 'paypal'|g" ./settings.py
 
