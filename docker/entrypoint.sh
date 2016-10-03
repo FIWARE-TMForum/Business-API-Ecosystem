@@ -121,7 +121,7 @@ function done_mongo {
     python /charging-entrypoint.py
 
     echo "Starting charging server"
-    python ./manage.py runserver 0.0.0.0:8004 &
+    python ./manage.py runserver 0.0.0.0:8006 &
 
     cd ../../business-ecosystem-logic-proxy
 
