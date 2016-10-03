@@ -168,8 +168,14 @@ if [[ $mongodbStatus -eq 0 && $doneGlassfish -eq 0 ]]; then
 fi
 
 
-while [[ ($mysqlStatus -ne 0 || $glassfishStatus -ne 0 || $mongodbStatus -ne 0) && $i -lt 20 ]]; do
-    sleep 2
+while [[ ($doneTables -ne 0 || $doneGlassfish -ne 0 || $doneMongo -ne 0) && $i -lt 50 ]]; do
+
+    echo "Checking deployment status: "
+    echo "MySQL databases: $doneTables"
+    echo "API deployment: $doneGlassfish"
+    echo "Charging startup: $doneMongo"
+
+    sleep 5
     i=$i+1
 
     if [[ $mysqlStatus -eq 0 && $doneTables -eq 1 ]]; then
@@ -201,9 +207,10 @@ while [[ ($mysqlStatus -ne 0 || $glassfishStatus -ne 0 || $mongodbStatus -ne 0) 
     fi
 done
 
-if [[ $i -eq 20 ]];
+if [[ $i -eq 50 ]];
 then
-    echo Conection to Mongo returned $mongoStatus
+    echo "It cannot be possible to start the Business API Ecosystem, is MySQL running?"
+    echo Conection to Mongo returned $mongodbStatus
     echo Conection to MySQL returned $mysqlStatus
     echo Conection to Glassfish returned $glassfishStatus
     exit 1

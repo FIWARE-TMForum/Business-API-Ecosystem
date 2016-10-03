@@ -1,6 +1,7 @@
 FROM glassfish
 
-RUN apt-get update && apt-get install -y python2.7 python-pip git maven mysql-client openjdk-8-jdk
+RUN apt-get update
+RUN apt-get install -y --fix-missing python2.7 python-pip git maven mysql-client openjdk-8-jdk
 
 RUN pip install sh
 
@@ -212,7 +213,8 @@ WORKDIR ../
 
 # Deploy charging backend
 
-RUN apt-get install -y --fix-missing mongodb wkhtmltopdf xvfb python-dev build-essential libssl-dev libffi-dev
+RUN apt-get update
+RUN apt-get install -y --fix-missing gcc mongodb wkhtmltopdf xvfb python-dev build-essential libssl-dev libffi-dev
 
 RUN git clone https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend.git
 
