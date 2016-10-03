@@ -125,6 +125,7 @@ function done_mongo {
 
     cd ../../business-ecosystem-logic-proxy
 
+    sed -i "s|config\.port|'$BIZ_ECOSYS_PORT'|" lib/tmfUtils.js
     python /proxy-entrypoint.py
 
     cd ..
