@@ -116,7 +116,7 @@ function done_mongo {
 
     sed -i "s|PAYMENT_METHOD = None|PAYMENT_METHOD = 'paypal'|g" ./settings.py
 
-    sed -i "s|AUTHORIZE_SERVICE = 'http://localhost:8004/authorizeService/apiKeys'|AUTHORIZE_SERVICE = 'http://$BIZ_ECOSYS_HOST:$BIZ_ECOSYS_PORT/authorizeService/apiKeys'|g" ./services_settings.py
+    sed -i "s|AUTHORIZE_SERVICE = 'http://localhost:8004/authorizeService/apiKeys'|AUTHORIZE_SERVICE = 'http://localhost:8000/authorizeService/apiKeys'|g" ./services_settings.py
 
     python /charging-entrypoint.py
 
@@ -162,7 +162,7 @@ if [[ $glassfishStatus -eq 0 && $mysqlStatus -eq 0 ]]; then
     doneGlassfish=0
 fi
 
-if [[ $mongodbStatus -eq 0 ]]; then
+if [[ $mongodbStatus -eq 0 && $doneGlassfish -eq 0 ]]; then
     done_mongo
     doneMongo=0
 fi
@@ -191,7 +191,7 @@ while [[ ($mysqlStatus -ne 0 || $glassfishStatus -ne 0 || $mongodbStatus -ne 0) 
 	    glassfishStatus=$?
     fi
 
-    if [[ $mongodbStatus -eq 0 && $doneMongo -eq 1 ]]; then
+    if [[ $mongodbStatus -eq 0 && $doneMongo -eq 1 && $glassfishStatus -eq 0 && $doneGlassfish -eq 0 ]]; then
 	    done_mongo
 	    doneMongo=0
 
