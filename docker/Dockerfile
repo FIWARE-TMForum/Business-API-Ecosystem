@@ -226,6 +226,7 @@ RUN git checkout v5.4.0
 RUN mkdir -p /data/db/
 RUN mkdir ./src/media
 RUN mkdir ./src/media/bills
+RUN mkdir ./src/media/assets
 
 ENV WORKSPACE=`pwd`
 
@@ -233,7 +234,8 @@ RUN ./python-dep-install.sh
 
 # Create volumes
 VOLUME /data/db
-VOLUME ./src/media
+VOLUME ./src/media/bills
+VOLUME ./src/media/assets
 
 WORKDIR ../
 
