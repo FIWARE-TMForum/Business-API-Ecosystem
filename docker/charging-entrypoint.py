@@ -33,7 +33,7 @@ if not connected:
 try:
     if "site" not in dbNames:
         print("\nCreating external site\n")
-        system("./manage.py createsite external {}:{}".format(getenv("BIZ_ECOSYS_HOST"), getenv("BIZ_ECOSYS_PORT")))
+        system("./manage.py createsite external http://{}:{}".format(getenv("BIZ_ECOSYS_HOST"), getenv("BIZ_ECOSYS_PORT")))
 except:
     print("ERROR CREATESITE EXTERNAL")
     sys.exit()
@@ -41,7 +41,7 @@ except:
 try:
     if "local_site" not in db.collection_names():
         print("\nCreating localsite site\n")
-        system("./manage.py createsite internal http://127.0.0.1:8004")
+        system("./manage.py createsite internal http://127.0.0.1:8006")
 except:
     print("ERROR CREATESITE INTERNAL")
     sys.exit()
