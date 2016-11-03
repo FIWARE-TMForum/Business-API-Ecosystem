@@ -8,7 +8,7 @@ if [[ $DIST ==  "deb" ]]; then
         echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee -a /etc/apt/sources.list.d/webupd8team-java.list
         apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886
     else
-        add-apt-repository ppa:webupd8team/java
+        add-apt-repository -y ppa:webupd8team/java
     fi
 
     apt-get update
@@ -52,8 +52,8 @@ fi
 # Install Glassfish
 cd /opt/biz-ecosystem/
 
-wget http://download.java.net/glassfish/4.1.1/release/glassfish-4.1.1.zip
-unzip glassfish-4.1.1.zip
+wget http://download.java.net/glassfish/4.1/release/glassfish-4.1.zip
+unzip glassfish-4.1.zip
 
 # Deploy MySQL connector
 wget http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.39.tar.gz
