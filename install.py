@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from sh import git, cd, mvn, mysql, asadmin, npm, cp, virtualenv, bash, mkdir, rm
+from sh import git, cd, mvn, mysql, asadmin, npm, node, cp, virtualenv, bash, mkdir, rm
 from os.path import isfile
 import click
 import os.path
@@ -312,6 +312,9 @@ def proxyCommand(host, port, chargingport, glassfishport):
 
         with open("config.js", "w") as f:
             f.write(text)
+
+        mkdir('indexes')
+        node('fill_indexes.js')
 
     print("""
     Finished!
