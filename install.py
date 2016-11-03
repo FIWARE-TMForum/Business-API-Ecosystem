@@ -270,15 +270,17 @@ def chargingbackend(ctx):
 
 
 def generate_endpoints(port, cport):
-    template = "'{}': {{ 'path': '{}', 'port': '{}' }}, "
+    template = "'{}': {{ 'path': '{}', 'port': '{}', 'host': 'localhost', 'appSsl': false }}, "
     base = [template.format(x.get("name"), x.get("root"), port) for x in APIS + [rss]]
+    base.append("'management': { 'path': 'management', 'host': 'localhost', 'port': config.port, 'appSsl': config.https.enabled }")
+
     return ["config.endpoints = {\n"] + base + [template.format("charging", "charging", cport)] + ["};"]
 
 
 @cli.command("proxy")
 @click.option("--host", "-h", default="localhost", type=str)
 @click.option("--port", "-p", default=8000, type=int)
-@click.option("--chargingport", "-c", default=8004, type=int)
+@click.option("--chargingport", "-c", default=8006, type=int)
 @click.option("--glassfishport", "-P", default=8080, type=int)
 def proxyCommand(host, port, chargingport, glassfishport):
     print("Installing logic proxy")
@@ -293,11 +295,10 @@ def proxyCommand(host, port, chargingport, glassfishport):
             text = f.read()
 
         text = text.replace("config.port = 80", "config.port = {}".format(port))\
-                   .replace("'/proxy'", "''")\
-                   .replace("config.appHost = ''", "config.appHost = '127.0.0.1'")
+                   .replace("'/proxy'", "''")
 
         texts = text.split("\n")
-        texts = texts[:50] + generate_endpoints(glassfishport, chargingport) + texts[88:]
+        texts = texts[:47] + generate_endpoints(glassfishport, chargingport) + texts[109:]
 
         text = "\n".join(texts)
 
