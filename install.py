@@ -266,6 +266,14 @@ def chargingbackend(ctx):
     virtualenv("virtenv")
 
     bash("python-dep-install.sh")
+
+    cd('src')
+    mkdir('media')
+    cd('media')
+    mkdir('assets')
+    mkdir('bills')
+
+    cd("..")
     cd("..")
 
 
