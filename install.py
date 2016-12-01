@@ -281,7 +281,7 @@ def chargingbackend(ctx):
 def generate_endpoints(port, cport):
     template = "'{}': {{ 'path': '{}', 'port': '{}', 'host': 'localhost', 'appSsl': false }}, "
     base = [template.format(x.get("name"), x.get("root"), port) for x in APIS + [rss]]
-    base.append("'management': { 'path': 'management', 'host': 'localhost', 'port': config.port, 'appSsl': config.https.enabled }")
+    base.append("'management': { 'path': 'management', 'host': 'localhost', 'port': config.port, 'appSsl': config.https.enabled },")
 
     return ["config.endpoints = {\n"] + base + [template.format("charging", "charging", cport)] + ["};"]
 
