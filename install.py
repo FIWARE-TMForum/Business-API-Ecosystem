@@ -275,6 +275,7 @@ def chargingbackend(ctx):
 
     cd("..")
     cd("..")
+    cd("..")
 
 
 def generate_endpoints(port, cport):
