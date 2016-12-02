@@ -288,7 +288,7 @@ def generate_endpoints(port, cport):
 
 @cli.command("proxy")
 @click.option("--host", "-h", default="localhost", type=str)
-@click.option("--port", "-p", default=8000, type=int)
+@click.option("--port", "-p", default=8004, type=int)
 @click.option("--chargingport", "-c", default=8006, type=int)
 @click.option("--glassfishport", "-P", default=8080, type=int)
 def proxyCommand(host, port, chargingport, glassfishport):
