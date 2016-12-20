@@ -654,6 +654,113 @@ It is also possible to show current jobs or remove jobs using the commands:
 
     $ ./manage.py crontab remove
 
+Configure Apache for running the Charging Backend
+-------------------------------------------------
+
+The Charging Backend is a Django App that can be deployed in different ways. In this case, this installation guide covers
+two different mechanisms: using the Django *runserver* command (as seen in *Running the Charging Backend* section) or
+deploying it using an Apache server. This section explains how to configure Apache and the Charging Backend to do the later.
+
+The first step is installing Apache and mod-wsgi. In Ubuntu/Debian: ::
+
+    sudo apt-get install apache2 libapache2-mod-wsgi
+
+Or in CentOS: ::
+
+    sudo yum install httpd
+
+The next step is populating the file *src/wsgi.py* provided with the Charging Backend ::
+
+    import os
+    import sys
+
+    path = 'charging_path/src'
+    if path not in sys.path:
+        sys.path.insert(0, path)
+
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+
+    import django.core.handlers.wsgi
+    application = django.core.handlers.wsgi.WSGIHandler()
+
+If you are using a virtualenv, then you will need to include its activation in your *wsgi.py* file, so it should look
+similar to the following: ::
+
+    import os
+    import sys
+    import site
+
+    site.addsitedir('virtualenv_path/local/lib/python2.7/site-packages')
+    path = 'charging_path/src'
+    if path not in sys.path:
+        sys.path.insert(0, path)
+
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+
+    # Activate your virtual env
+    activate_env=os.path.expanduser('virtualenv_path/bin/activate_this.py')
+    execfile(activate_env, dict(__file__=activate_env))
+
+    import django.core.handlers.wsgi
+    application = django.core.handlers.wsgi.WSGIHandler()
+
+.. note::
+    Pay special attention to *charging_path* and *virtualenv_path* which have to point to the Charging Backend and the
+    virtualenv paths respectively.
+
+Once WSGI has been configured in the Charging Backend, the next step is creating a vitualhost in Apache. To do that, you
+can create a new site configuration file in Apache *sites-available* directory (located in */etc/apache2/sites-available/*
+in an Ubuntu/Debian system or in */etc/httpd/sites-available* in a CentOS system) and populate it with the following content: ::
+
+    <VirtualHost *:8006>
+            WSGIDaemonProcess char_process
+            WSGIScriptAlias / charging_path/src/wsgi.py
+            WSGIProcessGroup char_process
+            WSGIPassAuthorization On
+
+            WSGIApplicationGroup %{GLOBAL}
+    </VirtualHost>
+
+.. note::
+    Pay special attention to *charging_path* which have to point to the Charging Backend path.
+
+Depending on the version of Apache you are using, you may need to explicitly allow the access to the directory where
+the Charging Backend is deployed in the configuration of the virtualhost. To do that, add the following lines to your virtualhost:
+
+Apache version < 2.4 ::
+
+    <Directory charging_path/src>
+        Order deny,allow
+        Allow from all
+    </Directory>
+
+
+Apache version 2.4+ ::
+
+    <Directory charging_path/src>
+        Require all granted
+    </Directory>
+
+Once you have included the new virtualhost configuration, the next step is configuring Apache to listen in the selected
+port (8006 in the example). To do that, edit */etc/apache2/ports.conf* and include the following line: ::
+
+    Listen 8006
+
+Then, enable the site by linking the configuration file to the *sites-enabled* directory: ::
+
+    ln -s ../sites-available/001-charging.conf ./sites-enabled/001-charging.conf
+
+Once you have the site enabled, restart Apache. In Ubuntu/Debian ::
+
+    $ sudo service apache2 restart
+
+Or in CentOS ::
+
+    $ sudo apachectl restart
+
+.. note::
+    Ensure that the directory when the Changing Backend is installed can be accessed by the Apache user (www-data in
+    Ubuntu/Debian, and apache in CentOS)
 
 Configuring the Logic Proxy
 ===========================
@@ -805,7 +912,9 @@ Running the Charging Backend
 The Charging Backend creates some objects and connections on startup; in this way, the Glassfish APIs must be up an running
 before starting it.
 
-The Charging Backend can be started using the *runserver* command as follows ::
+**Using Django runserver**
+
+The Charging Backend can be started using the *runserver* command provided with Django as follows ::
 
     $ ./manage.py runserver 127.0.0.1:<charging_port>
 
@@ -816,6 +925,16 @@ Or in background ::
 .. note::
     If you have created a virtualenv when installing the backend or used the installation script, you will need to activate the
     virtualenv before starting the Charging Backend
+
+**Using Apache**
+
+If you have deployed the charging backend in Apache, you can stat it with the following command in a Debian/Ubuntu system ::
+
+    $ sudo service apache2 start
+
+Or in a CentOS system ::
+
+    $ sudo apachectl start
 
 Running the Logic Proxy
 =======================
