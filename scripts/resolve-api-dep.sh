@@ -40,7 +40,7 @@ elif [[  $DIST == "rhel" ]]; then
     rpm -ivh mysql-community-release-el7-5.noarch.rpm
     yum update
 
-    yum yum install -y mysql-community-server
+    yum install -y mysql-community-server
     systemctl start mysqld
 
     # Install maven

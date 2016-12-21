@@ -1,5 +1,36 @@
 #!/bin/bash
 
+if [[ -z "$WORKSPACE" ]]
+  then
+    export WORKSPACE=`pwd`
+fi
+
+if [ -f "/etc/centos-release" ]; then
+    export DIST="rhel"
+    CONT=$(cat /etc/centos-release)
+
+    if [[ $CONT == *7* ]]; then
+        echo "7"
+        export VER="7"
+    else
+        export VER="6"
+    fi
+
+elif [ -f "/etc/issue" ]; then
+    # This file can exist in Debian and centos
+    CONTENT=$(cat /etc/issue)
+
+    if [[ $CONTENT == *CentOS* ]]; then
+        export DIST="rhel"
+        export VER="6"
+    elif [[ $CONTENT == *Ubuntu* || $CONTENT == *Debian* ]]; then
+        export DIST="deb"
+        if [[ $CONTENT == *Debian* ]]; then
+            export VER="d"
+        fi
+    fi
+fi
+
 # Install basic dependencies
 cd scripts
 sudo ./resolve-basic-dep.sh
@@ -19,6 +50,13 @@ sudo mkdir /etc/default/rss
 sudo chown $USER:$USER /etc/default/rss
 
 asadmin start-domain
-sudo service mysql restart
-sudo service mongodb restart
+
+if [[ $DIST ==  "deb" ]]; then
+    sudo service mysql restart
+    sudo service mongodb restart
+elif [[  $DIST == "rhel" ]]; then
+    sudo service mysqld restart
+    sudo service mongod restart
+fi
+
 
