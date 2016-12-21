@@ -1,10 +1,5 @@
 #!/bin/bash
 
-if [[ -z "$WORKSPACE" ]]
-  then
-    export WORKSPACE=`pwd`
-fi
-
 if [ -f "/etc/centos-release" ]; then
     export DIST="rhel"
     CONT=$(cat /etc/centos-release)
@@ -33,7 +28,7 @@ fi
 
 # Install basic dependencies
 cd scripts
-sudo ./resolve-basic-dep.sh
+sudo -E ./resolve-basic-dep.sh
 cd ..
 
 # Setup env variables

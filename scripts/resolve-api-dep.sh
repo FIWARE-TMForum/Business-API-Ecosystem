@@ -23,17 +23,17 @@ if [[ $DIST ==  "deb" ]]; then
 elif [[  $DIST == "rhel" ]]; then
     # Install Java
     cd /opt/biz-ecosystem/
-    wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u102-b14/jdk-8u102-linux-x64.tar.gz"
+    wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u111-b14/jdk-8u111-linux-x64.tar.gz"
 
-    tar xzf jdk-8u102-linux-x64.tar.gz
+    tar xzf jdk-8u111-linux-x64.tar.gz
 
-    alternatives --install /usr/bin/java java /opt/biz-ecosystem/jdk1.8.0_102/bin/java 2
+    alternatives --install /usr/bin/java java /opt/biz-ecosystem/jdk1.8.0_111/bin/java 2
     alternatives --config java
 
-    alternatives --install /usr/bin/jar jar /opt/biz-ecosystem/jdk1.8.0_102/bin/jar 2
-    alternatives --install /usr/bin/javac javac /opt/biz-ecosystem/jdk1.8.0_102/bin/javac 2
-    alternatives --set jar /opt/biz-ecosystem/jdk1.8.0_102/bin/jar
-    alternatives --set javac /opt/biz-ecosystem/jdk1.8.0_102/bin/javac
+    alternatives --install /usr/bin/jar jar /opt/biz-ecosystem/jdk1.8.0_111/bin/jar 2
+    alternatives --install /usr/bin/javac javac /opt/biz-ecosystem/jdk1.8.0_111/bin/javac 2
+    alternatives --set jar /opt/biz-ecosystem/jdk1.8.0_111/bin/jar
+    alternatives --set javac /opt/biz-ecosystem/jdk1.8.0_111/bin/javac
 
     # Install Mysql
     wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
@@ -42,6 +42,7 @@ elif [[  $DIST == "rhel" ]]; then
 
     yum install -y mysql-community-server
     systemctl start mysqld
+    mysql_secure_installation
 
     # Install maven
     wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo

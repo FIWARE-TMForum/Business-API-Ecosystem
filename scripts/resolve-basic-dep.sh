@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if [[ -z "$WORKSPACE" ]]
+  then
+    export WORKSPACE=`pwd`
+fi
+
 # Install python3 and pip3 required for executing install.py script
 if [[ $DIST ==  "deb" ]]; then
     apt-get update
