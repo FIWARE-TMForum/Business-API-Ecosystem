@@ -44,7 +44,7 @@ sudo chown -R $USER:$USER /opt/biz-ecosystem
 sudo mkdir /etc/default/rss
 sudo chown $USER:$USER /etc/default/rss
 
-asadmin start-domain
+/opt/biz-ecosystem/glassfish4/glassfish/bin/asadmin start-domain
 
 if [[ $DIST ==  "deb" ]]; then
     sudo service mysql restart

@@ -38,7 +38,7 @@ elif [[  $DIST == "rhel" ]]; then
     # Install Mysql
     wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
     rpm -ivh mysql-community-release-el7-5.noarch.rpm
-    yum update
+    yum update -y
 
     yum install -y mysql-community-server
     systemctl start mysqld
@@ -48,6 +48,7 @@ elif [[  $DIST == "rhel" ]]; then
     wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
     sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
     yum install -y apache-maven
+    yum install -y unzip
 fi
 
 # Install Glassfish
