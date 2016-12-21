@@ -12,7 +12,7 @@ if [[ $DIST ==  "deb" ]]; then
     apt-get install -y python3-pip
     apt-get install unzip
 elif [[  $DIST == "rhel" ]]; then
-    yum install -y centos-release-scl
+    yum install -y epel-release
     yum install -y python34
     curl -O https://bootstrap.pypa.io/get-pip.py
     sudo /usr/bin/python3.4 get-pip.py
