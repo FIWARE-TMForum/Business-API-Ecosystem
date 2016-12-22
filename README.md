@@ -13,7 +13,7 @@
 # Introducction
 
 This is the main repository of the Business API Ecosystem. This project is part of [FIWARE](https://www.fiware.org), and has been developed in 
-collaboration with the [TM Forum](https://www.tmforum.org/). Check also the [FIWARE Catalogue entry for the Business API Ecosystem](https://catalogue.fiware.org)!
+collaboration with the [TM Forum](https://www.tmforum.org/). Check also the [FIWARE Catalogue entry for the Business API Ecosystem](https://catalogue.fiware.org/enablers/business-api-ecosystem-biz-ecosystem-ri)!
 
 The Business API Ecosystem is not a single software repository, but it is composed of different projects which work coordinatelly to provide the complete functionality.
 
