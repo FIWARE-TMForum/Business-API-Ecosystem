@@ -663,11 +663,11 @@ deploying it using an Apache server. This section explains how to configure Apac
 
 The first step is installing Apache and mod-wsgi. In Ubuntu/Debian: ::
 
-    sudo apt-get install apache2 libapache2-mod-wsgi
+    $ sudo apt-get install apache2 libapache2-mod-wsgi
 
 Or in CentOS: ::
 
-    sudo yum install httpd
+    $ sudo yum install httpd mod_wsgi
 
 The next step is populating the file *src/wsgi.py* provided with the Charging Backend ::
 
@@ -709,16 +709,16 @@ similar to the following: ::
     virtualenv paths respectively.
 
 Once WSGI has been configured in the Charging Backend, the next step is creating a vitualhost in Apache. To do that, you
-can create a new site configuration file in Apache *sites-available* directory (located in */etc/apache2/sites-available/*
-in an Ubuntu/Debian system or in */etc/httpd/sites-available* in a CentOS system) and populate it with the following content: ::
+can create a new site configuration file in the Apache related directory (located in */etc/apache2/sites-available/*
+in an Ubuntu/Debian system or in */etc/httpd/conf.d* in a CentOS system) and populate it with the following content: ::
 
     <VirtualHost *:8006>
-            WSGIDaemonProcess char_process
-            WSGIScriptAlias / charging_path/src/wsgi.py
-            WSGIProcessGroup char_process
-            WSGIPassAuthorization On
+        WSGIDaemonProcess char_process
+        WSGIScriptAlias / charging_path/src/wsgi.py
+        WSGIProcessGroup char_process
+        WSGIPassAuthorization On
 
-            WSGIApplicationGroup %{GLOBAL}
+        WSGIApplicationGroup %{GLOBAL}
     </VirtualHost>
 
 .. note::
@@ -742,11 +742,12 @@ Apache version 2.4+ ::
     </Directory>
 
 Once you have included the new virtualhost configuration, the next step is configuring Apache to listen in the selected
-port (8006 in the example). To do that, edit */etc/apache2/ports.conf* and include the following line: ::
+port (8006 in the example). To do that, edit */etc/apache2/ports.conf* in Ubuntu/Debian or */etc/httpd/conf/httpd.conf*
+in CentOS and include the following line: ::
 
     Listen 8006
 
-Then, enable the site by linking the configuration file to the *sites-enabled* directory: ::
+Then, in Ubuntu/Debian systems, enable the site by linking the configuration file to the *sites-enabled* directory: ::
 
     ln -s ../sites-available/001-charging.conf ./sites-enabled/001-charging.conf
 
@@ -759,7 +760,7 @@ Or in CentOS ::
     $ sudo apachectl restart
 
 .. note::
-    Ensure that the directory when the Changing Backend is installed can be accessed by the Apache user (www-data in
+    Ensure that the directory where the Changing Backend is installed can be accessed by the Apache user (www-data in
     Ubuntu/Debian, and apache in CentOS)
 
 Configuring the Logic Proxy
