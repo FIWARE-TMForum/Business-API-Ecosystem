@@ -261,12 +261,12 @@ Additionally, *install.py* specs the binaries of Glassfish and Node to be includ
 by the user using the script. This can be done with the following commands (Note that the commands are supposing both or them are installed at */opt/biz-ecosystem*) ::
 
     $ export PATH=$PATH:/opt/biz-ecosystem/glassfish4/glassfish/bin
-    $ export PATH=$PATH:/opt/biz-ecosystem/node-v4.5.0-linux-x64/bin
+    $ export PATH=$PATH:/opt/biz-ecosystem/node-6.9.1-linux-x64/bin
 
     $ sudo chown -R <your_user>:<your_user> /opt/biz-ecosystem
 
 If you have used *setup_env.sh**, the Glassfish installation directory already belongs to your user. In addition, the
-export PATH command has been included in your bashrc, so to have Node and Glassfish in the PATH exceute the following
+export PATH command has been included in your bashrc, so to have Node and Glassfish in the PATH execute the following
 command: ::
 
     $ source ~/.bashrc
@@ -307,7 +307,7 @@ To make a complete installation of the Business API Ecosystem, execute the follo
 
     $ ./install.py all
 
-In addition to the *all* option, *install.py* provides also several options that allows to execute parts of the installation
+In addition to the *all* option, *install.py* also provides several options that allows to execute parts of the installation
 process, so you can have more control over it. Concretely, the script provides the following options:
 
 * **clone**: Downloads from GitHub the different components of the Business API Ecosystem
