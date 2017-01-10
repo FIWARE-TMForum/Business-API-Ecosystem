@@ -170,12 +170,12 @@ Then, provide a name and an optional description for the catalog. Once you have 
 .. image:: /images/user/catalog5.png
    :align: center
 
-Sellers, can also update their catalogs. To do that, click on the name of the catalog to open the update view.
+Sellers can also update their catalogs. To do that, click on the name of the catalog to open the update view.
 
 .. image:: /images/user/catalog6.png
    :align: center
 
-Then update the fields you want to modify and click on *Update*. In this view, it is possible to change the *Status* of the
+Then, update the fields you want to modify and click on *Update*. In this view, it is possible to change the *Status* of the
 catalog. To start monetizing the catalog, and make it appear in the *Home* you have to change its status to *Launched*
 
 .. image:: /images/user/catalog7.png
@@ -247,7 +247,7 @@ available options, provide the asset, and include its media type.
    :align: center
 
 The next step in the creation of a product is including its characteristics. For including a new characteristic click on
-*Add Characteristic*
+*New Characteristic*
 
 .. image:: /images/user/product12.png
    :align: center
@@ -258,7 +258,7 @@ characteristic by filling the *Create a value* input and clicking on *+*.
 .. image:: /images/user/product13.png
    :align: center
 
-Once you have included all the characteristic info, save it clicking on *Add Characteristic*
+Once you have included all the characteristic info, save it clicking on *Create*
 
 .. image:: /images/user/product14.png
    :align: center
@@ -277,13 +277,21 @@ picture or directly uploading it. Once provided click *Next*
 .. image:: /images/user/product17.png
    :align: center
 
-In the last step, you can specify relationships of the product you are creating with other of your product specs. Once done
-click on *Next* and then on *Create*
+Then, you can specify relationships of the product you are creating with other of your product specs.
 
 .. image:: /images/user/product18.png
    :align: center
 
+In the last step, you can specify the terms and conditions that apply to your product and that must be accepted by those
+customers who want to acquire it. To do that, include a title and a text for your terms and click on *Next*. Note that
+the terms and conditions are not mandatory.
+
 .. image:: /images/user/product19.png
+   :align: center
+
+Once done click on *Next* and then on *Create*
+
+.. image:: /images/user/product19b.png
    :align: center
 
 Sellers can update their products. To do that click on the product specification to be updated.
