@@ -7,10 +7,10 @@ Introduction
 ------------
 
 This installation and administration guide covers the Business API Ecosystem version 5.4.1, corresponding to FIWARE release 5.
-Any feedback on this document is highly welcomed, including bugs, typos or things you think should be included but aren't. Please send them to the "Contact Person" email that appears in the `Catalogue page for this GEi`_.
-Or create an issue at `GitHub Issues`_
+Any feedback on this document is highly welcomed, including bugs, typos or things you think should be included but aren't.
+Please send them to the "Contact Person" email that appears in the `Catalogue page for this GEi`_. Or create an issue at `GitHub Issues`_
 
-.. _Catalogue page for this GEi: http://catalogue.fiware.org
+.. _Catalogue page for this GEi: https://catalogue.fiware.org/enablers/business-api-ecosystem-biz-ecosystem-ri
 .. _GitHub Issues: https://github.com/FIWARE-TMForum/Business-API-Ecosystem/issues/new
 
 The current version of the software has been tested under Ubuntu 14.04, Ubuntu 15.10, Ubuntu 16.04, Debian 7, Debian 8,
