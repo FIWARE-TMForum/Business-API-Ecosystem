@@ -6,11 +6,11 @@ User and Programmer Guide
 Introduction
 ------------
 
-This user and programmer guide covers the Business API Ecosystem version 5.4.0, corresponding to FIWARE release 5.
-Any feedback on this document is highly welcomed, including bugs, typos or things you think should be included but aren't. Please send them to the "Contact Person" email that appears in the `Catalogue page for this GEi`_.
-Or create an issue at `GitHub Issues`_
+This user and programmer guide covers the Business API Ecosystem version 5.4.1, corresponding to FIWARE release 5.
+Any feedback on this document is highly welcomed, including bugs, typos or things you think should be included but aren't.
+Please send them to the "Contact Person" email that appears in the `Catalogue page for this GEi`_. Or create an issue at `GitHub Issues`_
 
-.. _Catalogue page for this GEi: http://catalogue.fiware.org
+.. _Catalogue page for this GEi: https://catalogue.fiware.org/enablers/business-api-ecosystem-biz-ecosystem-ri
 .. _GitHub Issues: https://github.com/FIWARE-TMForum/Business-API-Ecosystem/issues/new
 
 ----------
@@ -31,7 +31,7 @@ To configure the user profile, the first step is opening the user *Settings* loc
 .. image:: /images/user/profile1.png
    :align: center
 
-In the displayed view, it can be seen that some information related to account is already included (*Username*, *Email*, *Access token*).
+In the displayed view, it can be seen that some information related to the account is already included (*Username*, *Email*, *Access token*).
 This information is the one provided by the IdM after the login process.
 
 To create the profile, fill in the required information and click on *Update*
@@ -48,7 +48,7 @@ Once you have created your profile, you can include contact mediums by going to 
    :align: center
 
 In the *Contact Medium* section, there are two different tabs. On the one hand, the *Shipping addresses* tab, where you
-can register the shipping addresses you will be able to use when creating order and purchasing products.
+can register the shipping addresses you will be able to use when creating orders and purchasing products.
 
 To create a shipping address, fill in the fields and click on *Create*
 
@@ -115,7 +115,7 @@ Then, provide a name and an optional description for the category. Once the info
 .. image:: /images/user/cat4.png
    :align: center
 
-Categories in the Business API Ecosystem can be nested, so you can choose a parent category if you want, while creating.
+Categories in the Business API Ecosystem can be nested, so you can choose a parent category if you want while creating.
 
 .. image:: /images/user/cat5.png
    :align: center
