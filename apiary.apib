@@ -210,7 +210,7 @@ Additionally, for uploading assets the API manages the following fields:
 
 ## Asset Info Entry [/charging/api/assetManagement/assets/{id}]
 
-### Get seller asset [GET]
+### Get asset [GET]
 
 + Parameters
 
@@ -235,7 +235,36 @@ Additionally, for uploading assets the API manages the following fields:
             "resourceType": "Java App",
             "metadata": {}
         }
-        
+
+## Product Asset Info Collection [/charging/api/assetManagement/assets/product/{id}]
+
+### Get asset [GET]
+
++ Parameters
+
+    + id - 1 - Id of the product whose assets are retrieved
+    
++ Request
+
+    + Headers
+
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": "1",
+                "href": "https://store.lab.fiware.org/charging/api/assetManagement/assets/1",
+                "version": "1",
+                "contentType": "application/zip",
+                "state": "Active",
+                "location": "https://store.lab.fiware.org/charging/api/media/application.war",
+                "resourceType": "Java App",
+                "metadata": {}
+            }
+        ]    
+
 ## Upload asset task [/charging/api/assetManagement/assets/uploadJob/]
 
 There are two different ways of uploading digital assets in the Business API Ecosystem GE.
@@ -458,7 +487,7 @@ The product catalog management API uses the following fields:
 * **lifecycleStatus** - Current lifecycle status
 * **relatedParty** - List of parties and its roles related to the current catalog. For each party, it is included the id and the href as described in the Party Management section. Additionally, it is inlcluded a *role* field specifing the role of the user in the current catalog
 
-## Product Catalog Collection [/DSProductCatalog/api/catalogManagement/v2/catalog{?offset}{?size}]
+## Product Catalog Collection [/DSProductCatalog/api/catalogManagement/v2/catalog{?offset}{?size}{?name}{?relatedParty.id}{?lifecycleStatus}]
 
 ### List Product Catalogs [GET]
 
@@ -466,6 +495,9 @@ The product catalog management API uses the following fields:
 
     + offset - 1 (optional) - Optional parameter used to specify the first element to be returned
     + size - 10 (optional) - Optional parameter used to limit the number of elements returned
+    + name - Cloud (optional) - Optional paramener used to filter the returned catalogs by name
+    + relatedParty.id - fdelavega (optional) - Optional parameter used to filter the returned catalogs by owner
+    + lifecycleStatus - Active (optional) - Optional parameter used to filter the returned catalogs by lifecycle status
     
 + Request
 
@@ -674,7 +706,7 @@ The Product Specification Management API uses the folowing fields:
         * **valueTo** - Ending value of the characteristic when it is a range. If this field is included, valueFrom must be also included and value must be empty
         * **valueType** - The kind of value the characteristic could have. Valid values are *String* and *Number*
 
-## Product Specification Collection [/DSProductCatalog/api/catalogManagement/v2/productSpecification{?offset}{?size}]
+## Product Specification Collection [/DSProductCatalog/api/catalogManagement/v2/productSpecification{?offset}{?size}{?isBundle}{?productNumber}{?relatedParty.id}{?lifecycleStatus}]
 
 ### List Product Specifications [GET]
 
@@ -682,6 +714,10 @@ The Product Specification Management API uses the folowing fields:
 
     + offset - 1 (optional) - Optional parameter used to specify the first element to be returned
     + size - 10 (optional) - Optional parameter used to limit the number of elements returned
+    + isBundle - true (optional) - Optional parameter used to filter the returned product specifications by isBundle
+    + productNumber - 1 (optional)- Optional parameter used to filter the returned product specifications by product number
+    + relatedParty.id - fdelavega (optional) - Optional parameter used to filter the returned product specifications by owner
+    + lifecycleStatus - Active (optional) - Optional parameter used to filter the returned product specifications by lifecycle status
     
 + Request
 
@@ -1088,7 +1124,7 @@ The Product Offering Management API uses the following fields:
         * **priceCondition** - Condition of the alteration with the format [lt | le | eq | ge | gt ] <price>
         * **price** - fixed price or percentage for be deducted or added to the final price
 
-## Product Offering Collection [/DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?offset}{?size}]
+## Product Offering Collection [/DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?offset}{?size}{?isBundle}{?name}{?relatedParty.id}{?category.id}{?category.name}{?productSpecification.id}{bundledProductOffering.id}{?lifecycleStatus}]
 
 ### List Product Offerings [GET]
 
@@ -1097,6 +1133,14 @@ The Product Offering Management API uses the following fields:
     + catId - 1 - Id of the catalog whose offerings are going to be retrieved
     + offset - 1 (optional) - Optional parameter used to specify the first element to be returned
     + size - 10 (optional) - Optional parameter used to limit the number of elements returned
+    + isBundle - true (optional) - Optional parameter used to filter the returned product offerings by isBundle
+    + name - 1 (optional)- Optional parameter used to filter the returned product offerings by name
+    + relatedParty.id - fdelavega (optional) - Optional parameter used to filter the returned product offerings by owner
+    + category.id - 1 (optional) - Optional parameter used to filter the returned product offerings by category id
+    + category.name - Cloud (optional) - Optional parameter used to filter the returned product offerings by category name
+    + productSpecification.id - 1 (optional) - Optional parameter used to filter the returned product offerings by product specification id
+    + bundledProductOffering.id - 1 (optional) - Optional parameter used to filter the returned product offerings by bundled offerings id
+    + lifecycleStatus - Active (optional) - Optional parameter used to filter the returned product offering by lifecycle status
     
 + Request
 
@@ -1553,7 +1597,7 @@ This API manages the following fields:
     * **product** - Information provided to create the inventory product. It contains the selected characteristics and the selected pricing. The different fields managed by this object are the same as the described in the Inventory Management API Section
 
 
-## Product Order Collection [/DSProductOrdering/api/productOrdering/v2/productOrder{?offset}{?size}]
+## Product Order Collection [/DSProductOrdering/api/productOrdering/v2/productOrder{?offset}{?size}{?priority}{?state}{?relatedParty.id}{?relatedParty.role}]
 
 ### List Product Orders [GET]
 
@@ -1561,6 +1605,10 @@ This API manages the following fields:
 
     + offset - 1 (optional) - Optional parameter used to specify the first element to be returned
     + size - 10 (optional) - Optional parameter used to limit the number of elements returned
+    + priority - 1 (optional) - Optional parameter used to filter the returned orders by priority
+    + state - InProgress (optional) - Optional parameter used to filter the returned orders by state
+    + relatedParty.id - fdelavega (optional) - Optional parameter used to filter the returned orders by user id
+    + relatedParty.role - seller (optional) - Optional parameter used to filter the returned orders by user role (customer or seller)
     
 + Request
 
@@ -1992,7 +2040,7 @@ This API manages the following fields:
 * **relatedParty** - Defines parties which are involved in the product and the role they are playing. For each party, it is included the id and the href as described in the Party Management section. Additionally, it is inlcluded a *role* field specifing the role of the user in the current product
 * **productPrice** - Price model of the product offering selected by the user when the order was created
 
-## Product Collection [/DSProductInventory/api/productInventory/v2/product{?offset}{?size}]
+## Product Collection [/DSProductInventory/api/productInventory/v2/product{?offset}{?size}{?name}{?relatedParty.id}{?status}]
 
 ### List Products [GET]
 
@@ -2000,6 +2048,9 @@ This API manages the following fields:
 
     + offset - 1 (optional) - Optional parameter used to specify the first element to be returned
     + size - 10 (optional) - Optional parameter used to limit the number of elements returned
+    + name - Broadband (optional) - Optional parameter used to filter the returned products by name
+    + relatedParty.id - fdelavega (optional) - Optional parameter used to filter the returned products by owner
+    + status - Active (optional) - Optional parameter used to filter the returned products by status
     
 + Request
 
@@ -3667,12 +3718,14 @@ This API manages the following fields:
     * stakeholderId - provider Id of the Stakeholder
     * modelValue - Value of the stakeholder in the Revenue Sharing Model
 
-## Revenue Sharing Models Collection [/DSRevenueSharing/rss/models{?aggregatorId}{?appProviderId}{?productClass}]
+## Revenue Sharing Models Collection [/DSRevenueSharing/rss/models{?offset}{?size}{?aggregatorId}{?appProviderId}{?productClass}]
 
 ### List Revenue Sharing models [GET]
 
 + Parameters
 
+    + offset - 1 (optional) - Optional parameter used to specify the first element to be returned
+    + size - 10 (optional) - Optional parameter used to limit the number of elements returned
     + aggregatorId: fdelavega@conwet.com (optional) - Optional parameter used to filter by aggragtor Id
     + appProviderId: aarranz (optional) - Optional parameter used to filter by provider Id
     + productClass: orionServices (optional) - Optional parameter used to filter by product class
@@ -3758,12 +3811,14 @@ Additionally, for lauching the settlement process it uses the following fields:
 * **callbackUrl** - Callback to be called when the settlement process ends
 
 
-## Transactions Collection [/DSRevenueSharing/rss/cdrs{?aggregatorId}{?providerId}]
+## Transactions Collection [/DSRevenueSharing/rss/cdrs{?offset}{?size}{?aggregatorId}{?providerId}]
 
 ### List Transactions [GET]
 
 + Parameters
 
+    + offset - 1 (optional) - Optional parameter used to specify the first element to be returned
+    + size - 10 (optional) - Optional parameter used to limit the number of elements returned
     + aggregatorId: fdelavega@conwet.com (optional) - Optional parameter used to filter transactions by aggregatorId
     + providerId: aarranz (optional) - Optional parameter used to filter transactions by providerId 
 
@@ -3809,8 +3864,7 @@ Additionally, for lauching the settlement process it uses the following fields:
             {
                 "aggregatorId": "fdelavega@conwet.com",
                 "providerId": "aarranz",
-                "productClass": "orionServices",
-                "callbackUrl": "http://myservice.com/callback"
+                "productClass": "orionServices"
             }
 
 + Response 202
@@ -3834,12 +3888,14 @@ This API manages the following fields:
     * **stakeholderId** - provider Id of the Stakeholder
     * **modelValue** - Amount that has to be paid to the concrete stakeholder
 
-## Reports Collection [/DSRevenueSharing/rss/settlement/reports{?aggregatorId}{?providerId}{?productClass}]
+## Reports Collection [/DSRevenueSharing/rss/settlement/reports{?offset}{?size}{?aggregatorId}{?providerId}{?productClass}]
 
 ### Get Reports [GET]
 
 + Parameters
 
+    + offset - 1 (optional) - Optional parameter used to specify the first element to be returned
+    + size - 10 (optional) - Optional parameter used to limit the number of elements returned
     + aggregatorId: fdelavega@conwet.com (optional) - Optional parameter used to get only reports with a given aggregator
     + providerId: aarranz (optional) - Optional parameter used to get only reports with a given provider 
     + productClass: orionServices (optional) - Optional parameter used to get only reports with a given product class
