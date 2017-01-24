@@ -1,8 +1,8 @@
 FORMAT: 1A
 HOST: https://store.lab.fiware.org/
 TITLE: FIWARE Business API Ecosystem Open API Specification
-DATE: 15 August 2016
-VERSION: v5.4.3
+DATE: 23 January 2017
+VERSION: v6.1.3
 PREVIOUS_VERSION: v5.4.3
 APIARY_PROJECT: fiwaretmfbizecosystem
 SPEC_URL: https://fiware-tmforum.github.io/Business-API-Ecosystem/
@@ -38,8 +38,8 @@ Pierre Gauthier, Aitor Magán, and Álvaro Arranz García
 
 ## Copyright
 
-* Copyright © 2016 by Universidad Politénica de Madrid
-* Copyright © 2016 by TM Forum
+* Copyright © 2016 - 2017 by Universidad Politénica de Madrid
+* Copyright © 2016 - 2017 by TM Forum
 
 ## License
 
@@ -178,14 +178,14 @@ Additionally, for uploading assets the API manages the following fields:
     * **name** - Name of the asset file being uploaded
     * **data** - Base64 encoded raw data of the asset file being uploaded
 
-## Asset Info collection [/charging/api/assetManagement/assets{?start}{?limit}]
+## Asset Info collection [/charging/api/assetManagement/assets{?offset}{?size}]
 
 ### List seller assets [GET]
 
 + Parameters
 
-    + start - 1 (optional) - Optional parameter used to specify the first element to be returned
-    + limit - 10 (optional) - Optional parameter used to limit the number of elements returned
+    + offset - 1 (optional) - Optional parameter used to specify the first element to be returned
+    + size - 10 (optional) - Optional parameter used to limit the number of elements returned
     
 + Request
 
@@ -307,14 +307,14 @@ Category Management API uses the following fields:
 * **isRoot** - Specifies whether this category is a root category or has a parent
 * **description** - Descrfiption of the category
 
-## Category Collection [/DSProductCatalog/api/catalogManagement/v2/category{?start}{?limit}]
+## Category Collection [/DSProductCatalog/api/catalogManagement/v2/category{?offset}{?size}]
 
 ### List Categories [GET]
 
 + Parameters
 
-    + start - 1 (optional) - Optional parameter used to specify the first element to be returned
-    + limit - 10 (optional) - Optional parameter used to limit the number of elements returned
+    + offset - 1 (optional) - Optional parameter used to specify the first element to be returned
+    + size - 10 (optional) - Optional parameter used to limit the number of elements returned
     
 + Request
 
@@ -458,14 +458,14 @@ The product catalog management API uses the following fields:
 * **lifecycleStatus** - Current lifecycle status
 * **relatedParty** - List of parties and its roles related to the current catalog. For each party, it is included the id and the href as described in the Party Management section. Additionally, it is inlcluded a *role* field specifing the role of the user in the current catalog
 
-## Product Catalog Collection [/DSProductCatalog/api/catalogManagement/v2/catalog{?start}{?limit}]
+## Product Catalog Collection [/DSProductCatalog/api/catalogManagement/v2/catalog{?offset}{?size}]
 
 ### List Product Catalogs [GET]
 
 + Parameters
 
-    + start - 1 (optional) - Optional parameter used to specify the first element to be returned
-    + limit - 10 (optional) - Optional parameter used to limit the number of elements returned
+    + offset - 1 (optional) - Optional parameter used to specify the first element to be returned
+    + size - 10 (optional) - Optional parameter used to limit the number of elements returned
     
 + Request
 
@@ -674,14 +674,14 @@ The Product Specification Management API uses the folowing fields:
         * **valueTo** - Ending value of the characteristic when it is a range. If this field is included, valueFrom must be also included and value must be empty
         * **valueType** - The kind of value the characteristic could have. Valid values are *String* and *Number*
 
-## Product Specification Collection [/DSProductCatalog/api/catalogManagement/v2/productSpecification{?start}{?limit}]
+## Product Specification Collection [/DSProductCatalog/api/catalogManagement/v2/productSpecification{?offset}{?size}]
 
 ### List Product Specifications [GET]
 
 + Parameters
 
-    + start - 1 (optional) - Optional parameter used to specify the first element to be returned
-    + limit - 10 (optional) - Optional parameter used to limit the number of elements returned
+    + offset - 1 (optional) - Optional parameter used to specify the first element to be returned
+    + size - 10 (optional) - Optional parameter used to limit the number of elements returned
     
 + Request
 
@@ -1088,15 +1088,15 @@ The Product Offering Management API uses the following fields:
         * **priceCondition** - Condition of the alteration with the format [lt | le | eq | ge | gt ] <price>
         * **price** - fixed price or percentage for be deducted or added to the final price
 
-## Product Offering Collection [/DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?start}{?limit}]
+## Product Offering Collection [/DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?offset}{?size}]
 
 ### List Product Offerings [GET]
 
 + Parameters
 
     + catId - 1 - Id of the catalog whose offerings are going to be retrieved
-    + start - 1 (optional) - Optional parameter used to specify the first element to be returned
-    + limit - 10 (optional) - Optional parameter used to limit the number of elements returned
+    + offset - 1 (optional) - Optional parameter used to specify the first element to be returned
+    + size - 10 (optional) - Optional parameter used to limit the number of elements returned
     
 + Request
 
@@ -1553,14 +1553,14 @@ This API manages the following fields:
     * **product** - Information provided to create the inventory product. It contains the selected characteristics and the selected pricing. The different fields managed by this object are the same as the described in the Inventory Management API Section
 
 
-## Product Order Collection [/DSProductOrdering/api/productOrdering/v2/productOrder{?start}{?limit}]
+## Product Order Collection [/DSProductOrdering/api/productOrdering/v2/productOrder{?offset}{?size}]
 
 ### List Product Orders [GET]
 
 + Parameters
 
-    + start - 1 (optional) - Optional parameter used to specify the first element to be returned
-    + limit - 10 (optional) - Optional parameter used to limit the number of elements returned
+    + offset - 1 (optional) - Optional parameter used to specify the first element to be returned
+    + size - 10 (optional) - Optional parameter used to limit the number of elements returned
     
 + Request
 
@@ -1992,14 +1992,14 @@ This API manages the following fields:
 * **relatedParty** - Defines parties which are involved in the product and the role they are playing. For each party, it is included the id and the href as described in the Party Management section. Additionally, it is inlcluded a *role* field specifing the role of the user in the current product
 * **productPrice** - Price model of the product offering selected by the user when the order was created
 
-## Product Collection [/DSProductInventory/api/productInventory/v2/product{?start}{?limit}]
+## Product Collection [/DSProductInventory/api/productInventory/v2/product{?offset}{?size}]
 
 ### List Products [GET]
 
 + Parameters
 
-    + start - 1 (optional) - Optional parameter used to specify the first element to be returned
-    + limit - 10 (optional) - Optional parameter used to limit the number of elements returned
+    + offset - 1 (optional) - Optional parameter used to specify the first element to be returned
+    + size - 10 (optional) - Optional parameter used to limit the number of elements returned
     
 + Request
 
