@@ -77,19 +77,11 @@ pre code{
 #references a:link[href^="http://"]:after, a:visited[href^="http://"]:after, 
 #references a:link[href^="https://"]:after, a:visited[href^="https://"]:after,
 #references a:link[href^="ftp://"]:after, a:visited[href^="ftp://"]:after { 
-	content:" (" attr(href) ") ";
-    word-break: break-word;
-    word-wrap: normal; 
+	content:" (" attr(href) ") "; 
 }
 
 pre, pre code{
 	page-break-inside: auto !important;
-}
-
-p code {
-    word-break: normal !important;
-    word-wrap: break-word !important;
-    white-space: pre-wrap;
 }
 
 .goActions a::after, .goApiary a::after, .goExample a::after{

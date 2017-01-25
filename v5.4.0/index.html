@@ -13,8 +13,7 @@
     <link href="css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
     <link href="css/font-awesome.css" rel="stylesheet">
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/monokai.css">
+    <link rel="stylesheet" href="css/idea.css">
     <script src="js/highlight.pack.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
     <script src="js/jquery.min.js"></script>
@@ -140,21 +139,7 @@
                                         <ul class="toc  ">
                                         
                                             
-                                                <li><a href="#action_get-asset" title ="GET - Get asset">GET - Get asset</a></li>
-                                            
-
-                                        
-                                        </ul>
-                                    </li>
-                                
-                              
-                                
-                                    <li>
-                                        <a href="#resource_product-asset-info-collection" title = "Resource Product Asset Info Collection">Resource Product Asset Info Collection</a>
-                                        <ul class="toc  ">
-                                        
-                                            
-                                                <li><a href="#action_get-asset" title ="GET - Get asset">GET - Get asset</a></li>
+                                                <li><a href="#action_get-seller-asset" title ="GET - Get seller asset">GET - Get seller asset</a></li>
                                             
 
                                         
@@ -889,7 +874,7 @@
 	
 
 	
-		<span class="dateLabel">DATE:</span> <span class="dateValue"> 23 January 2017 </span>
+		<span class="dateLabel">DATE:</span> <span class="dateValue"> 15 August 2016 </span>
 	
 
 	
@@ -950,21 +935,6 @@
 
 
 
-	<dl>
-	
-		<dt class="versionLabel">This version:</dt> 
-		<dd class="versionValue"> <a href="https://fiware-tmforum.github.io/Business-API-Ecosystem/v5.4.1">
-			https://fiware-tmforum.github.io/Business-API-Ecosystem/v5.4.1
-		</a> </dd>
-	
-
-	
-		<dt class="versionLabel">Previous version:</dt> 
-		<dd class="versionValue"> <a href="https://fiware-tmforum.github.io/Business-API-Ecosystem/v5.4.0">
-			https://fiware-tmforum.github.io/Business-API-Ecosystem/v5.4.0
-		</a> </dd>
-
-	</dl>
 
 
 
@@ -1042,8 +1012,8 @@
     
         <h2 id="copyright">Copyright</h2>
         <ul>
-<li>Copyright © 2016 - 2017 by Universidad Politénica de Madrid</li>
-<li>Copyright © 2016 - 2017 by TM Forum</li>
+<li>Copyright © 2016 by Universidad Politénica de Madrid</li>
+<li>Copyright © 2016 by TM Forum</li>
 </ul>
     
 
@@ -1064,8 +1034,8 @@
 	
 		<h2 id="license">License</h2>
 		<p>This specification is licensed under the
-[FIWARE Open Specification License (implicit patent license)]
-(<a href="https://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/Implicit_Patents_License)">https://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/Implicit_Patents_License)</a>.</p>
+<a href="https://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/Implicit_Patents_License">FIWARE Open Specification License (implicit patent license)</a>.</p>
+
 	
 
 	
@@ -1199,7 +1169,7 @@ available version on <a href="https://github.com/FIWARE-TMForum">GitHub</a>.</p>
                                     <a href="#action_list-seller-assets" title ="GET - List seller assets"><span class="actionMethod">GET</span> - List seller assets
                                     
                                         
-                                            [/charging/api/assetManagement/assets{?offset}{?size}]
+                                            [/charging/api/assetManagement/assets{?start}{?limit}]
                                         
                                     
                                     </a>
@@ -1222,36 +1192,10 @@ available version on <a href="https://github.com/FIWARE-TMForum">GitHub</a>.</p>
                         
                             
                                 <li>
-                                    <a href="#action_get-asset" title ="GET - Get asset"><span class="actionMethod">GET</span> - Get asset
+                                    <a href="#action_get-seller-asset" title ="GET - Get seller asset"><span class="actionMethod">GET</span> - Get seller asset
                                     
                                         
                                             [/charging/api/assetManagement/assets/{id}]
-                                        
-                                    
-                                    </a>
-                                </li>
-                            
-
-                        
-                        </ul>
-                    </li>
-                
-              
-                
-                    <li>
-                        <a href="#resource_product-asset-info-collection" title = "Resource Product Asset Info Collection">
-                        
-                            Product Asset Info Collection
-                        
-                        </a>
-                        <ul class="toc  ">
-                        
-                            
-                                <li>
-                                    <a href="#action_get-asset" title ="GET - Get asset"><span class="actionMethod">GET</span> - Get asset
-                                    
-                                        
-                                            [/charging/api/assetManagement/assets/product/{id}]
                                         
                                     
                                     </a>
@@ -1313,7 +1257,7 @@ available version on <a href="https://github.com/FIWARE-TMForum">GitHub</a>.</p>
                                     <a href="#action_list-categories" title ="GET - List Categories"><span class="actionMethod">GET</span> - List Categories
                                     
                                         
-                                            [/DSProductCatalog/api/catalogManagement/v2/category{?offset}{?size}]
+                                            [/DSProductCatalog/api/catalogManagement/v2/category{?start}{?limit}]
                                         
                                     
                                     </a>
@@ -1326,7 +1270,7 @@ available version on <a href="https://github.com/FIWARE-TMForum">GitHub</a>.</p>
                                     <a href="#action_create-category" title ="POST - Create Category"><span class="actionMethod">POST</span> - Create Category
                                     
                                         
-                                            [/DSProductCatalog/api/catalogManagement/v2/category{?offset}{?size}]
+                                            [/DSProductCatalog/api/catalogManagement/v2/category{?start}{?limit}]
                                         
                                     
                                     </a>
@@ -1401,7 +1345,7 @@ available version on <a href="https://github.com/FIWARE-TMForum">GitHub</a>.</p>
                                     <a href="#action_list-product-catalogs" title ="GET - List Product Catalogs"><span class="actionMethod">GET</span> - List Product Catalogs
                                     
                                         
-                                            [/DSProductCatalog/api/catalogManagement/v2/catalog{?offset}{?size}{?name}{?relatedParty.id}{?lifecycleStatus}]
+                                            [/DSProductCatalog/api/catalogManagement/v2/catalog{?start}{?limit}]
                                         
                                     
                                     </a>
@@ -1414,7 +1358,7 @@ available version on <a href="https://github.com/FIWARE-TMForum">GitHub</a>.</p>
                                     <a href="#action_create-product-catalog" title ="POST - Create Product Catalog"><span class="actionMethod">POST</span> - Create Product Catalog
                                     
                                         
-                                            [/DSProductCatalog/api/catalogManagement/v2/catalog{?offset}{?size}{?name}{?relatedParty.id}{?lifecycleStatus}]
+                                            [/DSProductCatalog/api/catalogManagement/v2/catalog{?start}{?limit}]
                                         
                                     
                                     </a>
@@ -1489,7 +1433,7 @@ available version on <a href="https://github.com/FIWARE-TMForum">GitHub</a>.</p>
                                     <a href="#action_list-product-specifications" title ="GET - List Product Specifications"><span class="actionMethod">GET</span> - List Product Specifications
                                     
                                         
-                                            [/DSProductCatalog/api/catalogManagement/v2/productSpecification{?offset}{?size}{?isBundle}{?productNumber}{?relatedParty.id}{?lifecycleStatus}]
+                                            [/DSProductCatalog/api/catalogManagement/v2/productSpecification{?start}{?limit}]
                                         
                                     
                                     </a>
@@ -1502,7 +1446,7 @@ available version on <a href="https://github.com/FIWARE-TMForum">GitHub</a>.</p>
                                     <a href="#action_create-product-specification" title ="POST - Create Product Specification"><span class="actionMethod">POST</span> - Create Product Specification
                                     
                                         
-                                            [/DSProductCatalog/api/catalogManagement/v2/productSpecification{?offset}{?size}{?isBundle}{?productNumber}{?relatedParty.id}{?lifecycleStatus}]
+                                            [/DSProductCatalog/api/catalogManagement/v2/productSpecification{?start}{?limit}]
                                         
                                     
                                     </a>
@@ -1577,7 +1521,7 @@ available version on <a href="https://github.com/FIWARE-TMForum">GitHub</a>.</p>
                                     <a href="#action_list-product-offerings" title ="GET - List Product Offerings"><span class="actionMethod">GET</span> - List Product Offerings
                                     
                                         
-                                            [/DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?offset}{?size}{?isBundle}{?name}{?relatedParty.id}{?category.id}{?category.name}{?productSpecification.id}{bundledProductOffering.id}{?lifecycleStatus}]
+                                            [/DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?start}{?limit}]
                                         
                                     
                                     </a>
@@ -1590,7 +1534,7 @@ available version on <a href="https://github.com/FIWARE-TMForum">GitHub</a>.</p>
                                     <a href="#action_create-product-offering" title ="POST - Create Product Offering"><span class="actionMethod">POST</span> - Create Product Offering
                                     
                                         
-                                            [/DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?offset}{?size}{?isBundle}{?name}{?relatedParty.id}{?category.id}{?category.name}{?productSpecification.id}{bundledProductOffering.id}{?lifecycleStatus}]
+                                            [/DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?start}{?limit}]
                                         
                                     
                                     </a>
@@ -1665,7 +1609,7 @@ available version on <a href="https://github.com/FIWARE-TMForum">GitHub</a>.</p>
                                     <a href="#action_list-product-orders" title ="GET - List Product Orders"><span class="actionMethod">GET</span> - List Product Orders
                                     
                                         
-                                            [/DSProductOrdering/api/productOrdering/v2/productOrder{?offset}{?size}{?priority}{?state}{?relatedParty.id}{?relatedParty.role}]
+                                            [/DSProductOrdering/api/productOrdering/v2/productOrder{?start}{?limit}]
                                         
                                     
                                     </a>
@@ -1678,7 +1622,7 @@ available version on <a href="https://github.com/FIWARE-TMForum">GitHub</a>.</p>
                                     <a href="#action_create-product-order" title ="POST - Create Product Order"><span class="actionMethod">POST</span> - Create Product Order
                                     
                                         
-                                            [/DSProductOrdering/api/productOrdering/v2/productOrder{?offset}{?size}{?priority}{?state}{?relatedParty.id}{?relatedParty.role}]
+                                            [/DSProductOrdering/api/productOrdering/v2/productOrder{?start}{?limit}]
                                         
                                     
                                     </a>
@@ -1753,7 +1697,7 @@ available version on <a href="https://github.com/FIWARE-TMForum">GitHub</a>.</p>
                                     <a href="#action_list-products" title ="GET - List Products"><span class="actionMethod">GET</span> - List Products
                                     
                                         
-                                            [/DSProductInventory/api/productInventory/v2/product{?offset}{?size}{?name}{?relatedParty.id}{?status}]
+                                            [/DSProductInventory/api/productInventory/v2/product{?start}{?limit}]
                                         
                                     
                                     </a>
@@ -2285,7 +2229,7 @@ available version on <a href="https://github.com/FIWARE-TMForum">GitHub</a>.</p>
                                     <a href="#action_list-revenue-sharing-models" title ="GET - List Revenue Sharing models"><span class="actionMethod">GET</span> - List Revenue Sharing models
                                     
                                         
-                                            [/DSRevenueSharing/rss/models{?offset}{?size}{?aggregatorId}{?appProviderId}{?productClass}]
+                                            [/DSRevenueSharing/rss/models{?aggregatorId}{?appProviderId}{?productClass}]
                                         
                                     
                                     </a>
@@ -2298,7 +2242,7 @@ available version on <a href="https://github.com/FIWARE-TMForum">GitHub</a>.</p>
                                     <a href="#action_create-revenue-sharing-model" title ="POST - Create Revenue Sharing Model"><span class="actionMethod">POST</span> - Create Revenue Sharing Model
                                     
                                         
-                                            [/DSRevenueSharing/rss/models{?offset}{?size}{?aggregatorId}{?appProviderId}{?productClass}]
+                                            [/DSRevenueSharing/rss/models{?aggregatorId}{?appProviderId}{?productClass}]
                                         
                                     
                                     </a>
@@ -2334,7 +2278,7 @@ available version on <a href="https://github.com/FIWARE-TMForum">GitHub</a>.</p>
                                     <a href="#action_list-transactions" title ="GET - List Transactions"><span class="actionMethod">GET</span> - List Transactions
                                     
                                         
-                                            [/DSRevenueSharing/rss/cdrs{?offset}{?size}{?aggregatorId}{?providerId}]
+                                            [/DSRevenueSharing/rss/cdrs{?aggregatorId}{?providerId}]
                                         
                                     
                                     </a>
@@ -2396,7 +2340,7 @@ available version on <a href="https://github.com/FIWARE-TMForum">GitHub</a>.</p>
                                     <a href="#action_get-reports" title ="GET - Get Reports"><span class="actionMethod">GET</span> - Get Reports
                                     
                                         
-                                            [/DSRevenueSharing/rss/settlement/reports{?offset}{?size}{?aggregatorId}{?providerId}{?productClass}]
+                                            [/DSRevenueSharing/rss/settlement/reports{?aggregatorId}{?providerId}{?productClass}]
                                         
                                     
                                     </a>
@@ -2866,7 +2810,7 @@ for the creation of digital products or as attachments in product specifications
                  <div class= "header" >
                  
                     <h3 id="h-resource_asset-info-collection">Asset Info collection</h3>
-                    <span class="extra-header">[/charging/api/assetManagement/assets{?offset}{?size}]</span>
+                    <span class="extra-header">[/charging/api/assetManagement/assets{?start}{?limit}]</span>
                  
                  </div>
                 
@@ -2898,7 +2842,7 @@ for the creation of digital products or as attachments in product specifications
             <span class="extra-header">
 		GET 
                 
-                    /charging/api/assetManagement/assets{?offset}{?size}
+                    /charging/api/assetManagement/assets{?start}{?limit}
                 
             </span>
         
@@ -2916,18 +2860,18 @@ for the creation of digital products or as attachments in product specifications
 	<dl>
 		
 			<dt>
-				<span class="parameter-name">offset</span> <span class="parameter-attributes">(optional)</span>
+				<span class="parameter-name">limit</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Optional parameter used to specify the first element to be returned</p>
+				<p>10 &#40;optional&#41; - Optional parameter used to limit the number of elements returned</p>
 				
 			</dd>
 		
 			<dt>
-				<span class="parameter-name">size</span> <span class="parameter-attributes">(optional)</span>
+				<span class="parameter-name">start</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Optional parameter used to limit the number of elements returned</p>
+				<p>1 &#40;optional&#41; - Optional parameter used to specify the first element to be returned</p>
 				
 			</dd>
 		
@@ -3020,12 +2964,12 @@ for the creation of digital products or as attachments in product specifications
 
 
                     
-                        <div id="action_get-asset" class="action GET">
+                        <div id="action_get-seller-asset" class="action GET">
 
                         
     <div class="header">
         
-            <h4 id="h-action_get-asset">Get asset </h4>
+            <h4 id="h-action_get-seller-asset">Get seller asset </h4>
             <span class="extra-header">
 		GET 
                 
@@ -3037,7 +2981,7 @@ for the creation of digital products or as attachments in product specifications
     </div>
 
         
-                            <div id="get-asset_body" class="">
+                            <div id="get-seller-asset_body" class="">
                                 
                                 
                                 
@@ -3050,7 +2994,7 @@ for the creation of digital products or as attachments in product specifications
 				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the element to be retrieved</p>
+				<p>1 - Id of the element to be retrieved</p>
 				
 			</dd>
 		
@@ -3071,7 +3015,7 @@ for the creation of digital products or as attachments in product specifications
                                         
                                 
                                 <div><div class="goExample">
-                                        <a href="#action_get-asset_examples">Go to example</a>
+                                        <a href="#action_get-seller-asset_examples">Go to example</a>
                                     </div>
                                     
     <div class="goApiary">
@@ -3098,130 +3042,7 @@ for the creation of digital products or as attachments in product specifications
                 
             
             
-                <a target="_blank" href="http://docs.fiwaretmfbizecosystem.apiary.io/#reference/asset-management-api/asset-info-entry/get-asset">View in Apiary</a>
-            
-        
-    
-        
-    
-        
-    
-    </div>
-
-                                
-                                </div>
-                                
-                            </div>
-                        </div>
-                    
-            </section>
-        
-            <section id="resource_product-asset-info-collection" class="resource">
-                 <div class= "header" >
-                 
-                    <h3 id="h-resource_product-asset-info-collection">Product Asset Info Collection</h3>
-                    <span class="extra-header">[/charging/api/assetManagement/assets/product/{id}]</span>
-                 
-                 </div>
-                
-                
-                
-
-		        
-                
-                
-
-
-
-
-
-
-    
-
-
-                
-
-
-                    
-                        <div id="action_get-asset" class="action GET">
-
-                        
-    <div class="header">
-        
-            <h4 id="h-action_get-asset">Get asset </h4>
-            <span class="extra-header">
-		GET 
-                
-                    /charging/api/assetManagement/assets/product/{id}
-                
-            </span>
-        
-
-    </div>
-
-        
-                            <div id="get-asset_body" class="">
-                                
-                                
-                                
-                                
-
-	<span class="parameters-title">Parameters</span>
-	<dl>
-		
-			<dt>
-				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
-			</dt>
-			<dd>
-				<p>Id of the product whose assets are retrieved</p>
-				
-			</dd>
-		
-	</dl>
-			
-                                
-                                
-
-
-
-      
-
-                                
-
-                                    
-                                        
-                                        
-                                        
-                                
-                                <div><div class="goExample">
-                                        <a href="#action_get-asset_examples">Go to example</a>
-                                    </div>
-                                    
-    <div class="goApiary">
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-            
-                
-            
-            
-
-            
-                
-            
-            
-                <a target="_blank" href="http://docs.fiwaretmfbizecosystem.apiary.io/#reference/asset-management-api/product-asset-info-collection/get-asset">View in Apiary</a>
+                <a target="_blank" href="http://docs.fiwaretmfbizecosystem.apiary.io/#reference/asset-management-api/asset-info-entry/get-seller-asset">View in Apiary</a>
             
         
     
@@ -3398,7 +3219,7 @@ containers.  Categories can contain other categories being possible to create a 
                  <div class= "header" >
                  
                     <h3 id="h-resource_category-collection">Category Collection</h3>
-                    <span class="extra-header">[/DSProductCatalog/api/catalogManagement/v2/category{?offset}{?size}]</span>
+                    <span class="extra-header">[/DSProductCatalog/api/catalogManagement/v2/category{?start}{?limit}]</span>
                  
                  </div>
                 
@@ -3430,7 +3251,7 @@ containers.  Categories can contain other categories being possible to create a 
             <span class="extra-header">
 		GET 
                 
-                    /DSProductCatalog/api/catalogManagement/v2/category{?offset}{?size}
+                    /DSProductCatalog/api/catalogManagement/v2/category{?start}{?limit}
                 
             </span>
         
@@ -3448,18 +3269,18 @@ containers.  Categories can contain other categories being possible to create a 
 	<dl>
 		
 			<dt>
-				<span class="parameter-name">offset</span> <span class="parameter-attributes">(optional)</span>
+				<span class="parameter-name">limit</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Optional parameter used to specify the first element to be returned</p>
+				<p>10 &#40;optional&#41; - Optional parameter used to limit the number of elements returned</p>
 				
 			</dd>
 		
 			<dt>
-				<span class="parameter-name">size</span> <span class="parameter-attributes">(optional)</span>
+				<span class="parameter-name">start</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Optional parameter used to limit the number of elements returned</p>
+				<p>1 &#40;optional&#41; - Optional parameter used to specify the first element to be returned</p>
 				
 			</dd>
 		
@@ -3532,7 +3353,7 @@ containers.  Categories can contain other categories being possible to create a 
             <span class="extra-header">
 		POST 
                 
-                    /DSProductCatalog/api/catalogManagement/v2/category{?offset}{?size}
+                    /DSProductCatalog/api/catalogManagement/v2/category{?start}{?limit}
                 
             </span>
         
@@ -3663,7 +3484,7 @@ containers.  Categories can contain other categories being possible to create a 
 				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the category to be returned</p>
+				<p>1 - Id of the category to be returned</p>
 				
 			</dd>
 		
@@ -3757,7 +3578,7 @@ containers.  Categories can contain other categories being possible to create a 
 				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the category to be updated</p>
+				<p>1 - Id of the category to be updated</p>
 				
 			</dd>
 		
@@ -3863,7 +3684,7 @@ according to the seller needs.</p>
                  <div class= "header" >
                  
                     <h3 id="h-resource_product-catalog-collection">Product Catalog Collection</h3>
-                    <span class="extra-header">[/DSProductCatalog/api/catalogManagement/v2/catalog{?offset}{?size}{?name}{?relatedParty.id}{?lifecycleStatus}]</span>
+                    <span class="extra-header">[/DSProductCatalog/api/catalogManagement/v2/catalog{?start}{?limit}]</span>
                  
                  </div>
                 
@@ -3895,7 +3716,7 @@ according to the seller needs.</p>
             <span class="extra-header">
 		GET 
                 
-                    /DSProductCatalog/api/catalogManagement/v2/catalog{?offset}{?size}{?name}{?relatedParty.id}{?lifecycleStatus}
+                    /DSProductCatalog/api/catalogManagement/v2/catalog{?start}{?limit}
                 
             </span>
         
@@ -3913,42 +3734,18 @@ according to the seller needs.</p>
 	<dl>
 		
 			<dt>
-				<span class="parameter-name">lifecycleStatus</span> <span class="parameter-attributes">(optional)</span>
+				<span class="parameter-name">limit</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Optional parameter used to filter the returned catalogs by lifecycle status</p>
+				<p>10 &#40;optional&#41; - Optional parameter used to limit the number of elements returned</p>
 				
 			</dd>
 		
 			<dt>
-				<span class="parameter-name">name</span> <span class="parameter-attributes">(optional)</span>
+				<span class="parameter-name">start</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Optional paramener used to filter the returned catalogs by name</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">offset</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to specify the first element to be returned</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">relatedParty.id</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to filter the returned catalogs by owner</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">size</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to limit the number of elements returned</p>
+				<p>1 &#40;optional&#41; - Optional parameter used to specify the first element to be returned</p>
 				
 			</dd>
 		
@@ -4021,7 +3818,7 @@ according to the seller needs.</p>
             <span class="extra-header">
 		POST 
                 
-                    /DSProductCatalog/api/catalogManagement/v2/catalog{?offset}{?size}{?name}{?relatedParty.id}{?lifecycleStatus}
+                    /DSProductCatalog/api/catalogManagement/v2/catalog{?start}{?limit}
                 
             </span>
         
@@ -4152,7 +3949,7 @@ according to the seller needs.</p>
 				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the catalog to be retrieved</p>
+				<p>1 - Id of the catalog to be retrieved</p>
 				
 			</dd>
 		
@@ -4246,7 +4043,7 @@ according to the seller needs.</p>
 				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the catalog to be updated</p>
+				<p>1 - Id of the catalog to be updated</p>
 				
 			</dd>
 		
@@ -4393,7 +4190,7 @@ a party role.</p>
                  <div class= "header" >
                  
                     <h3 id="h-resource_product-specification-collection">Product Specification Collection</h3>
-                    <span class="extra-header">[/DSProductCatalog/api/catalogManagement/v2/productSpecification{?offset}{?size}{?isBundle}{?productNumber}{?relatedParty.id}{?lifecycleStatus}]</span>
+                    <span class="extra-header">[/DSProductCatalog/api/catalogManagement/v2/productSpecification{?start}{?limit}]</span>
                  
                  </div>
                 
@@ -4425,7 +4222,7 @@ a party role.</p>
             <span class="extra-header">
 		GET 
                 
-                    /DSProductCatalog/api/catalogManagement/v2/productSpecification{?offset}{?size}{?isBundle}{?productNumber}{?relatedParty.id}{?lifecycleStatus}
+                    /DSProductCatalog/api/catalogManagement/v2/productSpecification{?start}{?limit}
                 
             </span>
         
@@ -4443,50 +4240,18 @@ a party role.</p>
 	<dl>
 		
 			<dt>
-				<span class="parameter-name">isBundle</span> <span class="parameter-attributes">(optional)</span>
+				<span class="parameter-name">limit</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Optional parameter used to filter the returned product specifications by isBundle</p>
+				<p>10 &#40;optional&#41; - Optional parameter used to limit the number of elements returned</p>
 				
 			</dd>
 		
 			<dt>
-				<span class="parameter-name">lifecycleStatus</span> <span class="parameter-attributes">(optional)</span>
+				<span class="parameter-name">start</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Optional parameter used to filter the returned product specifications by lifecycle status</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">offset</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to specify the first element to be returned</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">productNumber</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to filter the returned product specifications by product number</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">relatedParty.id</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to filter the returned product specifications by owner</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">size</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to limit the number of elements returned</p>
+				<p>1 &#40;optional&#41; - Optional parameter used to specify the first element to be returned</p>
 				
 			</dd>
 		
@@ -4559,7 +4324,7 @@ a party role.</p>
             <span class="extra-header">
 		POST 
                 
-                    /DSProductCatalog/api/catalogManagement/v2/productSpecification{?offset}{?size}{?isBundle}{?productNumber}{?relatedParty.id}{?lifecycleStatus}
+                    /DSProductCatalog/api/catalogManagement/v2/productSpecification{?start}{?limit}
                 
             </span>
         
@@ -4690,7 +4455,7 @@ a party role.</p>
 				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the product to be retrieved</p>
+				<p>1 - Id of the product to be retrieved</p>
 				
 			</dd>
 		
@@ -4784,7 +4549,7 @@ a party role.</p>
 				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the product specification to be updated</p>
+				<p>1 - Id of the product specification to be updated</p>
 				
 			</dd>
 		
@@ -4931,7 +4696,7 @@ includes pricing information.</p>
                  <div class= "header" >
                  
                     <h3 id="h-resource_product-offering-collection">Product Offering Collection</h3>
-                    <span class="extra-header">[/DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?offset}{?size}{?isBundle}{?name}{?relatedParty.id}{?category.id}{?category.name}{?productSpecification.id}{bundledProductOffering.id}{?lifecycleStatus}]</span>
+                    <span class="extra-header">[/DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?start}{?limit}]</span>
                  
                  </div>
                 
@@ -4963,7 +4728,7 @@ includes pricing information.</p>
             <span class="extra-header">
 		GET 
                 
-                    /DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?offset}{?size}{?isBundle}{?name}{?relatedParty.id}{?category.id}{?category.name}{?productSpecification.id}{bundledProductOffering.id}{?lifecycleStatus}
+                    /DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?start}{?limit}
                 
             </span>
         
@@ -4981,90 +4746,26 @@ includes pricing information.</p>
 	<dl>
 		
 			<dt>
-				<span class="parameter-name">bundledProductOffering.id</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to filter the returned product offerings by bundled offerings id</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">category.id</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to filter the returned product offerings by category id</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">category.name</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to filter the returned product offerings by category name</p>
-				
-			</dd>
-		
-			<dt>
 				<span class="parameter-name">catId</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the catalog whose offerings are going to be retrieved</p>
+				<p>1 - Id of the catalog whose offerings are going to be retrieved</p>
 				
 			</dd>
 		
 			<dt>
-				<span class="parameter-name">isBundle</span> <span class="parameter-attributes">(optional)</span>
+				<span class="parameter-name">limit</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Optional parameter used to filter the returned product offerings by isBundle</p>
+				<p>10 &#40;optional&#41; - Optional parameter used to limit the number of elements returned</p>
 				
 			</dd>
 		
 			<dt>
-				<span class="parameter-name">lifecycleStatus</span> <span class="parameter-attributes">(optional)</span>
+				<span class="parameter-name">start</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Optional parameter used to filter the returned product offering by lifecycle status</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">name</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to filter the returned product offerings by name</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">offset</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to specify the first element to be returned</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">productSpecification.id</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to filter the returned product offerings by product specification id</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">relatedParty.id</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to filter the returned product offerings by owner</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">size</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to limit the number of elements returned</p>
+				<p>1 &#40;optional&#41; - Optional parameter used to specify the first element to be returned</p>
 				
 			</dd>
 		
@@ -5137,7 +4838,7 @@ includes pricing information.</p>
             <span class="extra-header">
 		POST 
                 
-                    /DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?offset}{?size}{?isBundle}{?name}{?relatedParty.id}{?category.id}{?category.name}{?productSpecification.id}{bundledProductOffering.id}{?lifecycleStatus}
+                    /DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?start}{?limit}
                 
             </span>
         
@@ -5158,7 +4859,7 @@ includes pricing information.</p>
 				<span class="parameter-name">catId</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the catalog whose offerings are going to be retrieved</p>
+				<p>1 - Id of the catalog whose offerings are going to be retrieved</p>
 				
 			</dd>
 		
@@ -5281,7 +4982,7 @@ includes pricing information.</p>
 				<span class="parameter-name">catId</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the catalog whose offerings are going to be retrieved</p>
+				<p>1 - Id of the catalog whose offerings are going to be retrieved</p>
 				
 			</dd>
 		
@@ -5289,7 +4990,7 @@ includes pricing information.</p>
 				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the product offering to be retrieved</p>
+				<p>1 - Id of the product offering to be retrieved</p>
 				
 			</dd>
 		
@@ -5383,7 +5084,7 @@ includes pricing information.</p>
 				<span class="parameter-name">catId</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the catalog whose offerings are going to be retrieved</p>
+				<p>1 - Id of the catalog whose offerings are going to be retrieved</p>
 				
 			</dd>
 		
@@ -5391,7 +5092,7 @@ includes pricing information.</p>
 				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the product offering to be retrieved</p>
+				<p>1 - Id of the product offering to be retrieved</p>
 				
 			</dd>
 		
@@ -5531,7 +5232,7 @@ configurable characteristics as well as the concrete pricing to be aplied.</p>
                  <div class= "header" >
                  
                     <h3 id="h-resource_product-order-collection">Product Order Collection</h3>
-                    <span class="extra-header">[/DSProductOrdering/api/productOrdering/v2/productOrder{?offset}{?size}{?priority}{?state}{?relatedParty.id}{?relatedParty.role}]</span>
+                    <span class="extra-header">[/DSProductOrdering/api/productOrdering/v2/productOrder{?start}{?limit}]</span>
                  
                  </div>
                 
@@ -5563,7 +5264,7 @@ configurable characteristics as well as the concrete pricing to be aplied.</p>
             <span class="extra-header">
 		GET 
                 
-                    /DSProductOrdering/api/productOrdering/v2/productOrder{?offset}{?size}{?priority}{?state}{?relatedParty.id}{?relatedParty.role}
+                    /DSProductOrdering/api/productOrdering/v2/productOrder{?start}{?limit}
                 
             </span>
         
@@ -5581,50 +5282,18 @@ configurable characteristics as well as the concrete pricing to be aplied.</p>
 	<dl>
 		
 			<dt>
-				<span class="parameter-name">offset</span> <span class="parameter-attributes">(optional)</span>
+				<span class="parameter-name">limit</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Optional parameter used to specify the first element to be returned</p>
+				<p>10 &#40;optional&#41; - Optional parameter used to limit the number of elements returned</p>
 				
 			</dd>
 		
 			<dt>
-				<span class="parameter-name">priority</span> <span class="parameter-attributes">(optional)</span>
+				<span class="parameter-name">start</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Optional parameter used to filter the returned orders by priority</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">relatedParty.id</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to filter the returned orders by user id</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">relatedParty.role</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to filter the returned orders by user role &#40;customer or seller&#41;</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">size</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to limit the number of elements returned</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">state</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to filter the returned orders by state</p>
+				<p>1 &#40;optional&#41; - Optional parameter used to specify the first element to be returned</p>
 				
 			</dd>
 		
@@ -5697,7 +5366,7 @@ configurable characteristics as well as the concrete pricing to be aplied.</p>
             <span class="extra-header">
 		POST 
                 
-                    /DSProductOrdering/api/productOrdering/v2/productOrder{?offset}{?size}{?priority}{?state}{?relatedParty.id}{?relatedParty.role}
+                    /DSProductOrdering/api/productOrdering/v2/productOrder{?start}{?limit}
                 
             </span>
         
@@ -5828,7 +5497,7 @@ configurable characteristics as well as the concrete pricing to be aplied.</p>
 				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the product order to be retrieved</p>
+				<p>1 - Id of the product order to be retrieved</p>
 				
 			</dd>
 		
@@ -5922,7 +5591,7 @@ configurable characteristics as well as the concrete pricing to be aplied.</p>
 				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the product order to be updated</p>
+				<p>1 - Id of the product order to be updated</p>
 				
 			</dd>
 		
@@ -6049,7 +5718,7 @@ pricing model selected. Note that this API does not allow to create or update pr
                  <div class= "header" >
                  
                     <h3 id="h-resource_product-collection">Product Collection</h3>
-                    <span class="extra-header">[/DSProductInventory/api/productInventory/v2/product{?offset}{?size}{?name}{?relatedParty.id}{?status}]</span>
+                    <span class="extra-header">[/DSProductInventory/api/productInventory/v2/product{?start}{?limit}]</span>
                  
                  </div>
                 
@@ -6081,7 +5750,7 @@ pricing model selected. Note that this API does not allow to create or update pr
             <span class="extra-header">
 		GET 
                 
-                    /DSProductInventory/api/productInventory/v2/product{?offset}{?size}{?name}{?relatedParty.id}{?status}
+                    /DSProductInventory/api/productInventory/v2/product{?start}{?limit}
                 
             </span>
         
@@ -6099,42 +5768,18 @@ pricing model selected. Note that this API does not allow to create or update pr
 	<dl>
 		
 			<dt>
-				<span class="parameter-name">name</span> <span class="parameter-attributes">(optional)</span>
+				<span class="parameter-name">limit</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Optional parameter used to filter the returned products by name</p>
+				<p>10 &#40;optional&#41; - Optional parameter used to limit the number of elements returned</p>
 				
 			</dd>
 		
 			<dt>
-				<span class="parameter-name">offset</span> <span class="parameter-attributes">(optional)</span>
+				<span class="parameter-name">start</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Optional parameter used to specify the first element to be returned</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">relatedParty.id</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to filter the returned products by owner</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">size</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to limit the number of elements returned</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">status</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to filter the returned products by status</p>
+				<p>1 &#40;optional&#41; - Optional parameter used to specify the first element to be returned</p>
 				
 			</dd>
 		
@@ -6257,7 +5902,7 @@ pricing model selected. Note that this API does not allow to create or update pr
 				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the product to be retrieved</p>
+				<p>1 - Id of the product to be retrieved</p>
 				
 			</dd>
 		
@@ -6630,7 +6275,7 @@ For the different individuals of the system the following information is used:</
 				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the individual to be retrieved</p>
+				<p>1 - Id of the individual to be retrieved</p>
 				
 			</dd>
 		
@@ -6724,7 +6369,7 @@ For the different individuals of the system the following information is used:</
 				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the individual to be updated</p>
+				<p>1 - Id of the individual to be updated</p>
 				
 			</dd>
 		
@@ -7070,7 +6715,7 @@ the Billing Account includes a reference to a Customer Account which links to a 
 				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the customer to be retrieved</p>
+				<p>1 - Id of the customer to be retrieved</p>
 				
 			</dd>
 		
@@ -7164,7 +6809,7 @@ the Billing Account includes a reference to a Customer Account which links to a 
 				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the individual to be updated</p>
+				<p>1 - Id of the individual to be updated</p>
 				
 			</dd>
 		
@@ -7509,7 +7154,7 @@ the Billing Account includes a reference to a Customer Account which links to a 
 				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the customer account to be retrieved</p>
+				<p>1 - Id of the customer account to be retrieved</p>
 				
 			</dd>
 		
@@ -7603,7 +7248,7 @@ the Billing Account includes a reference to a Customer Account which links to a 
 				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the customer account to be updated</p>
+				<p>1 - Id of the customer account to be updated</p>
 				
 			</dd>
 		
@@ -7954,7 +7599,7 @@ the Billing Account includes a reference to a Customer Account which links to a 
 				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the billing account to be retrieved</p>
+				<p>1 - Id of the billing account to be retrieved</p>
 				
 			</dd>
 		
@@ -8048,7 +7693,7 @@ the Billing Account includes a reference to a Customer Account which links to a 
 				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the billing account to be updated</p>
+				<p>1 - Id of the billing account to be updated</p>
 				
 			</dd>
 		
@@ -8325,7 +7970,7 @@ the Billing Account includes a reference to a Customer Account which links to a 
 				<span class="parameter-name">id</span> <span class="parameter-attributes">(required)</span>
 			</dt>
 			<dd>
-				<p>Id of the billing charge to be retrieved</p>
+				<p>1 - Id of the billing charge to be retrieved</p>
 				
 			</dd>
 		
@@ -8664,7 +8309,7 @@ known for a particular type of usage.</p>
 <li>
 <p>Parameters</p>
 <ul>
-<li>id: 1 - Id of the usage specification to be retrieved</li>
+<li>id - 1 - Id of the usage specification to be retrieved</li>
 </ul>
 </li>
 <li>
@@ -9002,7 +8647,7 @@ known for a particular type of usage.</p>
 <li>
 <p>Parameters</p>
 <ul>
-<li>id: 1 - Id of the usage specification to be retrieved</li>
+<li>id - 1 - Id of the usage specification to be retrieved</li>
 </ul>
 </li>
 <li>
@@ -9237,7 +8882,7 @@ known for a particular type of usage.</p>
                  <div class= "header" >
                  
                     <h3 id="h-resource_revenue-sharing-models-collection">Revenue Sharing Models Collection</h3>
-                    <span class="extra-header">[/DSRevenueSharing/rss/models{?offset}{?size}{?aggregatorId}{?appProviderId}{?productClass}]</span>
+                    <span class="extra-header">[/DSRevenueSharing/rss/models{?aggregatorId}{?appProviderId}{?productClass}]</span>
                  
                  </div>
                 
@@ -9269,7 +8914,7 @@ known for a particular type of usage.</p>
             <span class="extra-header">
 		GET 
                 
-                    /DSRevenueSharing/rss/models{?offset}{?size}{?aggregatorId}{?appProviderId}{?productClass}
+                    /DSRevenueSharing/rss/models{?aggregatorId}{?appProviderId}{?productClass}
                 
             </span>
         
@@ -9303,26 +8948,10 @@ known for a particular type of usage.</p>
 			</dd>
 		
 			<dt>
-				<span class="parameter-name">offset</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to specify the first element to be returned</p>
-				
-			</dd>
-		
-			<dt>
 				<span class="parameter-name">productClass</span> <span class="parameter-attributes">(optional)</span>
 			</dt>
 			<dd>
 				<p>Optional parameter used to filter by product class</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">size</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to limit the number of elements returned</p>
 				
 			</dd>
 		
@@ -9395,7 +9024,7 @@ known for a particular type of usage.</p>
             <span class="extra-header">
 		POST 
                 
-                    /DSRevenueSharing/rss/models{?offset}{?size}{?aggregatorId}{?appProviderId}{?productClass}
+                    /DSRevenueSharing/rss/models{?aggregatorId}{?appProviderId}{?productClass}
                 
             </span>
         
@@ -9541,7 +9170,7 @@ known for a particular type of usage.</p>
                  <div class= "header" >
                  
                     <h3 id="h-resource_transactions-collection">Transactions Collection</h3>
-                    <span class="extra-header">[/DSRevenueSharing/rss/cdrs{?offset}{?size}{?aggregatorId}{?providerId}]</span>
+                    <span class="extra-header">[/DSRevenueSharing/rss/cdrs{?aggregatorId}{?providerId}]</span>
                  
                  </div>
                 
@@ -9573,7 +9202,7 @@ known for a particular type of usage.</p>
             <span class="extra-header">
 		GET 
                 
-                    /DSRevenueSharing/rss/cdrs{?offset}{?size}{?aggregatorId}{?providerId}
+                    /DSRevenueSharing/rss/cdrs{?aggregatorId}{?providerId}
                 
             </span>
         
@@ -9599,26 +9228,10 @@ known for a particular type of usage.</p>
 			</dd>
 		
 			<dt>
-				<span class="parameter-name">offset</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to specify the first element to be returned</p>
-				
-			</dd>
-		
-			<dt>
 				<span class="parameter-name">providerId</span> <span class="parameter-attributes">(optional)</span>
 			</dt>
 			<dd>
 				<p>Optional parameter used to filter transactions by providerId</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">size</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to limit the number of elements returned</p>
 				
 			</dd>
 		
@@ -9843,7 +9456,7 @@ known for a particular type of usage.</p>
                  <div class= "header" >
                  
                     <h3 id="h-resource_reports-collection">Reports Collection</h3>
-                    <span class="extra-header">[/DSRevenueSharing/rss/settlement/reports{?offset}{?size}{?aggregatorId}{?providerId}{?productClass}]</span>
+                    <span class="extra-header">[/DSRevenueSharing/rss/settlement/reports{?aggregatorId}{?providerId}{?productClass}]</span>
                  
                  </div>
                 
@@ -9875,7 +9488,7 @@ known for a particular type of usage.</p>
             <span class="extra-header">
 		GET 
                 
-                    /DSRevenueSharing/rss/settlement/reports{?offset}{?size}{?aggregatorId}{?providerId}{?productClass}
+                    /DSRevenueSharing/rss/settlement/reports{?aggregatorId}{?providerId}{?productClass}
                 
             </span>
         
@@ -9901,14 +9514,6 @@ known for a particular type of usage.</p>
 			</dd>
 		
 			<dt>
-				<span class="parameter-name">offset</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to specify the first element to be returned</p>
-				
-			</dd>
-		
-			<dt>
 				<span class="parameter-name">productClass</span> <span class="parameter-attributes">(optional)</span>
 			</dt>
 			<dd>
@@ -9921,14 +9526,6 @@ known for a particular type of usage.</p>
 			</dt>
 			<dd>
 				<p>Optional parameter used to get only reports with a given provider</p>
-				
-			</dd>
-		
-			<dt>
-				<span class="parameter-name">size</span> <span class="parameter-attributes">(optional)</span>
-			</dt>
-			<dd>
-				<p>Optional parameter used to limit the number of elements returned</p>
 				
 			</dd>
 		
@@ -10321,7 +9918,7 @@ known for a particular type of usage.</p>
                             <div class= "header" >
                             
                                 <h4 id="h-resource_asset-info-collection_example">Asset Info collection</h4>
-                                <span class="extra-header">[/charging/api/assetManagement/assets{?offset}{?size}]</span>
+                                <span class="extra-header">[/charging/api/assetManagement/assets{?start}{?limit}]</span>
                             
                             </div>
 
@@ -10344,7 +9941,7 @@ known for a particular type of usage.</p>
             <span class="extra-header">
 		GET 
                 
-                    /charging/api/assetManagement/assets{?offset}{?size}
+                    /charging/api/assetManagement/assets{?start}{?limit}
                 
             </span>
         
@@ -10372,7 +9969,7 @@ known for a particular type of usage.</p>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /charging/api/assetManagement/assets?offset=1?size=10</span> 
+    <span class="packetType">Request  /charging/api/assetManagement/assets</span> 
         
     
     
@@ -10484,12 +10081,12 @@ known for a particular type of usage.</p>
                             
 
                             
-                                <div id="action_get-asset_examples" class="actionExample GET">
+                                <div id="action_get-seller-asset_examples" class="actionExample GET">
 
                                     
     <div class="header">
         
-            <h5 id="h-action_get-asset_examples">Get asset </h5>
+            <h5 id="h-action_get-seller-asset_examples">Get seller asset </h5>
             <span class="extra-header">
 		GET 
                 
@@ -10501,7 +10098,7 @@ known for a particular type of usage.</p>
     </div>
 
                                 
-                                        <div id="action_get-asset_body" class=""> 
+                                        <div id="action_get-seller-asset_body" class=""> 
                                             
                                             
                                             
@@ -10521,7 +10118,7 @@ known for a particular type of usage.</p>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /charging/api/assetManagement/assets/1</span> 
+    <span class="packetType">Request  /charging/api/assetManagement/assets/{id}</span> 
         
     
     
@@ -10532,7 +10129,7 @@ known for a particular type of usage.</p>
 
 
 
-    <div id="action_get-asset_Request_1_body" class=" action-div-body">
+    <div id="action_get-seller-asset_Request_1_body" class=" action-div-body">
         <p></p>
 
         
@@ -10572,7 +10169,7 @@ known for a particular type of usage.</p>
 
 
 
-    <div id="action_get-asset_Response_1_body" class=" action-div-body">
+    <div id="action_get-seller-asset_Response_1_body" class=" action-div-body">
         <p></p>
 
         
@@ -10606,156 +10203,7 @@ known for a particular type of usage.</p>
                                                 
                                             
                                             <div class="goActions">
-                                                <a href="#action_get-asset">Go to specification</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                        </section>
-                    
-                
-                    <section id="resource_product-asset-info-collection_example" class="resourceExample">
-                            <div class= "header" >
-                            
-                                <h4 id="h-resource_product-asset-info-collection_example">Product Asset Info Collection</h4>
-                                <span class="extra-header">[/charging/api/assetManagement/assets/product/{id}]</span>
-                            
-                            </div>
-
-                            
-                            
-
-                            
-                            
-                            
-
-                            
-
-                            
-                                <div id="action_get-asset_examples" class="actionExample GET">
-
-                                    
-    <div class="header">
-        
-            <h5 id="h-action_get-asset_examples">Get asset </h5>
-            <span class="extra-header">
-		GET 
-                
-                    /charging/api/assetManagement/assets/product/{id}
-                
-            </span>
-        
-
-    </div>
-
-                                
-                                        <div id="action_get-asset_body" class=""> 
-                                            
-                                            
-                                            
-                                                     
-                                            
-                                                
-                                            
-
-                                                
-                                                    
-                                                    
-                                                    
-
-                                                    
-                                                        
-
-
-<div class="rest-packet-div">
-    
-    <span class="packetType">Request  /charging/api/assetManagement/assets/product/1</span> 
-        
-    
-    
-    
-    
-    
-   
-
-
-
-    <div id="action_get-asset_Request_1_body" class=" action-div-body">
-        <p></p>
-
-        
-	         <div class= "header"><p>Headers</p></div>
-            
-            
-                
-            
-
-	        <pre><code>Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
-        
-
-        
-
-        
-    </div>   
-</div>
-
-                                                        
-                                                            
-                                                            
-                                                            
-
-
-<div class="rest-packet-div">
-    
-    <span class="packetType">Response 200</span> 
-        
-            (application/json)
-        
-    
-    
-    
-    
-    
-   
-
-
-
-    <div id="action_get-asset_Response_1_body" class=" action-div-body">
-        <p></p>
-
-        
-	         <div class= "header"><p>Headers</p></div>
-            
-            
-                
-            
-
-	        <pre><code>Content-Type: application/json</code></pre>
-        
-
-        
-            <div class= "header"><p>Body</p></div>
-            <pre><code>[
-    {
-        "id": "1",
-        "href": "https://store.lab.fiware.org/charging/api/assetManagement/assets/1",
-        "version": "1",
-        "contentType": "application/zip",
-        "state": "Active",
-        "location": "https://store.lab.fiware.org/charging/api/media/application.war",
-        "resourceType": "Java App",
-        "metadata": {}
-    }
-]    
-</code></pre>
-        
-
-        
-    </div>   
-</div>
-                                                
-                                            
-                                            <div class="goActions">
-                                                <a href="#action_get-asset">Go to specification</a>
+                                                <a href="#action_get-seller-asset">Go to specification</a>
                                             </div>
                                         </div>
                                     </div>
@@ -11028,7 +10476,7 @@ FILE
                             <div class= "header" >
                             
                                 <h4 id="h-resource_category-collection_example">Category Collection</h4>
-                                <span class="extra-header">[/DSProductCatalog/api/catalogManagement/v2/category{?offset}{?size}]</span>
+                                <span class="extra-header">[/DSProductCatalog/api/catalogManagement/v2/category{?start}{?limit}]</span>
                             
                             </div>
 
@@ -11051,7 +10499,7 @@ FILE
             <span class="extra-header">
 		GET 
                 
-                    /DSProductCatalog/api/catalogManagement/v2/category{?offset}{?size}
+                    /DSProductCatalog/api/catalogManagement/v2/category{?start}{?limit}
                 
             </span>
         
@@ -11079,7 +10527,7 @@ FILE
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /DSProductCatalog/api/catalogManagement/v2/category?offset=1?size=10</span> 
+    <span class="packetType">Request  /DSProductCatalog/api/catalogManagement/v2/category</span> 
         
     
     
@@ -11191,7 +10639,7 @@ FILE
             <span class="extra-header">
 		POST 
                 
-                    /DSProductCatalog/api/catalogManagement/v2/category{?offset}{?size}
+                    /DSProductCatalog/api/catalogManagement/v2/category{?start}{?limit}
                 
             </span>
         
@@ -11385,7 +10833,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /DSProductCatalog/api/catalogManagement/v2/category/1</span> 
+    <span class="packetType">Request  /DSProductCatalog/api/catalogManagement/v2/category/{id}</span> 
         
     
     
@@ -11627,7 +11075,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                             <div class= "header" >
                             
                                 <h4 id="h-resource_product-catalog-collection_example">Product Catalog Collection</h4>
-                                <span class="extra-header">[/DSProductCatalog/api/catalogManagement/v2/catalog{?offset}{?size}{?name}{?relatedParty.id}{?lifecycleStatus}]</span>
+                                <span class="extra-header">[/DSProductCatalog/api/catalogManagement/v2/catalog{?start}{?limit}]</span>
                             
                             </div>
 
@@ -11650,7 +11098,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
             <span class="extra-header">
 		GET 
                 
-                    /DSProductCatalog/api/catalogManagement/v2/catalog{?offset}{?size}{?name}{?relatedParty.id}{?lifecycleStatus}
+                    /DSProductCatalog/api/catalogManagement/v2/catalog{?start}{?limit}
                 
             </span>
         
@@ -11678,7 +11126,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /DSProductCatalog/api/catalogManagement/v2/catalog?offset=1?size=10?name=Cloud?relatedParty.id=fdelavega?lifecycleStatus=Active</span> 
+    <span class="packetType">Request  /DSProductCatalog/api/catalogManagement/v2/catalog</span> 
         
     
     
@@ -11790,7 +11238,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
             <span class="extra-header">
 		POST 
                 
-                    /DSProductCatalog/api/catalogManagement/v2/catalog{?offset}{?size}{?name}{?relatedParty.id}{?lifecycleStatus}
+                    /DSProductCatalog/api/catalogManagement/v2/catalog{?start}{?limit}
                 
             </span>
         
@@ -12006,7 +11454,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /DSProductCatalog/api/catalogManagement/v2/catalog/1</span> 
+    <span class="packetType">Request  /DSProductCatalog/api/catalogManagement/v2/catalog/{id}</span> 
         
     
     
@@ -12270,7 +11718,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                             <div class= "header" >
                             
                                 <h4 id="h-resource_product-specification-collection_example">Product Specification Collection</h4>
-                                <span class="extra-header">[/DSProductCatalog/api/catalogManagement/v2/productSpecification{?offset}{?size}{?isBundle}{?productNumber}{?relatedParty.id}{?lifecycleStatus}]</span>
+                                <span class="extra-header">[/DSProductCatalog/api/catalogManagement/v2/productSpecification{?start}{?limit}]</span>
                             
                             </div>
 
@@ -12293,7 +11741,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
             <span class="extra-header">
 		GET 
                 
-                    /DSProductCatalog/api/catalogManagement/v2/productSpecification{?offset}{?size}{?isBundle}{?productNumber}{?relatedParty.id}{?lifecycleStatus}
+                    /DSProductCatalog/api/catalogManagement/v2/productSpecification{?start}{?limit}
                 
             </span>
         
@@ -12321,7 +11769,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /DSProductCatalog/api/catalogManagement/v2/productSpecification?offset=1?size=10?isBundle=true?productNumber=1?relatedParty.id=fdelavega?lifecycleStatus=Active</span> 
+    <span class="packetType">Request  /DSProductCatalog/api/catalogManagement/v2/productSpecification</span> 
         
     
     
@@ -12472,7 +11920,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
             <span class="extra-header">
 		POST 
                 
-                    /DSProductCatalog/api/catalogManagement/v2/productSpecification{?offset}{?size}{?isBundle}{?productNumber}{?relatedParty.id}{?lifecycleStatus}
+                    /DSProductCatalog/api/catalogManagement/v2/productSpecification{?start}{?limit}
                 
             </span>
         
@@ -12767,7 +12215,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /DSProductCatalog/api/catalogManagement/v2/productSpecification/1</span> 
+    <span class="packetType">Request  /DSProductCatalog/api/catalogManagement/v2/productSpecification/{id}</span> 
         
     
     
@@ -13109,7 +12557,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                             <div class= "header" >
                             
                                 <h4 id="h-resource_product-offering-collection_example">Product Offering Collection</h4>
-                                <span class="extra-header">[/DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?offset}{?size}{?isBundle}{?name}{?relatedParty.id}{?category.id}{?category.name}{?productSpecification.id}{bundledProductOffering.id}{?lifecycleStatus}]</span>
+                                <span class="extra-header">[/DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?start}{?limit}]</span>
                             
                             </div>
 
@@ -13132,7 +12580,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
             <span class="extra-header">
 		GET 
                 
-                    /DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?offset}{?size}{?isBundle}{?name}{?relatedParty.id}{?category.id}{?category.name}{?productSpecification.id}{bundledProductOffering.id}{?lifecycleStatus}
+                    /DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?start}{?limit}
                 
             </span>
         
@@ -13160,7 +12608,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /DSProductCatalog/api/catalogManagement/v2/catalog/1/productOffering?offset=1?size=10?isBundle=true?name=1?relatedParty.id=fdelavega?category.id=1?category.name=Cloud?productSpecification.id=11?lifecycleStatus=Active</span> 
+    <span class="packetType">Request  /DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering</span> 
         
     
     
@@ -13321,7 +12769,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
             <span class="extra-header">
 		POST 
                 
-                    /DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?offset}{?size}{?isBundle}{?name}{?relatedParty.id}{?category.id}{?category.name}{?productSpecification.id}{bundledProductOffering.id}{?lifecycleStatus}
+                    /DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?start}{?limit}
                 
             </span>
         
@@ -13349,7 +12797,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /DSProductCatalog/api/catalogManagement/v2/catalog/1/productOffering{bundledProductOffering.id}</span> 
+    <span class="packetType">Request  /DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering</span> 
         
             (application/json)
         
@@ -13635,7 +13083,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /DSProductCatalog/api/catalogManagement/v2/catalog/1/productOffering/1</span> 
+    <span class="packetType">Request  /DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering/{id}</span> 
         
     
     
@@ -13997,7 +13445,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                             <div class= "header" >
                             
                                 <h4 id="h-resource_product-order-collection_example">Product Order Collection</h4>
-                                <span class="extra-header">[/DSProductOrdering/api/productOrdering/v2/productOrder{?offset}{?size}{?priority}{?state}{?relatedParty.id}{?relatedParty.role}]</span>
+                                <span class="extra-header">[/DSProductOrdering/api/productOrdering/v2/productOrder{?start}{?limit}]</span>
                             
                             </div>
 
@@ -14020,7 +13468,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
             <span class="extra-header">
 		GET 
                 
-                    /DSProductOrdering/api/productOrdering/v2/productOrder{?offset}{?size}{?priority}{?state}{?relatedParty.id}{?relatedParty.role}
+                    /DSProductOrdering/api/productOrdering/v2/productOrder{?start}{?limit}
                 
             </span>
         
@@ -14048,7 +13496,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /DSProductOrdering/api/productOrdering/v2/productOrder?offset=1?size=10?priority=1?state=InProgress?relatedParty.id=fdelavega?relatedParty.role=seller</span> 
+    <span class="packetType">Request  /DSProductOrdering/api/productOrdering/v2/productOrder</span> 
         
     
     
@@ -14208,7 +13656,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
             <span class="extra-header">
 		POST 
                 
-                    /DSProductOrdering/api/productOrdering/v2/productOrder{?offset}{?size}{?priority}{?state}{?relatedParty.id}{?relatedParty.role}
+                    /DSProductOrdering/api/productOrdering/v2/productOrder{?start}{?limit}
                 
             </span>
         
@@ -14516,7 +13964,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /DSProductOrdering/api/productOrdering/v2/productOrder/1</span> 
+    <span class="packetType">Request  /DSProductOrdering/api/productOrdering/v2/productOrder/{id}</span> 
         
     
     
@@ -14876,7 +14324,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                             <div class= "header" >
                             
                                 <h4 id="h-resource_product-collection_example">Product Collection</h4>
-                                <span class="extra-header">[/DSProductInventory/api/productInventory/v2/product{?offset}{?size}{?name}{?relatedParty.id}{?status}]</span>
+                                <span class="extra-header">[/DSProductInventory/api/productInventory/v2/product{?start}{?limit}]</span>
                             
                             </div>
 
@@ -14899,7 +14347,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
             <span class="extra-header">
 		GET 
                 
-                    /DSProductInventory/api/productInventory/v2/product{?offset}{?size}{?name}{?relatedParty.id}{?status}
+                    /DSProductInventory/api/productInventory/v2/product{?start}{?limit}
                 
             </span>
         
@@ -14927,7 +14375,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /DSProductInventory/api/productInventory/v2/product?offset=1?size=10?name=Broadband?relatedParty.id=fdelavega?status=Active</span> 
+    <span class="packetType">Request  /DSProductInventory/api/productInventory/v2/product</span> 
         
     
     
@@ -15111,7 +14559,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /DSProductInventory/api/productInventory/v2/product/1</span> 
+    <span class="packetType">Request  /DSProductInventory/api/productInventory/v2/product/{id}</span> 
         
     
     
@@ -15629,7 +15077,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /DSPartyManagement/api/partyManagement/v2/individual/1</span> 
+    <span class="packetType">Request  /DSPartyManagement/api/partyManagement/v2/individual/{id}</span> 
         
     
     
@@ -16313,7 +15761,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /DSCustomerManagement/api/customerManagement/v2/customer/1</span> 
+    <span class="packetType">Request  /DSCustomerManagement/api/customerManagement/v2/customer/{id}</span> 
         
     
     
@@ -16968,7 +16416,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /DSCustomerManagement/api/customerManagement/v2/customerAccount/1</span> 
+    <span class="packetType">Request  /DSCustomerManagement/api/customerManagement/v2/customerAccount/{id}</span> 
         
     
     
@@ -17592,7 +17040,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /DSBillingManagement/api/billingManagement/v2/billingAccount/1</span> 
+    <span class="packetType">Request  /DSBillingManagement/api/billingManagement/v2/billingAccount/{id}</span> 
         
     
     
@@ -18072,7 +17520,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /DSBillingManagement/api/billingManagement/v2/appliedCustomerBillingCharge/1</span> 
+    <span class="packetType">Request  /DSBillingManagement/api/billingManagement/v2/appliedCustomerBillingCharge/{id}</span> 
         
     
     
@@ -18359,7 +17807,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                             <div class= "header" >
                             
                                 <h4 id="h-resource_revenue-sharing-models-collection_example">Revenue Sharing Models Collection</h4>
-                                <span class="extra-header">[/DSRevenueSharing/rss/models{?offset}{?size}{?aggregatorId}{?appProviderId}{?productClass}]</span>
+                                <span class="extra-header">[/DSRevenueSharing/rss/models{?aggregatorId}{?appProviderId}{?productClass}]</span>
                             
                             </div>
 
@@ -18382,7 +17830,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
             <span class="extra-header">
 		GET 
                 
-                    /DSRevenueSharing/rss/models{?offset}{?size}{?aggregatorId}{?appProviderId}{?productClass}
+                    /DSRevenueSharing/rss/models{?aggregatorId}{?appProviderId}{?productClass}
                 
             </span>
         
@@ -18410,7 +17858,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /DSRevenueSharing/rss/models?offset=1?size=10?aggregatorId=fdelavega@conwet.com?appProviderId=aarranz?productClass=orionServices</span> 
+    <span class="packetType">Request  /DSRevenueSharing/rss/models?aggregatorId=fdelavega@conwet.com?appProviderId=aarranz?productClass=orionServices</span> 
         
     
     
@@ -18514,7 +17962,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
             <span class="extra-header">
 		POST 
                 
-                    /DSRevenueSharing/rss/models{?offset}{?size}{?aggregatorId}{?appProviderId}{?productClass}
+                    /DSRevenueSharing/rss/models{?aggregatorId}{?appProviderId}{?productClass}
                 
             </span>
         
@@ -18649,7 +18097,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                             <div class= "header" >
                             
                                 <h4 id="h-resource_transactions-collection_example">Transactions Collection</h4>
-                                <span class="extra-header">[/DSRevenueSharing/rss/cdrs{?offset}{?size}{?aggregatorId}{?providerId}]</span>
+                                <span class="extra-header">[/DSRevenueSharing/rss/cdrs{?aggregatorId}{?providerId}]</span>
                             
                             </div>
 
@@ -18672,7 +18120,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
             <span class="extra-header">
 		GET 
                 
-                    /DSRevenueSharing/rss/cdrs{?offset}{?size}{?aggregatorId}{?providerId}
+                    /DSRevenueSharing/rss/cdrs{?aggregatorId}{?providerId}
                 
             </span>
         
@@ -18700,7 +18148,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /DSRevenueSharing/rss/cdrs?offset=1?size=10?aggregatorId=fdelavega@conwet.com?providerId=aarranz</span> 
+    <span class="packetType">Request  /DSRevenueSharing/rss/cdrs?aggregatorId=fdelavega@conwet.com?providerId=aarranz</span> 
         
     
     
@@ -18884,7 +18332,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
             <pre><code>{
     "aggregatorId": "fdelavega@conwet.com",
     "providerId": "aarranz",
-    "productClass": "orionServices"
+    "productClass": "orionServices",
+    "callbackUrl": "http://myservice.com/callback"
 }
 </code></pre>
         
@@ -18946,7 +18395,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                             <div class= "header" >
                             
                                 <h4 id="h-resource_reports-collection_example">Reports Collection</h4>
-                                <span class="extra-header">[/DSRevenueSharing/rss/settlement/reports{?offset}{?size}{?aggregatorId}{?providerId}{?productClass}]</span>
+                                <span class="extra-header">[/DSRevenueSharing/rss/settlement/reports{?aggregatorId}{?providerId}{?productClass}]</span>
                             
                             </div>
 
@@ -18969,7 +18418,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
             <span class="extra-header">
 		GET 
                 
-                    /DSRevenueSharing/rss/settlement/reports{?offset}{?size}{?aggregatorId}{?providerId}{?productClass}
+                    /DSRevenueSharing/rss/settlement/reports{?aggregatorId}{?providerId}{?productClass}
                 
             </span>
         
@@ -18997,7 +18446,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 <div class="rest-packet-div">
     
-    <span class="packetType">Request  /DSRevenueSharing/rss/settlement/reports?offset=1?size=10?aggregatorId=fdelavega@conwet.com?providerId=aarranz?productClass=orionServices</span> 
+    <span class="packetType">Request  /DSRevenueSharing/rss/settlement/reports?aggregatorId=fdelavega@conwet.com?providerId=aarranz?productClass=orionServices</span> 
         
     
     
