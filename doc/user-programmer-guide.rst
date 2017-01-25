@@ -1005,6 +1005,7 @@ Additionally, it includes the following methods:
 * **get_url**: Returns the URL where the asset can be accessed
 * **get_uri**: Returns the url where the asset info can be accessed
 
+
 * **Contract**: Django model with the following fields
    * **item_id**: Id of the order item which generated the current contract
    * **offering**: Offering object with the information of the offering acquired in the current contract (The offering object is described later)
@@ -1040,6 +1041,7 @@ Additionally, it includes the following methods:
    * **contracts**: List of Conctract objects, one for earch offering acquired in the order
 
 Additionally, it includes the following methods:
+
 * **get_item_contract**: Returns a contract given an item_id
 * **get_product_contract**: Returns a contract given a product_id
 
