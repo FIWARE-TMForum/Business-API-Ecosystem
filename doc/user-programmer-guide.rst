@@ -220,7 +220,7 @@ in your environment. Then, click on *Next*.
    :align: center
 
 In the next step, you can choose whether your product specification is a bundle or not. Product bundles are logical containers
-that allows you to sell multiple products as if it were a single one. Once you have selected the right option click on *Next*
+that allow you to sell multiple products as if it were a single one. Once you have selected the right option click on *Next*
 
 .. image:: /images/user/product8.png
    :align: center
