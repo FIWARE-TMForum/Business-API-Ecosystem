@@ -1,7 +1,11 @@
-FROM glassfish
+FROM ubuntu:16.04
 
 RUN apt-get update
 RUN apt-get install -y --fix-missing python2.7 python-pip git maven mysql-client openjdk-8-jdk
+
+# Download and install glassfish
+RUN wget http://download.java.net/glassfish/4.1/release/glassfish-4.1.zip
+RUN unzip glassfish-4.1.zip
 
 RUN pip install sh
 
@@ -10,7 +14,7 @@ RUN wget http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1
 
 RUN tar -xvf mysql-connector-java-5.1.39.tar.gz
 
-RUN cp ./mysql-connector-java-5.1.39/mysql-connector-java-5.1.39-bin.jar glassfish/domains/domain1/lib
+RUN cp ./mysql-connector-java-5.1.39/mysql-connector-java-5.1.39-bin.jar glassfish4/glassfish/domains/domain1/lib
 
 RUN mkdir /apis
 WORKDIR /apis
@@ -21,7 +25,7 @@ RUN git clone https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2.git
 
 WORKDIR DSPRODUCTCATALOG2
 
-RUN git checkout v5.4.0
+RUN git checkout v5.4.1
 
 # Fixing reloading the database everytime the API is restarted
 RUN sed -i 's/jdbc\/sample/jdbc\/pcatv2/g' ./src/main/resources/META-INF/persistence.xml
@@ -37,7 +41,7 @@ RUN grep -F "<property name=\"javax.persistence.schema-generation.database.actio
 # Create WAR file
 RUN mvn install
 
-RUN mv ./target/DSPRODUCTCATALOG2.war ../wars/
+RUN mv ./target/DSProductCatalog.war ../wars/
 
 WORKDIR ../
 
@@ -46,7 +50,7 @@ RUN git clone https://github.com/FIWARE-TMForum/DSPRODUCTORDERING.git
 
 WORKDIR DSPRODUCTORDERING
 
-RUN git checkout v5.4.0
+RUN git checkout v5.4.1
 
 # Fixing reloading the database everytime the API is restarted
 RUN sed -i 's/jdbc\/sample/jdbc\/podbv2/g' ./src/main/resources/META-INF/persistence.xml
@@ -62,7 +66,7 @@ RUN grep -F "<property name=\"javax.persistence.schema-generation.database.actio
 # Create WAR file
 RUN mvn install
 
-RUN mv ./target/productOrdering.war ../wars/
+RUN mv ./target/DSProductOrdering.war ../wars/
 
 WORKDIR ../
 
@@ -71,7 +75,7 @@ RUN git clone https://github.com/FIWARE-TMForum/DSPRODUCTINVENTORY.git
 
 WORKDIR DSPRODUCTINVENTORY
 
-RUN git checkout v5.4.0
+RUN git checkout v5.4.1
 
 # Fixing reloading the database everytime the API is restarted
 RUN sed -i 's/jdbc\/sample/jdbc\/pidbv2/g' ./src/main/resources/META-INF/persistence.xml
@@ -87,7 +91,7 @@ RUN grep -F "<property name=\"javax.persistence.schema-generation.database.actio
 # Create WAR file
 RUN mvn install
 
-RUN mv ./target/productInventory.war ../wars/
+RUN mv ./target/DSProductInventory.war ../wars/
 
 WORKDIR ../
 
@@ -96,7 +100,7 @@ RUN git clone https://github.com/FIWARE-TMForum/DSPARTYMANAGEMENT.git
 
 WORKDIR DSPARTYMANAGEMENT
 
-RUN git checkout v5.4.0
+RUN git checkout v5.4.1
 
 # Fixing reloading the database everytime the API is restarted
 RUN sed -i 's/jdbc\/sample/jdbc\/partydb/g' ./src/main/resources/META-INF/persistence.xml
@@ -112,7 +116,7 @@ RUN grep -F "<property name=\"javax.persistence.schema-generation.database.actio
 # Create WAR file
 RUN mvn install
 
-RUN mv ./target/party.war ../wars/
+RUN mv ./target/DSPartyManagement.war ../wars/
 
 WORKDIR ../
 
@@ -121,7 +125,7 @@ RUN git clone https://github.com/FIWARE-TMForum/DSBILLINGMANAGEMENT.git
 
 WORKDIR DSBILLINGMANAGEMENT
 
-RUN git checkout v5.4.0
+RUN git checkout v5.4.1
 
 # Fixing reloading the database everytime the API is restarted
 RUN sed -i 's/jdbc\/sample/jdbc\/bmdbv2/g' ./src/main/resources/META-INF/persistence.xml
@@ -137,7 +141,7 @@ RUN grep -F "<property name=\"javax.persistence.schema-generation.database.actio
 # Create WAR file
 RUN mvn install
 
-RUN mv ./target/billingManagement.war ../wars/
+RUN mv ./target/DSBillingManagement.war ../wars/
 
 WORKDIR ../
 
@@ -146,7 +150,7 @@ RUN git clone https://github.com/FIWARE-TMForum/DSCUSTOMER.git
 
 WORKDIR DSCUSTOMER
 
-RUN git checkout v5.4.0
+RUN git checkout v5.4.1
 
 # Fixing reloading the database everytime the API is restarted
 RUN sed -i 's/jdbc\/sample/jdbc\/customerdbv2/g' ./src/main/resources/META-INF/persistence.xml
@@ -162,7 +166,7 @@ RUN grep -F "<property name=\"javax.persistence.schema-generation.database.actio
 # Create WAR file
 RUN mvn install
 
-RUN mv ./target/customer.war ../wars/
+RUN mv ./target/DSProductCustomer.war ../wars/
 
 WORKDIR ../
 
@@ -171,7 +175,7 @@ RUN git clone https://github.com/FIWARE-TMForum/DSUSAGEMANAGEMENT.git
 
 WORKDIR DSUSAGEMANAGEMENT
 
-RUN git checkout v5.4.0
+RUN git checkout v5.4.1
 
 # Fixing reloading the database everytime the API is restarted
 RUN sed -i 's/jdbc\/sample/jdbc\/usagedbv2/g' ./src/main/resources/META-INF/persistence.xml
@@ -187,7 +191,7 @@ RUN grep -F "<property name=\"javax.persistence.schema-generation.database.actio
 # Create WAR file
 RUN mvn install
 
-RUN mv ./target/usageManagement.war ../wars/
+RUN mv ./target/DSUsageManagement.war ../wars/
 
 WORKDIR ../
 
@@ -196,7 +200,7 @@ RUN git clone https://github.com/FIWARE-TMForum/business-ecosystem-rss.git
 
 WORKDIR business-ecosystem-rss
 
-RUN git checkout v5.4.0
+RUN git checkout v5.4.1
 
 # Create WAR file
 
@@ -214,19 +218,20 @@ WORKDIR ../
 # Deploy charging backend
 
 RUN apt-get update
-RUN apt-get install -y --fix-missing gcc mongodb wkhtmltopdf xvfb python-dev build-essential libssl-dev libffi-dev
+RUN apt-get install -y --fix-missing gcc mongodb wkhtmltopdf xvfb python-dev build-essential libssl-dev libffi-dev apache2 libapache2-mod-wsgi
 
 RUN git clone https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend.git
 
 WORKDIR business-ecosystem-charging-backend
 
-RUN git checkout v5.4.0
+RUN git checkout v5.4.1
 
 # Create required folders
 RUN mkdir -p /data/db/
 RUN mkdir ./src/media
 RUN mkdir ./src/media/bills
 RUN mkdir ./src/media/assets
+RUN mkdir ./src/plugins
 
 ENV WORKSPACE=`pwd`
 
@@ -234,34 +239,48 @@ RUN ./python-dep-install.sh
 
 # Create volumes
 VOLUME /data/db
-VOLUME ./src/media/bills
-VOLUME ./src/media/assets
+VOLUME /apis/business-ecosystem-charging-backend/src/media/bills
+VOLUME /apis/business-ecosystem-charging-backend/src/media/assets
+VOLUME /apis/business-ecosystem-charging-backend/src/plugins
 
-WORKDIR ../
+WORKDIR src
+
+RUN rm wsgi.py
+COPY wsgi.py .
+
+WORKDIR /etc/apache2/
+COPY charging.conf ./sites-available
+
+RUN ln -s ../sites-available/charging.conf ./sites-enabled/charging.conf
+RUN sed -i "s|Listen 80|Listen 8006|g" ports.conf
+
+WORKDIR /apis
 
 # Deploy logic proxy
 
 RUN git clone https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy
 
-WORKDIR business-ecosystem-logic-proxy
+WORKDIR /
 
-RUN wget https://nodejs.org/dist/v4.5.0/node-v4.5.0-linux-x64.tar.xz
+RUN wget https://nodejs.org/dist/v6.9.1/node-v6.9.1-linux-x64.tar.xz
 
-RUN tar -xvf node-v4.5.0-linux-x64.tar.xz
+RUN tar -xvf node-v6.9.1-linux-x64.tar.xz
 
-RUN echo "export PATH=$PATH:/business-ecosystem-logic-proxy/node-v4.5.0-linux-x64/bin" >> ~/.bashrc
+RUN echo 'export PATH=$PATH:/node-v6.9.1-linux-x64/bin' >> ~/.bashrc
 
-RUN git checkout v5.4.0
+WORKDIR /apis/business-ecosystem-logic-proxy
 
-RUN ./node-v4.5.0-linux-x64/bin/npm install
+RUN git checkout v5.4.1
+
+RUN mkdir indexes
+VOLUME /apis/business-ecosystem-logic-proxy/indexes
+
+RUN export PATH=$PATH:/node-v6.9.1-linux-x64/bin; npm install
 
 RUN cp config.js.template config.js
 
-WORKDIR ../
-
 COPY ./entrypoint.sh /
 COPY ./rss-entrypoint.py /
-COPY ./charging-entrypoint.py /
 COPY ./proxy-entrypoint.py /
 COPY ./apis-entrypoint.py /
 

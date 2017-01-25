@@ -4,55 +4,55 @@
 
 if [ -z $PAYPAL_CLIENT_ID ];
 then
-    echo $PAYPAL_CLIENT_ID environment variable not set
+    echo PAYPAL_CLIENT_ID environment variable not set
     exit 1
 fi
 
 if [ -z $PAYPAL_CLIENT_SECRET ];
 then
-    echo $PAYPAL_CLIENT_SECRET environment variable not set
+    echo PAYPAL_CLIENT_SECRET environment variable not set
     exit 1
 fi
 
 if [ -z $ADMIN_EMAIL ];
 then
-    echo $ADMIN_EMAIL environment variable not set
+    echo ADMIN_EMAIL environment variable not set
     exit 1
 fi
 
 if [ -z $BIZ_ECOSYS_PORT ];
 then
-    echo $BIZ_ECOSYS_PORT environment variable not set
+    echo BIZ_ECOSYS_PORT environment variable not set
     exit 1
 fi
 
 if [ -z $BIZ_ECOSYS_HOST ];
 then
-    echo $BIZ_ECOSYS_HOST environment variable not set
+    echo BIZ_ECOSYS_HOST environment variable not set
     exit 1
 fi
 
 if [[ -z $OAUTH2_CLIENT_ID ]];
 then
-    echo $OAUTH2_CLIENT_ID is not set
+    echo OAUTH2_CLIENT_ID is not set
     exit 1
 fi
 
 if [[ -z $OAUTH2_CLIENT_SECRET ]];
 then
-    echo $OAUTH2_CLIENT_SECRET is not set
+    echo OAUTH2_CLIENT_SECRET is not set
     exit 1
 fi
 
 if [[ -z $MYSQL_ROOT_PASSWORD ]];
 then
-    echo $MYSQL_ROOT_PASSWORD is not set
+    echo MYSQL_ROOT_PASSWORD is not set
     exit 1
 fi
 
 if [[ -z $MYSQL_HOST ]];
 then
-    echo $MYSQL_HOST is not set
+    echo MYSQL_HOST is not set
     exit 1
 fi
 
@@ -114,26 +114,29 @@ function done_mongo {
         sed -i "s|SMTPPORT = 587|SMTPPORT = $EMAIL_SERVER_PORT|g" ./settings.py
     fi
 
-    sed -i "s|PAYMENT_METHOD = None|PAYMENT_METHOD = 'paypal'|g" ./settings.py
-
     sed -i "s|AUTHORIZE_SERVICE = 'http://localhost:8004/authorizeService/apiKeys'|AUTHORIZE_SERVICE = 'http://localhost:8000/authorizeService/apiKeys'|g" ./services_settings.py
 
-    python /charging-entrypoint.py
+
+    python ./manage.py createsite external http://$BIZ_ECOSYSTEM_HOST:$BIZ_ECOSYSTEM_PORT/
+    python ./manage.py createsite internal http://127.0.0.1:8006/
 
     echo "Starting charging server"
-    python ./manage.py runserver 0.0.0.0:8006 &
+    service apache2 restart
 
     cd ../../business-ecosystem-logic-proxy
 
     sed -i "s|config\.port|'$BIZ_ECOSYS_PORT'|" lib/tmfUtils.js
     python /proxy-entrypoint.py
 
+    /node-v6.9.1-linux-x64/bin/node fill_indexes.js
     cd ..
 }
 
 ########################################################################################
 
 set -o monitor
+
+export PATH=$PATH:/glassfish4/glassfish/bin
 
 service mongodb start
 
@@ -210,7 +213,7 @@ done
 
 if [[ $i -eq 50 ]];
 then
-    echo "It cannot be possible to start the Business API Ecosystem, is MySQL running?"
+    echo "It has not been possible to start the Business API Ecosystem due to a timeout waiting for a required service"
     echo Conection to Mongo returned $mongodbStatus
     echo Conection to MySQL returned $mysqlStatus
     echo Conection to Glassfish returned $glassfishStatus
@@ -225,7 +228,4 @@ exec 9<&- # close input connection
 exec 10>&- # close output connection
 exec 10<&- # close input connection
 
-
-cd /apis/business-ecosystem-logic-proxy/
-
-./node-v4.5.0-linux-x64/bin/node server.js
+/node-v6.9.1-linux-x64/bin/node server.js
