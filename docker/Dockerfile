@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 
 RUN apt-get update
-RUN apt-get install -y --fix-missing python2.7 python-pip git maven mysql-client openjdk-8-jdk
+RUN apt-get install -y --fix-missing python2.7 python-pip git wget unzip maven mysql-client openjdk-8-jdk
 
 # Download and install glassfish
 RUN wget http://download.java.net/glassfish/4.1/release/glassfish-4.1.zip
@@ -166,7 +166,7 @@ RUN grep -F "<property name=\"javax.persistence.schema-generation.database.actio
 # Create WAR file
 RUN mvn install
 
-RUN mv ./target/DSProductCustomer.war ../wars/
+RUN mv ./target/DSCustomerManagement.war ../wars/
 
 WORKDIR ../
 
