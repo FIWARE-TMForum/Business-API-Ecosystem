@@ -279,6 +279,8 @@ RUN export PATH=$PATH:/node-v6.9.1-linux-x64/bin; npm install
 
 RUN cp config.js.template config.js
 
+WORKDIR /apis
+
 COPY ./entrypoint.sh /
 COPY ./rss-entrypoint.py /
 COPY ./proxy-entrypoint.py /

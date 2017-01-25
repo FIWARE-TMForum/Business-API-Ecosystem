@@ -228,4 +228,5 @@ exec 9<&- # close input connection
 exec 10>&- # close output connection
 exec 10<&- # close input connection
 
+cd business-ecosystem-logic-proxy
 /node-v6.9.1-linux-x64/bin/node server.js
