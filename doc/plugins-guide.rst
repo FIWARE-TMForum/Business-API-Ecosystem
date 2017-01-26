@@ -116,3 +116,84 @@ This plugin implements the following event handlers:
 
 Accounting Proxy
 ================
+
+The *Accounting Proxy* can be found in `GitHub <https://github.com/FIWARE-TMForum/Accounting-Proxy>`__. This software
+is a NodeJs server intended to manage services offered in the Business API Ecosystem. In particular, it is able to
+authenticate users, authorize or deny users to access to a particular service depending on the acquisition, the URL,
+or the HTTP method used, and account the usage made of the service so users can be charged on pay-per-use basis.
+
+Having this software deployed allows service owners to protect their services and offer them in the Business API Ecosystem
+without the need of making any modification in the specific service.
+
+Administration
+--------------
+
+The Accounting Proxy is able to manage multiple services. In this regard, it has been provided a *cli* tool that can be
+used by admins in order to register, delete, and manage its services. The available commands are:
+
+* `./cli addService [-c | --context-broker] <publicPath> <url> <appId> <httpMethod> [otherHttpMethods...]`: This command is used to register
+  a new service in the Accounting Proxy. It receives the following parameters
+    * *publicPath*: Path where the service will be made available to external users. There are two valid patterns for the
+    public path: (1) Providing a path with a single component (*/publicpath*) will make the Accounting Proxy accept requests
+    to sub-paths of the specified one (i.e having a public path */publicpath* requests to */publicpath/more/path* are accepted).
+    This pattern is typically used when you are offering the access to an API with multiple resources. (2) Providing a
+    complete path (*/this/is/the/final/resource/path?color=Blue&shape=rectangular*) will make the Accounting Proxy to
+    accept only requests to the exact registered path including query strings. This pattern is typically used when you are
+    offering a single URL, like a Context Broker query.
+
+    * *url*: URL where your service is actually running and where requests to the proxy will be redirected. Note that in
+    this case all the URL is provided (including the host) since the accounting proxy allows the management of services
+    running in different servers.
+
+    * *appId*: ID of the service given by the FIWARE IdM. This id is used in order to ensure that the access tokens provided
+    by users are valid for the accessed service
+
+    * *HTTP methods*: List of HTTP methods that are allowed to access to the registered service
+
+    * Options:
+       * `-c, --context-broker`: the service is an Orion Context broker service (`config.contextBroker` must be set to `true` in `config.js`).
+
+Following you can find two examples in order to clarify the options available for registering a service: ::
+
+    $ ./cli addService /apacheapp http://localhost:5000/ 1111 GET PUT POST
+
+In this case, there is a service running in the port 5000 which is made available though the */apacheapp* path, allowing
+only GET, PUT, and POST HTTP request. Supposing that the Accounting Proxy is running in the host *accounting.proxy.com* in the
+port 8000, the following requests will be accepted by it: ::
+
+    GET http://accounting.proxy.com:8000/apacheapp
+    GET http://accounting.proxy.com:8000/apacheapp/resource1/
+    POST http://accounting.proxy.com:8000/apacheapp/resource1/resource2
+.. note::
+    The Accounting Proxy does not care about the API or the semantics of the monitored service, so it may accept
+    a request to a URL which does not exists in the service, resulting in a usual 404 error given by the later
+
+Additionally, a complete path can be provided, as in the following example: ::
+
+    $ ./cli addService /broker/v1/contextEntities/Room2/attributes/temperature http://localhost:1026/v1/contextEntities/Room2/attributes/temperature 1111 GET
+
+In this example, there is a Context Broker running in the port 1026 and a specific query is made available through the
+Accounting proxy, so only the following request is accepted: ::
+
+    GET http://accounting.proxy.com:8000/broker/v1/contextEntities/Room2/attributes/temperature
+
+.. note::
+    For making the proxy transparent to final users is a good practice to use the same path in the external path and in
+    the URL when providing a complete path. Nevertheless, this is not mandatory, so it is possible to create an alias for
+    a query (i.e */room2/temperature* for the previous example)
+
+
+* `./cli getService [-p <publicPath>]`: This command is used to retrieve the URL, the application ID and the type
+  (Context Broker or not) of all registered services.
+    * Options:
+      * `-p, --publicPath <path>`: only displays the information of the specified service.
+
+* `./cli deleteService <publicPath>`: This command is used to delete the service associated with the public path.
+* `./cli addAdmin <userId>`: This command is used to add a new administrator.
+* `./cli deleteAdmin <userId>`: This command is used to delete the specified admin.
+* `./cli bindAdmin <userId> <publicPath>`: This command is used to add the specified administrator to the service specified by the public path.
+* `./cli unbindAdmin <userId> <publicPath>`: This command is used to delete the specified administrator for the specified service by its public path.
+* `./cli getAdmins <publicPath>`: This command is used to display all the administrators for the specified service.
+
+To display a brief description of the *cli* tool you can use : `./cli -h` or `./cli --help`. In addition, to get
+information for a specific command you can use: `./cli help [cmd]`.
