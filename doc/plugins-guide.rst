@@ -29,10 +29,10 @@ In addition, the plugin only allows the media type *WireCloud Component*. Nevert
 metainfo to determine the type of the WireCloud component (Widget, Operator, or Mashup) and overrides the media type with the
 proper one understood by the WireCloud platform (*wirecloud/widget*, *wirecloud/operator* or *wirecloud/mashup*).
 
-.. image:: /images/user/wirecloud1.png
+.. image:: /images/plugin/wirecloud1.png
    :align: center
 
-.. image:: /images/user/wirecloud2.png
+.. image:: /images/plugin/wirecloud2.png
    :align: center
 
 This plugin implements the following event handlers:
