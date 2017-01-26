@@ -134,19 +134,19 @@ used by admins in order to register, delete, and manage its services. The availa
 * `./cli addService [-c | --context-broker] <publicPath> <url> <appId> <httpMethod> [otherHttpMethods...]`: This command is used to register
   a new service in the Accounting Proxy. It receives the following parameters
     * *publicPath*: Path where the service will be made available to external users. There are two valid patterns for the
-    public path: (1) Providing a path with a single component (*/publicpath*) will make the Accounting Proxy accept requests
-    to sub-paths of the specified one (i.e having a public path */publicpath* requests to */publicpath/more/path* are accepted).
-    This pattern is typically used when you are offering the access to an API with multiple resources. (2) Providing a
-    complete path (*/this/is/the/final/resource/path?color=Blue&shape=rectangular*) will make the Accounting Proxy to
-    accept only requests to the exact registered path including query strings. This pattern is typically used when you are
-    offering a single URL, like a Context Broker query.
+      public path: (1) Providing a path with a single component (*/publicpath*) will make the Accounting Proxy accept requests
+      to sub-paths of the specified one (i.e having a public path */publicpath* requests to */publicpath/more/path* are accepted).
+      This pattern is typically used when you are offering the access to an API with multiple resources. (2) Providing a
+      complete path (*/this/is/the/final/resource/path?color=Blue&shape=rectangular*) will make the Accounting Proxy to
+      accept only requests to the exact registered path including query strings. This pattern is typically used when you are
+      offering a single URL, like a Context Broker query.
 
     * *url*: URL where your service is actually running and where requests to the proxy will be redirected. Note that in
-    this case all the URL is provided (including the host) since the accounting proxy allows the management of services
-    running in different servers.
+      this case all the URL is provided (including the host) since the accounting proxy allows the management of services
+      running in different servers.
 
     * *appId*: ID of the service given by the FIWARE IdM. This id is used in order to ensure that the access tokens provided
-    by users are valid for the accessed service
+      by users are valid for the accessed service
 
     * *HTTP methods*: List of HTTP methods that are allowed to access to the registered service
 
@@ -185,8 +185,9 @@ Accounting proxy, so only the following request is accepted: ::
 
 * `./cli getService [-p <publicPath>]`: This command is used to retrieve the URL, the application ID and the type
   (Context Broker or not) of all registered services.
+
     * Options:
-      * `-p, --publicPath <path>`: only displays the information of the specified service.
+       * `-p, --publicPath <path>`: only displays the information of the specified service.
 
 * `./cli deleteService <publicPath>`: This command is used to delete the service associated with the public path.
 * `./cli addAdmin <userId>`: This command is used to add a new administrator.
@@ -197,3 +198,26 @@ Accounting proxy, so only the following request is accepted: ::
 
 To display a brief description of the *cli* tool you can use : `./cli -h` or `./cli --help`. In addition, to get
 information for a specific command you can use: `./cli help [cmd]`.
+
+Authentication and Authorization
+--------------------------------
+
+The Accounting Proxy relies on the FIWARE IdM for authenticating users. To do that, the proxy expects that all the requests
+include a header *Authorization: Bearer access_token* or *X-Auth-Token: access_token* with a valid access token given
+by the IdM.
+
+Moreover, if the authentication process has succeed, the Accounting Proxy validates the permissions of the user to access
+to specific service. To do that, it checks if the user has been registered as an admin of the service or if the user has
+acquired the service.
+
+Is important to notice, that the Business API Ecosystem allows sellers to offer a service in different offerings with
+different pricing models. In this regard, having just the access token is not enough to determine the accounting unit
+(pricing model) that has to be used to account the usage of the service. It may happen, that a valid user has acquired
+the access to a service in two different offerings with two different models (i.e calls and seconds), so the proxy
+needs extra info to determine the unit to account (in this example calls or seconds). To deal with that problem, the
+Accounting Proxy generates an API Key which identifies the service, the user, and the accounting unit, so including
+it in a header *X-API-Key: api_key* when making requests, enables it to know what unit to account.
+
+.. note::
+    The X-API-Key header is not intended to provide an extra level of security, but just to remove the possible incertitude
+    around the request
