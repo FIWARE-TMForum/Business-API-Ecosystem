@@ -45,6 +45,42 @@ This plugin implements the following event handlers:
 CKAN Dataset
 ------------
 
+The *CKAN Dataset* plugin ia available in `GitHub <https://github.com/FIWARE-TMForum/wstore-ckan-plugin>`__.
+This plugin defines an asset type intended to manage and monetize datasets offered in a CKAN instance. In particular,
+this plugin is able to validate the dataset, validate the rights of the seller creating a product specification to sell
+the provided dataset, and manage the access to the dataset of those customers who acquire it.
+
+Is important to notice that by default CKAN does not provide a mechanism to publish protected datasets or an API for
+managing the access rights to the published datasets. In this regard, the CKAN instance to be monetized has to be extended
+with the following CKAN plugins:
+
+* `ckanext-oauth2 <https://github.com/conwetlab/ckanext-oauth2>`__: This extension allows to use an external OAuth2 Identity Manager
+  for managing CKAN users. In particular, this extension must be used, in this context, to authenticate users using the same
+  FIWARE IdM instance as the specific Business API Ecosystem instance, so both systems (CKAN and Business API Ecosystem)
+  share their users.
+* `ckanext-privatedatasets <https://github.com/conwetlab/ckanext-privatedatasets>`__: This extension allows to create
+  protected datasets in CKAN which can only be accessed by a set of users selected by the dataset owner. Moreover, this
+  extension exposes an API that can be used to add or remove authorized users from a dataset.
+
+In addition, if the `ckanext-storepublisher <https://github.com/FIWARE-TMForum/ckanext-storepublisher>`__ plugin is installed
+in CKAN, the *CKAN dataset* plugin must be installed in the Business API Ecosystem, since the aforementioned CKAN extension
+uses the *CKAN Dataset* asset type for creating product specifications.
+
+The CKAN Dataset plugin only allows to provide the asset with a URL that must match the dataset URL in CKAN.
+
+.. image:: /images/plugin/ckan1.png
+   :align: center
+
+This plugin implements the following event handlers:
+
+* **on_pre_product_spec_validation**: In this handler the plugin validates that the provided URL is a valid CKAN dataset and
+  that the user creating the product specification is its owner.
+* **on_product_acquisition**: In this handler the plugin uses the CKAN instance API in order to grant access to the user
+  who has acquired a dataset.
+* **on_product_suspension**: In this handler the plugin uses the CKAN instance API in order to revoke access to a dataset
+  when a user has not paid or when the user cancels a subscription.
+
+
 -------------------
 Accountable Service
 -------------------
