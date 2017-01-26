@@ -25,7 +25,7 @@ component. (For more details on the WireCloud platform see its documentation in 
 The WireCloud component plugin allows to provide the WGT file in the two ways supported by the Business API Ecosystem,
 that is, uploading the WGT file when creating the product and providing a URL where the platform can download the file.
 
-In addition, the plugin only allows the media type *WireCloud Component*. Nevertheless, the plugin code uses the WGT
+In addition, the plugin only allows the media type *Mashable application component*. Nevertheless, the plugin code uses the WGT
 metainfo to determine the type of the WireCloud component (Widget, Operator, or Mashup) and overrides the media type with the
 proper one understood by the WireCloud platform (*wirecloud/widget*, *wirecloud/operator* or *wirecloud/mashup*).
 
@@ -84,6 +84,35 @@ This plugin implements the following event handlers:
 -------------------
 Accountable Service
 -------------------
+
+The *Accountable Service* plugin is available in `GitHub <https://github.com/FIWARE-TMForum/wstore-orion-plugin>`__.
+This plugin defines a generic asset type which is used jointly with the `Accounting Proxy <https://github.com/FIWARE-TMForum/Accounting-Proxy>`__
+in order to offer services under a pay-per-use model. In particular, this plugin is able to validate services URLs,
+validate sellers permissions, generate API keys for the Accounting Proxy, validate offering pricing models, and manage
+customers access rights to the offered services.
+
+Taking into account that this plugin is intended tyo work coordinately with an instance of the Accounting Proxy, all
+the assets to be registered using the *Accountable Service* type must be registered in the proxy as described in the
+Accounting Proxy section.
+
+The *Accountable Service* plugin only allows to provide the assets with a URL that must match the service one.
+
+.. image:: /images/plugin/accounting1.png
+   :align: center
+
+This plugin implements the following event handlers:
+
+* **on_post_product_spec_validation**: In this event handler the plugin validates that the provided URL belongs to a valid
+  service registered in an instance of the Accounting Proxy, and that the user creating the product specification is its owner.
+  In addition, this handler generates an API key for the Accounting Proxy to be used when it feeds the Business API Ecosystem
+  with accounting information.
+* **on_post_product_offering_validation**: In this event handler the plugin validates the pricing model of a product offering
+  where the service is going to be sold. Specifically, it validates that all the price plans which can be selected by a
+  customer are usage models and that the units (calls, seconds, mb, etc) are supported by the Accounting Proxy.
+* **on_product_acquisition**: This event handler is used to grant access to a user who has acquired a service by sending
+  a notification to the proxy, including also the unit to be accounted (price plan selected).
+* **on_product_suspension**: This event handler is used to in order to revoke access to a service when a user has not
+  paid or when the user cancels a subscription.
 
 Accounting Proxy
 ================
