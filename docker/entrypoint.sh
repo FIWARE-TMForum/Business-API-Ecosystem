@@ -117,7 +117,7 @@ function done_mongo {
     sed -i "s|AUTHORIZE_SERVICE = 'http://localhost:8004/authorizeService/apiKeys'|AUTHORIZE_SERVICE = 'http://localhost:8000/authorizeService/apiKeys'|g" ./services_settings.py
 
 
-    python ./manage.py createsite external http://$BIZ_ECOSYSTEM_HOST:$BIZ_ECOSYSTEM_PORT/
+    python ./manage.py createsite external http://$BIZ_ECOSYS_HOST:$BIZ_ECOSYS_PORT/
     python ./manage.py createsite internal http://127.0.0.1:8006/
 
     echo "Starting charging server"
