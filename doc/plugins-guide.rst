@@ -435,3 +435,61 @@ header with a valid access token from the IdM.
     {
 	    "units": ["..."]
     }
+
+
+Accounting modules
+------------------
+
+By default, the Accounting Proxy includes three different modules for accounting. Nevertheless, it is possible to extend
+the proxy with new modules by creating them in the *acc_modules* directory, those modules have to have the following structure:
+
+::
+
+    /** Accounting module for unit: XXXXXX */
+
+    var count = function (countInfo, callback) {
+        // Code to do the accounting goes here
+        // .....
+
+        return callback(error, amount);
+    }
+
+    var getSpecification = function () {
+        return specification;
+    }
+
+
+The function `count` receives two parameters:
+* `countInfo`: object containing both, the request made by the user and the response returned by the service ::
+
+    {
+        request: { // Request object used by the proxy to make the request to the service.
+            headers: {
+
+            },
+            body: {
+
+            },
+            ...
+        },
+        response: { // Response object received from the service.
+            headers: {
+
+            },
+            body: {
+
+            },
+            elapsedTime: , // Response time
+            ...
+        }
+    }
+
+* `callback`: function, which is used to retrieve the accounting value or the error message. The callback expects 2 parameters:
+   * `error`: string with a description of the error if there is one. Otherwise, `null`.
+   * `amount`: number with the amount to be added to the current accounting.
+
+The function `getSpecification` should return a javascript object with the usage specification for the accounting unit
+according to the TMF635 usage management API (`TMF635 usage Management API <https://www.tmforum.org/resources/standard/tmf635-usage-management-api-rest-specification-r14-5-0/>`__).
+
+Finally, add the name of the developed accounting module to the `config.modules` array in the `config.js` file (the
+accounting module name is the name of the file, e.g. `megabyte` and `megabyte.js`) and restart the Accounting Proxy.
