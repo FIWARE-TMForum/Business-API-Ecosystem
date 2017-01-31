@@ -149,13 +149,13 @@ In order to have the accounting proxy running it is needed to fill the following
 ::
 
     {
-	    https: {
+        https: {
             enabled: true,
             certFile: 'ssl/server1.pem',
             keyFile: 'ssl/server1.key',
             caFile: 'ssl/fake_ca.pem'
         },
-	    port: 9000
+        port: 9000
     }
 
 
@@ -168,7 +168,7 @@ In order to have the accounting proxy running it is needed to fill the following
 ::
 
     {
-	    type: './db',
+        type: './db',
         name: 'accountingDB.sqlite',
         redis_host: 'localhost',
         redis_port: 6379
@@ -183,7 +183,7 @@ In order to have the accounting proxy running it is needed to fill the following
 ::
 
     {
-	    accounting: [ 'call', 'megabyte', 'millisecond']
+        accounting: [ 'call', 'megabyte', 'millisecond']
     }
 
 Other accounting modules can be implemented and included to the proxy (see  *Accounting modules*).
@@ -197,7 +197,7 @@ Other accounting modules can be implemented and included to the proxy (see  *Acc
 ::
 
     {
-	    host: 'localhost',
+        host: 'localhost',
         port: 8080,
         path: '/DSUsageManagement/api/usageManagement/v2',
         schedule: '00 00 * * *'
@@ -329,3 +329,109 @@ it in a header *X-API-Key: api_key* when making requests, enables it to know wha
 .. note::
     The X-API-Key header is not intended to provide an extra level of security, but just to remove the possible incertitude
     around the request
+
+Proxy API
+---------
+
+The Accounting Proxy runs by default in the port 9000; nevertheless, this port can be configured as described in *Configuration*
+section. In this regard, the different services configured though the administration *cli* tool can be accessed directly
+in the root of the proxy using the public path defined for the service.
+
+In addition, the Accounting Proxy has an administration API which can be accessed though the reserved path */accounting_proxy*.
+Following, you can find the different services exposed in the administration API:
+
+POST .../newBuy
++++++++++++++++
+
+This service is used by the Business API Ecosystem to notify a new buy. If the accounting proxy has been started over
+HTTPS, these requests should be signed with the Business API Ecosystem key; otherwise, they will be rejected.
+
+::
+
+    {
+       "orderId": "...",
+       "productId": "...",
+       "customer": "...",
+       "productSpecification": {
+           "url": "...",
+           "unit": "...",
+           "recordType": "..."
+       }
+    }
+
+* `orderId`: order identifier.
+* `productId`: product identifier.
+* `customer`: customer id.
+* `url`: base url of the service.
+* `unit`: accounting unit (`megabyte`, `call`, etc).
+* `recordType`: type of accounting.
+
+POST .../deleteBuy
+++++++++++++++++++
+
+This service is used by the Business API Ecosystem to notify a terminated buy. If the accounting proxy has been started over HTTPS, these
+requests should be signed with the Business API Ecosystem key; otherwise, they will be rejected.
+
+::
+
+    {
+       "orderId": "...",
+       "productId": "...",
+       "customer": "...",
+       "productSpecification": {
+          "url": "..."
+       }
+    }
+
+* `orderId`: order identifier.
+* `productId`: product identifier.
+* `customer`: customer id.
+* `url`: base url of the service.
+
+POST .../urls
++++++++++++++
+
+This service is used by the Business API Ecosystem to check if an URL is a valid registered service. This requests require
+the "authorization" header with a valid access token from the IdM and the user must be an administrator of the service.
+If the accounting proxy has been started over HTTPS, these requests should be signed with the Business API Ecosystem key cert; otherwise,
+they will be rejected.
+
+::
+
+    {
+       "url": "..."
+    }
+
+GET .../keys
+++++++++++++
+
+Retrieve the user's API_KEYs in a json. This request require the "authorization" header with a valid access token from the IdM.
+
+::
+
+    [
+	    {
+            "apiKey": "...",
+            "productId": "...",
+            "orderId": "...",
+            "url": "..."
+        },
+        {
+            "apiKey": "...",
+            "productId": "...",
+            "orderId": "...",
+            "url": "..."
+        }
+    ]
+
+GET .../units
++++++++++++++
+
+Retrieve the supported accounting units by the accounting proxy in a JSON. This requests require the "authorization"
+header with a valid access token from the IdM.
+
+::
+
+    {
+	    "units": ["..."]
+    }
