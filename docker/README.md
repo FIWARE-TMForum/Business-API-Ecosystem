@@ -37,13 +37,16 @@ biz_db:
         - MYSQL_ROOT_PASSWORD=my-secret-pw
 
 biz_ecosystem:
-    image: conwetlab/business-api-ecosystem
+    image: fiware/business-api-ecosystem
     ports:
         - "8000:8000"
     links:
         - biz_db
     volumes:
-        - /your/route/to/media:/apis/business-ecosystem-charging-backend/src/media    
+        - /your/bills/path:/apis/business-ecosystem-charging-backend/src/media/bills
+        - /your/assets/path:/apis/business-ecosystem-charging-backend/src/media/assets
+        - /your/plugins/path:/apis/business-ecosystem-charging-backend/src/plugins
+        - /your/indexes/path:/apis/business-ecosystem-logic-proxy/indexes
     environment:
         - MYSQL_ROOT_PASSWORD=my-secret-pw
         - MYSQL_HOST=biz_db
@@ -69,10 +72,20 @@ sudo docker run --name biz_db -e MYSQL_ROOT_PASSWORD=my-secret-pw -p PORT:3306 -
 To Business API Ecosystem:
 
 ```
-sudo docker run -e MYSQL_ROOT_PASSWORD=my-secret-pw -e MYSQL_HOST=rss_db -e OAUTH2_CLIENT_ID=your-oauth-client-id -e OAUTH2_CLIENT_SECRET=your-oauth-client-secret -e BIZ_ECOSYS_PORT=your-port -e BIZ_ECOSYS_HOST=your-host -e PAYPAL_CLIENT_ID=your-paypal-client-id -e PAYPAL_CLIENT_SECRET=your-paypal-client-secret -e ADMIN_EMAIL=your@email.com -p your-port:8000 --link biz_db conwetlab/business-api-ecosystem
+sudo docker run \
+    -e MYSQL_ROOT_PASSWORD=my-secret-pw \
+    -e MYSQL_HOST=rss_db \
+    -e OAUTH2_CLIENT_ID=your-oauth-client-id \
+    -e OAUTH2_CLIENT_SECRET=your-oauth-client-secret \
+    -e BIZ_ECOSYS_PORT=your-port \
+    -e BIZ_ECOSYS_HOST=your-host \
+    -e PAYPAL_CLIENT_ID=your-paypal-client-id \
+    -e PAYPAL_CLIENT_SECRET=your-paypal-client-secret \
+    -e ADMIN_EMAIL=your@email.com \
+    -p your-port:8000 --link biz_db fiware/business-api-ecosystem
 ```
 
-Note in the previous commands, that it is needed to provide some environment variables. Concretely:
+Note in the previous commands, that it is needed to provide some environment variables. In particular:
 
 * **MYSQL_ROOT_PASSWORD**: Password of the MySQL root user 
 * **MYSQL_HOST**: Host of MySQL. If you are linking instances this value will be the name of the MySQL container
@@ -92,6 +105,14 @@ email notifications:
 * **EMAIL_SERVER**: SMTP server host of the email account to be used for notifications
 * **EMAIL_SERVER_PORT**: SMTP server port of the email account to be used for notifications
 
+Moreover, the Business API Ecosystem image defines 4 containers intended to persist and share 
+some information. Specifically, the following volumes have been defined:
+
+* **/apis/business-ecosystem-charging-backend/src/media/bills**: This volume is used for saving the generated PDF invoices
+* **/apis/business-ecosystem-charging-backend/src/media/assets**: This volume is used for saving the uploaded digital assets
+* **/apis/business-ecosystem-charging-backend/src/plugins**: This volume is intended for supporting the installation of digital assets plugins (see *Installing Asset Plugins* section)
+* **/apis/business-ecosystem-logic-proxy/indexes**: This volume is used for saving the indexes used for searching and paginating
+
 ## Build the image
 
 If you have downloaded the [Business API Ecosystem](https://github.com/FIWARE-TMForum/Business-API-Ecosystem) you can 
@@ -108,3 +129,31 @@ To create the image, just navigate to the `docker` directory and run:
 The parameter `-t business-api-ecosystem` gives the image a name. This name could be anything, or even include an organization like `-t conwetlab/biz-ecosystem-logic-proxy`. This name is later used to run the container based on the image.
 
 If you want to know more about images and the building process you can find it in [Docker's documentation](https://docs.docker.com/userguide/dockerimages/).
+
+## Installing Asset Plugins
+
+As you may know, the Business API Ecosystem is able to sell different types of digital assets
+by loading asset plugins in its Charging Backend. In this context, it is possible to install
+asset plugins in the current Docker image as follows:
+
+1) Copy the plugin file into the host directory of the volume */apis/business-ecosystem-charging-backend/src/plugins*
+
+2) Enter the running container:
+```
+docker exec -i -t your-container /bin/bash
+```
+
+3) Go to the installation directory
+```
+cd /apis/business-ecosystem-charging-backend/src
+```
+
+4) Load the plugin
+```
+./manage.py loadplugin ./plugins/pluginfile.zip
+```
+
+5) Restart Apache
+```
+service apache2 restart
+```
