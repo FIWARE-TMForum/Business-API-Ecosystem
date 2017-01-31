@@ -6,11 +6,11 @@ User and Programmer Guide
 Introduction
 ------------
 
-This user and programmer guide covers the Business API Ecosystem version 5.4.0, corresponding to FIWARE release 5.
-Any feedback on this document is highly welcomed, including bugs, typos or things you think should be included but aren't. Please send them to the "Contact Person" email that appears in the `Catalogue page for this GEi`_.
-Or create an issue at `GitHub Issues`_
+This user and programmer guide covers the Business API Ecosystem version 5.4.1, corresponding to FIWARE release 5.
+Any feedback on this document is highly welcomed, including bugs, typos or things you think should be included but aren't.
+Please send them to the "Contact Person" email that appears in the `Catalogue page for this GEi`_. Or create an issue at `GitHub Issues`_
 
-.. _Catalogue page for this GEi: http://catalogue.fiware.org
+.. _Catalogue page for this GEi: https://catalogue.fiware.org/enablers/business-api-ecosystem-biz-ecosystem-ri
 .. _GitHub Issues: https://github.com/FIWARE-TMForum/Business-API-Ecosystem/issues/new
 
 ----------
@@ -31,7 +31,7 @@ To configure the user profile, the first step is opening the user *Settings* loc
 .. image:: /images/user/profile1.png
    :align: center
 
-In the displayed view, it can be seen that some information related to account is already included (*Username*, *Email*, *Access token*).
+In the displayed view, it can be seen that some information related to the account is already included (*Username*, *Email*, *Access token*).
 This information is the one provided by the IdM after the login process.
 
 To create the profile, fill in the required information and click on *Update*
@@ -48,7 +48,7 @@ Once you have created your profile, you can include contact mediums by going to 
    :align: center
 
 In the *Contact Medium* section, there are two different tabs. On the one hand, the *Shipping addresses* tab, where you
-can register the shipping addresses you will be able to use when creating order and purchasing products.
+can register the shipping addresses you will be able to use when creating orders and purchasing products.
 
 To create a shipping address, fill in the fields and click on *Create*
 
@@ -115,7 +115,7 @@ Then, provide a name and an optional description for the category. Once the info
 .. image:: /images/user/cat4.png
    :align: center
 
-Categories in the Business API Ecosystem can be nested, so you can choose a parent category if you want, while creating.
+Categories in the Business API Ecosystem can be nested, so you can choose a parent category if you want while creating.
 
 .. image:: /images/user/cat5.png
    :align: center
@@ -170,12 +170,12 @@ Then, provide a name and an optional description for the catalog. Once you have 
 .. image:: /images/user/catalog5.png
    :align: center
 
-Sellers, can also update their catalogs. To do that, click on the name of the catalog to open the update view.
+Sellers can also update their catalogs. To do that, click on the name of the catalog to open the update view.
 
 .. image:: /images/user/catalog6.png
    :align: center
 
-Then update the fields you want to modify and click on *Update*. In this view, it is possible to change the *Status* of the
+Then, update the fields you want to modify and click on *Update*. In this view, it is possible to change the *Status* of the
 catalog. To start monetizing the catalog, and make it appear in the *Home* you have to change its status to *Launched*
 
 .. image:: /images/user/catalog7.png
@@ -220,7 +220,7 @@ in your environment. Then, click on *Next*.
    :align: center
 
 In the next step, you can choose whether your product specification is a bundle or not. Product bundles are logical containers
-that allows you to sell multiple products as if it were a single one. Once you have selected the right option click on *Next*
+that allow you to sell multiple products as if it were a single one. Once you have selected the right option click on *Next*
 
 .. image:: /images/user/product8.png
    :align: center
@@ -247,7 +247,7 @@ available options, provide the asset, and include its media type.
    :align: center
 
 The next step in the creation of a product is including its characteristics. For including a new characteristic click on
-*Add Characteristic*
+*New Characteristic*
 
 .. image:: /images/user/product12.png
    :align: center
@@ -258,7 +258,7 @@ characteristic by filling the *Create a value* input and clicking on *+*.
 .. image:: /images/user/product13.png
    :align: center
 
-Once you have included all the characteristic info, save it clicking on *Add Characteristic*
+Once you have included all the characteristic info, save it clicking on *Create*
 
 .. image:: /images/user/product14.png
    :align: center
@@ -277,13 +277,21 @@ picture or directly uploading it. Once provided click *Next*
 .. image:: /images/user/product17.png
    :align: center
 
-In the last step, you can specify relationships of the product you are creating with other of your product specs. Once done
-click on *Next* and then on *Create*
+Then, you can specify relationships of the product you are creating with other of your product specs.
 
 .. image:: /images/user/product18.png
    :align: center
 
+In the last step, you can specify the terms and conditions that apply to your product and that must be accepted by those
+customers who want to acquire it. To do that, include a title and a text for your terms and click on *Next*. Note that
+the terms and conditions are not mandatory.
+
 .. image:: /images/user/product19.png
+   :align: center
+
+Once done click on *Next* and then on *Create*
+
+.. image:: /images/user/product19b.png
    :align: center
 
 Sellers can update their products. To do that click on the product specification to be updated.
@@ -429,7 +437,7 @@ you have to update its status to *Launched*
 Manage Revenue Sharing Models
 -----------------------------
 
-Revenue Sharing Models specify how the revenues generated by an offering or set of offerings must be distributed between,
+Revenue Sharing Models specify how the revenues generated by an offering or set of offerings must be distributed between
 the owner of the Business API Ecosystem instance, the provider of the offering, and the related stakeholders involved.
 
 To manage RS models go to the *Revenue Sharing* section.
@@ -454,12 +462,12 @@ you want to receive. The platform percentage is fixed and cannot be modified. On
 .. image:: /images/user/revenue4.png
    :align: center
 
-In the next step, you can optionally add more stakeholders to the RS model. To do that click on *Add Stakeholder*
+In the next step, you can optionally add more stakeholders to the RS model. To do that click on *New Stakeholder*
 
 .. image:: /images/user/revenue5.png
    :align: center
 
-Then, select the Stakeholder between the available users, and provide its percentage. Finally, save it clicking on *Add Stakeholder*
+Then, select the Stakeholder between the available users, and provide its percentage. Finally, save it clicking on *Create*
 
 .. image:: /images/user/revenue6.png
    :align: center
@@ -910,6 +918,132 @@ of a product containing the asset. Concretely, the following events have been de
 * **on_post_product_offering_validation**: This method is executed when creating a new product offering containing an asset of the given type, after validating its pricing model. This method can be used to make extra validations on the pricing model, for example check if the unit of an usage model is supported by the given asset
 * **on_product_acquisition**: This method is called when a product containing an asset of the given type has been acquired. This method can be used to activate the service for the customer and give him access rights.
 * **on_product_suspension**: This method is called when a product containing an asset of the given type has been suspended for a customer (e.g he has not paid). Tjis method can be used to suspend the service for the customer and remove his access rights
+
+As can be seen in the Plugin example, the different handler methods receive some parameters with relevant information and
+objects. In particular:
+
+on_pre_product_spec_validation
+------------------------------
+
+* **provider**: User object containing the user who is creating the product specification (The User object is described later)
+* **asset_t**: String containing the asset type, it must be equal to the one defined in package.json
+* **media_type**: String containing the media type of the asset included in the product being created
+* **url**: String containing the url of the asset included in the product being created
+
+
+on_post_product_spec_validation
+-------------------------------
+
+* **provider**: User object containing the user who is creating the product specification (The User object is described later)
+* **asset**: Asset object with the recently created asset (The Asset object is described later)
+
+on_pre_product_spec_attachment
+------------------------------
+
+* **asset**: Asset object where the created product specification id is going to be attached
+* **asset_t**: String containing the asset type, it must be equal to the one defined in package.json
+* **product_spec**: JSON with the raw product specification information that is going to be used for the attachment. (The structure of this JSON object can be found in the Open Api documentation)
+
+
+on_post_product_spec_attachment
+-------------------------------
+
+* **asset**: Asset object where the created product specification id has been attached
+* **asset_t**: String containing the asset type, it must be equal to the one defined in package.json
+* **product_spec**: JSON with the raw product specification information that has been used for the attachment. (The structure of this JSON object can be found in the Open Api documentation)
+
+on_pre_product_offering_validation
+----------------------------------
+
+* **asset**: Asset object included in the offering being created
+* **product_offering**: JSON with the raw product offering information that is going to be validated. (The structure of this JSON object can be found in the Open Api documentation)
+
+
+on_post_product_offering_validation
+-----------------------------------
+
+* **asset**: Asset object included in the offering being created
+* **product_offering**: JSON with the raw product offering information that has been validated. (The structure of this JSON object can be found in the Open Api documentation)
+
+on_product_acquisition
+----------------------
+
+* **asset**: Asset object that has been acquired
+* **contract**: Contract object including the information of the acquired offering which contains the asset. (The Contract object is described later)
+* **order**: Order object including the information of the order where the asset was acquired. (The Order object is described later)
+
+on_product_acquisition
+----------------------
+
+* **asset**: Asset object that has been suspended
+* **contract**: Contract object including the information of the acquired offering which contains the asset
+* **order**: Order object including the information of the order where the asset was acquired
+
+Handler Objects
+---------------
+
+Following you can find the information regarding the different objects used in plugin handlers
+
+* **User**: Django model object with the following fields
+   * **username**: Username of the user
+   * **email**: Email of the user
+   * **complete_name**: Complete name of the user
+
+* **Asset**: Django model object with the following fields
+   * **product_id**: Id of the product specification which includes the asset
+   * **version**: Version of the product specification which includes the asset
+   * **provider**: User object of the user that created the asset
+   * **content_type**: media type of the asset
+   * **download_link**: URL of the asset if it is a service in an external server
+   * **resource_path**: Path to the asset file if it is uploaded in the server
+   * **resource_type**: Type of the asset as defined in the package.json file of the related plug-in
+   * **is_public**: If true the asset can be downloaded by any user without the need of acquiring it
+   * **meta_info**: JSON with any related information. This field is useful to include specific info from the plugin code
+
+Additionally, it includes the following methods:
+
+* **get_url**: Returns the URL where the asset can be accessed
+* **get_uri**: Returns the url where the asset info can be accessed
+
+
+* **Contract**: Django model with the following fields
+   * **item_id**: Id of the order item which generated the current contract
+   * **offering**: Offering object with the information of the offering acquired in the current contract (The offering object is described later)
+   * **product_id**: Id of the inventory product created as a result if the acquisition of the specified offering
+   * **pricing_model**: JSON with the pricing model that is used in the current contract for charging the customer who acquired the included offering
+   * **last_charge**: Datetime object with the date and time of the last charge to the customer
+   * **charges**: List of Charge objects contaning the info of the different times the customer has been charged in the context of the current contract
+   * **correlation_number**: Next expected correlation number for usage documents. This field is only used when the pricing model is usage
+   * **last_usage**: Datetime object with the date and time of the last usage document received. This field is only used when the pricing model is usage
+   * **revenue_class**: Product class of the involved offering for revenue sharing
+   * **terminated**: Specified whether the contract has been terminated (the customer has no longer access to the acquired asset)
+
+* **Offering**: Django model with the following fields
+   * **off_id**: Id of the product offering
+   * **name**: Name of the offering
+   * **version**: Version of the offering
+   * **description**: Description of the offering
+   * **asset**: Asset offered in the offering
+
+* **Charge** Django model with the following fields
+   * **date**: Datetime object with the date and time of the charge
+   * **cost**: Total amount charged
+   * **duty_free**: Amount charged without taxes
+   * **currency**: Currency of the charge
+   * **concept**: Concept of the charge (initial, renovation, usage)
+   * **invoice**: Path to the PDF file containing the invoice of the charge
+
+* **Order**: Django model with the following fields
+   * **order_id**: Id of the product order
+   * **customer**: User object of the customer of the order
+   * **date**: Datetime object with the date and time of the order creation
+   * **tax_address**: JSON with the billing address used by the customer in the order
+   * **contracts**: List of Conctract objects, one for earch offering acquired in the order
+
+Additionally, it includes the following methods:
+
+* **get_item_contract**: Returns a contract given an item_id
+* **get_product_contract**: Returns a contract given a product_id
 
 Managing Plugins
 ================

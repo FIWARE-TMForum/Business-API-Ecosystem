@@ -4,55 +4,55 @@
 
 if [ -z $PAYPAL_CLIENT_ID ];
 then
-    echo $PAYPAL_CLIENT_ID environment variable not set
+    echo PAYPAL_CLIENT_ID environment variable not set
     exit 1
 fi
 
 if [ -z $PAYPAL_CLIENT_SECRET ];
 then
-    echo $PAYPAL_CLIENT_SECRET environment variable not set
+    echo PAYPAL_CLIENT_SECRET environment variable not set
     exit 1
 fi
 
 if [ -z $ADMIN_EMAIL ];
 then
-    echo $ADMIN_EMAIL environment variable not set
+    echo ADMIN_EMAIL environment variable not set
     exit 1
 fi
 
 if [ -z $BIZ_ECOSYS_PORT ];
 then
-    echo $BIZ_ECOSYS_PORT environment variable not set
+    echo BIZ_ECOSYS_PORT environment variable not set
     exit 1
 fi
 
 if [ -z $BIZ_ECOSYS_HOST ];
 then
-    echo $BIZ_ECOSYS_HOST environment variable not set
+    echo BIZ_ECOSYS_HOST environment variable not set
     exit 1
 fi
 
 if [[ -z $OAUTH2_CLIENT_ID ]];
 then
-    echo $OAUTH2_CLIENT_ID is not set
+    echo OAUTH2_CLIENT_ID is not set
     exit 1
 fi
 
 if [[ -z $OAUTH2_CLIENT_SECRET ]];
 then
-    echo $OAUTH2_CLIENT_SECRET is not set
+    echo OAUTH2_CLIENT_SECRET is not set
     exit 1
 fi
 
 if [[ -z $MYSQL_ROOT_PASSWORD ]];
 then
-    echo $MYSQL_ROOT_PASSWORD is not set
+    echo MYSQL_ROOT_PASSWORD is not set
     exit 1
 fi
 
 if [[ -z $MYSQL_HOST ]];
 then
-    echo $MYSQL_HOST is not set
+    echo MYSQL_HOST is not set
     exit 1
 fi
 
@@ -92,28 +92,51 @@ function done_mongo {
 
     sed -i "s|PAYPAL_CLIENT_SECRET = ''|PAYPAL_CLIENT_SECRET = '$PAYPAL_CLIENT_SECRET'|g" ./wstore/charging_engine/payment_client/paypal_client.py
 
-
     sed -i "s|WSTOREMAIL = 'wstore_email'|WSTOREMAIL = '$ADMIN_EMAIL'|g" ./settings.py
 
-    sed -i "s|PAYMENT_METHOD = None|PAYMENT_METHOD = 'paypal'|g" ./settings.py
+    if [[ ! -z $EMAIL_USER ]];
+    then
+        sed -i "s|WSTOREMAILUSER = 'email_user'|WSTOREMAILUSER = '$EMAIL_USER'|g" ./settings.py
+    fi
 
-    sed -i "s|AUTHORIZE_SERVICE = 'http://localhost:8004/authorizeService/apiKeys'|AUTHORIZE_SERVICE = 'http://$BIZ_ECOSYS_HOST:$BIZ_ECOSYS_PORT/authorizeService/apiKeys'|g" ./services_settings.py
+    if [[ ! -z $EMAIL_PASSWD ]];
+    then
+        sed -i "s|WSTOREMAILPASS = 'wstore_email_passwd'|WSTOREMAILPASS = '$EMAIL_PASSWD'|g" ./settings.py
+    fi
 
-    python /charging-entrypoint.py
+    if [[ ! -z $EMAIL_SERVER ]];
+    then
+        sed -i "s|SMTPSERVER = 'wstore_smtp_server'|SMTPSERVER = '$EMAIL_SERVER'|g" ./settings.py
+    fi
+
+    if [[ ! -z $EMAIL_SERVER_PORT ]];
+    then
+        sed -i "s|SMTPPORT = 587|SMTPPORT = $EMAIL_SERVER_PORT|g" ./settings.py
+    fi
+
+    sed -i "s|AUTHORIZE_SERVICE = 'http://localhost:8004/authorizeService/apiKeys'|AUTHORIZE_SERVICE = 'http://localhost:8000/authorizeService/apiKeys'|g" ./services_settings.py
+
+
+    python ./manage.py createsite external http://$BIZ_ECOSYS_HOST:$BIZ_ECOSYS_PORT/
+    python ./manage.py createsite internal http://127.0.0.1:8006/
 
     echo "Starting charging server"
-    python ./manage.py runserver 0.0.0.0:8004 &
+    service apache2 restart
 
     cd ../../business-ecosystem-logic-proxy
 
+    sed -i "s|config\.port|'$BIZ_ECOSYS_PORT'|" lib/tmfUtils.js
     python /proxy-entrypoint.py
 
+    /node-v6.9.1-linux-x64/bin/node fill_indexes.js
     cd ..
 }
 
 ########################################################################################
 
 set -o monitor
+
+export PATH=$PATH:/glassfish4/glassfish/bin
 
 service mongodb start
 
@@ -143,14 +166,20 @@ if [[ $glassfishStatus -eq 0 && $mysqlStatus -eq 0 ]]; then
     doneGlassfish=0
 fi
 
-if [[ $mongodbStatus -eq 0 ]]; then
+if [[ $mongodbStatus -eq 0 && $doneGlassfish -eq 0 ]]; then
     done_mongo
     doneMongo=0
 fi
 
 
-while [[ ($mysqlStatus -ne 0 || $glassfishStatus -ne 0 || $mongodbStatus -ne 0) && $i -lt 20 ]]; do
-    sleep 2
+while [[ ($doneTables -ne 0 || $doneGlassfish -ne 0 || $doneMongo -ne 0) && $i -lt 50 ]]; do
+
+    echo "Checking deployment status: "
+    echo "MySQL databases: $doneTables"
+    echo "API deployment: $doneGlassfish"
+    echo "Charging startup: $doneMongo"
+
+    sleep 5
     i=$i+1
 
     if [[ $mysqlStatus -eq 0 && $doneTables -eq 1 ]]; then
@@ -172,7 +201,7 @@ while [[ ($mysqlStatus -ne 0 || $glassfishStatus -ne 0 || $mongodbStatus -ne 0) 
 	    glassfishStatus=$?
     fi
 
-    if [[ $mongodbStatus -eq 0 && $doneMongo -eq 1 ]]; then
+    if [[ $mongodbStatus -eq 0 && $doneMongo -eq 1 && $glassfishStatus -eq 0 && $doneGlassfish -eq 0 ]]; then
 	    done_mongo
 	    doneMongo=0
 
@@ -182,9 +211,10 @@ while [[ ($mysqlStatus -ne 0 || $glassfishStatus -ne 0 || $mongodbStatus -ne 0) 
     fi
 done
 
-if [[ $i -eq 20 ]];
+if [[ $i -eq 50 ]];
 then
-    echo Conection to Mongo returned $mongoStatus
+    echo "It has not been possible to start the Business API Ecosystem due to a timeout waiting for a required service"
+    echo Conection to Mongo returned $mongodbStatus
     echo Conection to MySQL returned $mysqlStatus
     echo Conection to Glassfish returned $glassfishStatus
     exit 1
@@ -198,7 +228,5 @@ exec 9<&- # close input connection
 exec 10>&- # close output connection
 exec 10<&- # close input connection
 
-
-cd /apis/business-ecosystem-logic-proxy/
-
-./node-v4.5.0-linux-x64/bin/node server.js
+cd business-ecosystem-logic-proxy
+/node-v6.9.1-linux-x64/bin/node server.js

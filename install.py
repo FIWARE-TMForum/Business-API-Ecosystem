@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from sh import git, cd, mvn, mysql, asadmin, npm, cp, virtualenv, bash, mkdir, rm
+from sh import git, cd, mvn, mysql, asadmin, npm, node, cp, virtualenv, bash, mkdir, rm
 from os.path import isfile
 import click
 import os.path
@@ -12,68 +12,68 @@ DBHOST = "localhost"
 DBPORT = 3306
 
 APIS = [{"url": "https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2.git",
-         "branch": "v5.4.0",
+         "branch": "v5.4.1",
          "bbdd": "DSPRODUCTCATALOG2",
-         "war": "target/DSPRODUCTCATALOG2.war",
+         "war": "target/DSProductCatalog.war",
          "root": "DSProductCatalog",
          "name": "catalog",
          "resourcename": "jdbc/pcatv2"},
         {"url": "https://github.com/FIWARE-TMForum/DSPRODUCTORDERING.git",
-         "branch": "v5.4.0",
+         "branch": "v5.4.1",
          "bbdd": "DSPRODUCTORDERING",
-         "war": "target/productOrdering.war",
+         "war": "target/DSProductOrdering.war",
          "root": "DSProductOrdering",
          "name": "ordering",
          "resourcename": "jdbc/podbv2"},
         {"url": "https://github.com/FIWARE-TMForum/DSPRODUCTINVENTORY.git",
-         "branch": "v5.4.0",
+         "branch": "v5.4.1",
          "bbdd": "DSPRODUCTINVENTORY",
-         "war": "target/productInventory.war",
+         "war": "target/DSProductInventory.war",
          "root": "DSProductInventory",
          "name": "inventory",
          "resourcename": "jdbc/pidbv2"},
         {"url": "https://github.com/FIWARE-TMForum/DSPARTYMANAGEMENT.git",
-         "branch": "v5.4.0",
+         "branch": "v5.4.1",
          "bbdd": "DSPARTYMANAGEMENT",
-         "war": "target/party.war",
+         "war": "target/DSPartyManagement.war",
          "root": "DSPartyManagement",
          "name": "party",
          "resourcename": "jdbc/partydb"},
         {"url": "https://github.com/FIWARE-TMForum/DSBILLINGMANAGEMENT.git",
-         "branch": "v5.4.0",
+         "branch": "v5.4.1",
          "bbdd": "DSBILLINGMANAGEMENT",
-         "war": "target/billingManagement.war",
+         "war": "target/DSBillingManagement.war",
          "root": "DSBillingManagement",
          "name": "billing",
          "resourcename": "jdbc/bmdbv2"},
         {"url": "https://github.com/FIWARE-TMForum/DSCUSTOMER.git",
-         "branch": "v5.4.0",
+         "branch": "v5.4.1",
          "bbdd": "DSCUSTOMER",
-         "war": "target/customer.war",
+         "war": "target/DSCustomerManagement.war",
          "root": "DSCustomerManagement",
          "name": "customer",
          "resourcename": "jdbc/customerdbv2"},
         {"url": "https://github.com/FIWARE-TMForum/DSUSAGEMANAGEMENT.git",
-         "branch": "v5.4.0",
+         "branch": "v5.4.1",
          "bbdd": "DSUSAGEMANAGEMENT",
-         "war": "target/usageManagement.war",
+         "war": "target/DSUsageManagement.war",
          "root": "DSUsageManagement",
          "name": "usage",
          "resourcename": "jdbc/usagedbv2"}]
 
 rss = {"url": "https://github.com/FIWARE-TMForum/business-ecosystem-rss.git",
-       "branch": "v5.4.0",
+       "branch": "v5.4.1",
        "bbdd": "RSS",
        "war": "fiware-rss/target/DSRevenueSharing.war",
        "name": "rss",
        "root": "DSRevenueSharing"}
 
 charg = {"url": "https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend.git",
-         "branch": "v5.4.0",
+         "branch": "v5.4.1",
          "name": "charging"}
 
 proxy = {"url": "https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy.git",
-         "branch": "v5.4.0"}
+         "branch": "v5.4.1"}
 
 
 @click.group(chain=True)
@@ -266,19 +266,30 @@ def chargingbackend(ctx):
     virtualenv("virtenv")
 
     bash("python-dep-install.sh")
+
+    cd('src')
+    mkdir('media')
+    cd('media')
+    mkdir('assets')
+    mkdir('bills')
+
+    cd("..")
+    cd("..")
     cd("..")
 
 
 def generate_endpoints(port, cport):
-    template = "'{}': {{ 'path': '{}', 'port': '{}' }}, "
+    template = "'{}': {{ 'path': '{}', 'port': '{}', 'host': 'localhost', 'appSsl': false }}, "
     base = [template.format(x.get("name"), x.get("root"), port) for x in APIS + [rss]]
+    base.append("'management': { 'path': 'management', 'host': 'localhost', 'port': config.port, 'appSsl': config.https.enabled },")
+
     return ["config.endpoints = {\n"] + base + [template.format("charging", "charging", cport)] + ["};"]
 
 
 @cli.command("proxy")
 @click.option("--host", "-h", default="localhost", type=str)
-@click.option("--port", "-p", default=8000, type=int)
-@click.option("--chargingport", "-c", default=8004, type=int)
+@click.option("--port", "-p", default=8004, type=int)
+@click.option("--chargingport", "-c", default=8006, type=int)
 @click.option("--glassfishport", "-P", default=8080, type=int)
 def proxyCommand(host, port, chargingport, glassfishport):
     print("Installing logic proxy")
@@ -293,16 +304,18 @@ def proxyCommand(host, port, chargingport, glassfishport):
             text = f.read()
 
         text = text.replace("config.port = 80", "config.port = {}".format(port))\
-                   .replace("'/proxy'", "''")\
-                   .replace("config.appHost = ''", "config.appHost = '127.0.0.1'")
+                   .replace("'/proxy'", "''")
 
         texts = text.split("\n")
-        texts = texts[:50] + generate_endpoints(glassfishport, chargingport) + texts[88:]
+        texts = texts[:47] + generate_endpoints(glassfishport, chargingport) + texts[109:]
 
         text = "\n".join(texts)
 
         with open("config.js", "w") as f:
             f.write(text)
+
+        mkdir('indexes')
+        node('fill_indexes.js')
 
     print("""
     Finished!

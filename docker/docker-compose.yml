@@ -8,20 +8,23 @@ biz_db:
         - MYSQL_ROOT_PASSWORD=my-secret-pw
 
 biz_ecosystem:
-    image: conwetlab/business-api-ecosystem
+    image: fiware/business-api-ecosystem
     ports:
         - "8000:8000"
     links:
         - biz_db
     volumes:
-        - /your/path/media:/apis/business-ecosystem-charging-backend/src/media
+        - /your/bills/path:/apis/business-ecosystem-charging-backend/src/media/bills
+        - /your/assets/path:/apis/business-ecosystem-charging-backend/src/media/assets
+        - /your/plugins/path:/apis/business-ecosystem-charging-backend/src/plugins
+        - /your/indexes/path:/apis/business-ecosystem-logic-proxy/indexes
     environment:
         - MYSQL_ROOT_PASSWORD=my-secret-pw
-        - MYSQL_HOST=rss_db
+        - MYSQL_HOST=biz_db
         - OAUTH2_CLIENT_ID=your-client-id
         - OAUTH2_CLIENT_SECRET=your-client-secret
         - PAYPAL_CLIENT_ID=your-paypal-client-id
         - PAYPAL_CLIENT_SECRET=your-paypal-client-secret
         - ADMIN_EMAIL=your@email.com
-        - BIZ_ECOSYS_PORT=your-port
-        - BIZ_ECOSYS_HOST=your-host
+        - BIZ_ECOSYS_PORT=8000
+        - BIZ_ECOSYS_HOST=localhost

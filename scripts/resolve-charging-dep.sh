@@ -38,7 +38,7 @@ enabled=1" > /etc/yum.repos.d/mongodb.repo
     wget http://download.gna.org/wkhtmltopdf/0.12/0.12.1/wkhtmltox-0.12.1_linux-centos7-amd64.rpm
     rpm -ivh wkhtmltox-0.12.1_linux-centos7-amd64.rpm
 
-    yum install xorg-x11-server-Xvfb
+    yum install -y xorg-x11-server-Xvfb
 
     # Install virtualenv
     pip install virtualenv

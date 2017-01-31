@@ -10,37 +10,37 @@ DBPORT = "3306"
 
 APIS = [{
          "bbdd": "DSPRODUCTCATALOG2",
-         "war": "DSPRODUCTCATALOG2.war",
+         "war": "DSProductCatalog.war",
          "root": "DSProductCatalog",
          "resourcename": "jdbc/pcatv2"},
         {
          "bbdd": "DSPRODUCTORDERING",
-         "war": "productOrdering.war",
+         "war": "DSProductOrdering.war",
          "root": "DSProductOrdering",
          "resourcename": "jdbc/podbv2"},
         {
          "bbdd": "DSPRODUCTINVENTORY",
-         "war": "productInventory.war",
+         "war": "DSProductInventory.war",
          "root": "DSProductInventory",
          "resourcename": "jdbc/pidbv2"},
         {
          "bbdd": "DSPARTYMANAGEMENT",
-         "war": "party.war",
+         "war": "DSPartyManagement.war",
          "root": "DSPartyManagement",
          "resourcename": "jdbc/partydb"},
         {
          "bbdd": "DSBILLINGMANAGEMENT",
-         "war": "billingManagement.war",
+         "war": "DSBillingManagement.war",
          "root": "DSBillingManagement",
          "resourcename": "jdbc/bmdbv2"},
         {
          "bbdd": "DSCUSTOMER",
-         "war": "customer.war",
+         "war": "DSCustomerManagement.war",
          "root": "DSCustomerManagement",
          "resourcename": "jdbc/customerdbv2"},
         {
          "bbdd": "DSUSAGEMANAGEMENT",
-         "war": "usageManagement.war",
+         "war": "DSUsageManagement.war",
          "root": "DSUsageManagement",
          "resourcename": "jdbc/usagedbv2"}]
 

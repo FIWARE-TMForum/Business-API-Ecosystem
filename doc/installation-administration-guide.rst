@@ -6,11 +6,11 @@ Installation and Administration Guide
 Introduction
 ------------
 
-This installation and administration guide covers the Business API Ecosystem version 5.4.0, corresponding to FIWARE release 5.
-Any feedback on this document is highly welcomed, including bugs, typos or things you think should be included but aren't. Please send them to the "Contact Person" email that appears in the `Catalogue page for this GEi`_.
-Or create an issue at `GitHub Issues`_
+This installation and administration guide covers the Business API Ecosystem version 5.4.1, corresponding to FIWARE release 5.
+Any feedback on this document is highly welcomed, including bugs, typos or things you think should be included but aren't.
+Please send them to the "Contact Person" email that appears in the `Catalogue page for this GEi`_. Or create an issue at `GitHub Issues`_
 
-.. _Catalogue page for this GEi: http://catalogue.fiware.org
+.. _Catalogue page for this GEi: https://catalogue.fiware.org/enablers/business-api-ecosystem-biz-ecosystem-ri
 .. _GitHub Issues: https://github.com/FIWARE-TMForum/Business-API-Ecosystem/issues/new
 
 The current version of the software has been tested under Ubuntu 14.04, Ubuntu 15.10, Ubuntu 16.04, Debian 7, Debian 8,
@@ -28,13 +28,13 @@ work together for proving business capabilities. In this regard, this section co
 the different components that made up the Business API Ecosystem.
 
 .. note::
-    These dependencies are not mean to be inatalled manually in this step, as they will be installed throughout the documentation
+    These dependencies are not mean to be installed manually in this step, as they will be installed throughout the documentation
 
 TM Forum APIs and RSS requirements
 ----------------------------------
 
 * Java 8
-* Glassfish 4.1+
+* Glassfish 4.1
 * MySQL 5.5
 
 Charging Backend requirements
@@ -47,7 +47,7 @@ Charging Backend requirements
 Logic Proxy requirements
 ------------------------
 
-* NodeJS 4.5.0 (Including NPM)
+* NodeJS 4.5.0+ (Including NPM)
 
 
 Installing basic dependencies
@@ -62,14 +62,21 @@ provided by your operating system. However, in order to easy the installation pr
 Installing basic dependencies using the script
 ----------------------------------------------
 
-In order to automate the installation of the basic dependencies, the script *resolve-basic-dep.sh* has been provided. This
-script, located in the directory *scripts/*, installs all the needed packages for Ubuntu, Debian, and CentOS systems.
+In order to automate the installation of the basic dependencies, the script *setup_env.sh* has been provided. This
+script, located in the root directory, installs all the needed packages for Ubuntu, Debian, and CentOS systems.
 
-Additionally, this script creates a directory */opt/biz-ecosystem* where Glassfish 4.1 and Node 4.5.0 are downloaded.
+Additionally, this script creates a directory */opt/biz-ecosystem* where Glassfish 4.1 and Node 6.9.1 are downloaded,
+creates a */etc/default/rss* directory used later for properties files, and sets up the PATH environment in your .bashrc file.
 
-To execute the script, run the following command from the *scrips/* directory of the project ::
+.. note::
+    The installation script changes the owner of all its created directories to your current user
 
-    $ sudo ./resolve-basic-dep.sh
+To execute the script, run the following command from the root directory of the project ::
+
+    $ ./setup_env.sh
+
+.. note::
+   Do not execute the script using sudo, for those tasks which require root privileges the script will prompt you to provide your sudo password
 
 During the execution of the script you will be prompted some times in order to accept Oracle Java 8 terms and conditions
 and to provide MySQL root password.
@@ -97,7 +104,7 @@ directly with the following command::
 
     $ sudo add-apt-repository ppa:webupd8team/java
 
-In the case of a Debian system the following commands have to be executed ::
+In the case you have a Debian system the following commands have to be executed ::
 
     $ sudo echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee /etc/apt/sources.list.d/webupd8team-java.list
     $ sudo echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee -a /etc/apt/sources.list.d/webupd8team-java.list
@@ -154,8 +161,8 @@ Then, for installing Maven ::
 **Glassfish**
 The next step is downloading and extracting Glassfish ::
 
-    $ wget http://download.java.net/glassfish/4.1.1/release/glassfish-4.1.1.zip
-    $ unzip glassfish-4.1.1.zip
+    $ wget http://download.java.net/glassfish/4.1/release/glassfish-4.1.zip
+    $ unzip glassfish-4.1.zip
 
 Finally, it is required to download the MySQL connector for Glassfish and include it within the Glassfish *lib* directory ::
 
@@ -220,8 +227,8 @@ Logic Proxy Dependencies
 
 For installing Node and NPM it is needed to download the binaries from the official site and uncompress them ::
 
-    $ wget https://nodejs.org/dist/v4.5.0/node-v4.5.0-linux-x64.tar.xz
-    $ tar -xvf node-v4.5.0-linux-x64.tar.xz
+    $ wget https://nodejs.org/dist/v6.9.1/node-v6.9.1-linux-x64.tar.xz
+    $ tar -xvf node-v6.9.1-linux-x64.tar.xz
 
 Installing the Business API Ecosystem
 =====================================
@@ -233,10 +240,10 @@ Installing the Business API Ecosystem using the script
 ------------------------------------------------------
 
 The script *install.py* is located at the root of the Business API Ecosystem project. This script provides functionality
-to automate the installation of the software. Concretely, it downloads all the APIs and components, compiles and deploys,
+to automate the installation of the software. Concretely, it downloads all the APIs and components, compiles and deploys
 the APIs, and installs python and node libraries.
 
-This script depends on Python3 to work. If you have used the *resolve-basic-dep.sh* script, Python 3 is already installed.
+This script depends on Python3 to work. If you have used the *setup_env.sh* script, Python 3 is already installed.
 Otherwise, you can install Python 3 using the following commands:
 
 **Debian/Ubuntu** ::
@@ -254,12 +261,15 @@ Additionally, *install.py* specs the binaries of Glassfish and Node to be includ
 by the user using the script. This can be done with the following commands (Note that the commands are supposing both or them are installed at */opt/biz-ecosystem*) ::
 
     $ export PATH=$PATH:/opt/biz-ecosystem/glassfish4/glassfish/bin
-    $ export PATH=$PATH:/opt/biz-ecosystem/node-v4.5.0-linux-x64/bin
+    $ export PATH=$PATH:/opt/biz-ecosystem/node-6.9.1-linux-x64/bin
 
     $ sudo chown -R <your_user>:<your_user> /opt/biz-ecosystem
 
-.. note::
-    Including the previous command is your .bashrc file, prevents you to have to execute them each time
+If you have used *setup_env.sh**, the Glassfish installation directory already belongs to your user. In addition, the
+export PATH command has been included in your bashrc, so to have Node and Glassfish in the PATH execute the following
+command: ::
+
+    $ source ~/.bashrc
 
 Moreover, *install.py* requires Glassfish, MySQL and MongoDB to be up and running.
 
@@ -277,14 +287,15 @@ Moreover, *install.py* requires Glassfish, MySQL and MongoDB to be up and runnin
 
 
 Finally, during the deployment of the RSS API, the script saves the properties file in the default RSS properties directory.
-Since this directory is */etc/default/rss*, it is required to have root privileges to create it. In this way, this directory
-must exist and must be accessible by the user executing the script. To do that ::
+If you have used *setup_env.sh* this directory already exists. Otherwise, you have to manually create the directory
+*/etc/default/rss*, being required to have root privileges to create it. Moreover, this directory must be accessible by
+the user executing the script. To do that ::
 
     $ sudo mkdir /etc/default/rss
     $ sudo chown <your_user>:<your_user> /etc/default/rss
 
 The script *install.py* creates the different databases as well as the connection pools and resources. In this regard,
-after the execution of the script, all the APIs are already configured. You can specify the database settings by modifying the
+after the execution of the script all the APIs will be already configured. You can specify the database settings by modifying the
 script and updating DBUSER, DBPWD, DBHOST, and DBPORT, which by default contains the following configuration. ::
 
     DBUSER = "root"
@@ -296,7 +307,7 @@ To make a complete installation of the Business API Ecosystem, execute the follo
 
     $ ./install.py all
 
-In addition to the *all* option, *install.py* provides also several options that allows to execute parts of the installation
+In addition to the *all* option, *install.py* also provides several options that allows to execute parts of the installation
 process, so you can have more control over it. Concretely, the script provides the following options:
 
 * **clone**: Downloads from GitHub the different components of the Business API Ecosystem
@@ -329,7 +340,7 @@ The installation for all of them is similar. The first step is cloning the repos
 
     $ git clone https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2.git
     $ cd DSPRODUCTCATALOG2
-    $ git checkout v5.4.0
+    $ git checkout v5.4.1
 
 Once the software has been downloaded, it is needed to create the connection to the database. To do that, the first step
 is editing the *src/main/resources/META-INF/persistence.xml* to have something similar to the following: ::
@@ -354,15 +365,15 @@ The next step is creating the database for you API. ::
     $ mysql-u <user> -p<passwd> "CREATE DATABASE IF NOT EXISTS <database>"
 
 .. note::
-    You have to provide your own credentials and selected database name to the previuos command.
+    You have to provide your own credentials and the selected database name to the previous command.
 
-Once that that database has been created, the next step is creating the connection pool in Glassfish. To do that, you can
+Once that the database has been created, the next step is creating the connection pool in Glassfish. To do that, you can
 use the following command: ::
 
     $ asadmin create-jdbc-connection-pool --restype java.sql.Driver --driverclassname com.mysql.jdbc.Driver --property user=<user>:password=<passwd>:URL=jdbc:mysql://<host>:<port>/<database> <poolname>
 
 .. note::
-    You have to provide you own database credentials, database host, database port, the database name of the one created previously, and a name for your pool
+    You have to provide you own database credentials, the database host, the database port, the database name of the one created previously, and a name for your pool
 
 The last step for creating the database connection is creating the connection resource. To do that, execute the following command: ::
 
@@ -392,7 +403,7 @@ The first step for installing the RSS component is downloading it and moving to 
 
     $ git clone https://github.com/FIWARE-TMForum/business-ecosystem-rss.git
     $ cd business-ecosystem-rss
-    $ git checkout v5.4.0
+    $ git checkout v5.4.1
 
 Then, the next step is coping, *database.properties* and *oauth.properties* files to its default location at */etc/default/rss* ::
 
@@ -433,13 +444,13 @@ Finally, the last step is deploying the generated war file in Glassfish ::
 Installing the Charging Backend
 +++++++++++++++++++++++++++++++
 
-The Charging Backend sources can be found in in `GitHub <https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend>`__
+The Charging Backend sources can be found in `GitHub <https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend>`__
 
 The first step for installing the charging backend component is downloading it and moving to the correct release ::
 
     $ git clone https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend.git
     $ cd business-ecosystem-charging-backend
-    $ git checkout v5.4.0
+    $ git checkout v5.4.1
 
 Once the code has been downloaded, it is recommended to create a virtualenv for installing python dependencies (This is not mandatory). ::
 
@@ -456,15 +467,15 @@ To install python libs, execute the *python-dep-install.sh* script ::
 Installing the Logic Proxy
 ++++++++++++++++++++++++++
 
-The Charging Backend sources can be found in in `GitHub <https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy>`__
+The Logic Proxy sources can be found in`GitHub <https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy>`__
 
 The first step for installing the logic proxy component is downloading it and moving to the correct release ::
 
     $ git clone https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy.git
     $ cd business-ecosystem-logic-proxy
-    $ git checkout v5.4.0
+    $ git checkout v5.4.1
 
-Once the code has been downloaded, Node dependencies can be installed with npm asd follows ::
+Once the code has been downloaded, Node dependencies can be installed with npm as follows ::
 
     $ npm install
 
@@ -514,6 +525,7 @@ The Charging Backend creates some objects and connections in the different APIs 
 configuring the different URLs of the Business API Ecosystem components by modifying the file *services_settings.py*,
 which by default contains the following content: ::
 
+    CATALOG = 'http://localhost:8080/DSProductCatalog'
     INVENTORY = 'http://localhost:8080/DSProductInventory'
     ORDERING = 'http://localhost:8080/DSProductOrdering'
     BILLING = 'http://localhost:8080/DSBillingManagement'
@@ -521,8 +533,9 @@ which by default contains the following content: ::
     USAGE = 'http://localhost:8080/DSUsageManagement'
     AUTHORIZE_SERVICE = 'http://localhost:8004/authorizeService/apiKeys'
 
-This settings points to the different APIs accessed by the charging backend. Concretely:
+This settings points to the different APIs accessed by the charging backend. In particular:
 
+* CATALOG: URL of the catalog API including its path
 * INVENTORY: URL of the inventory API including its path
 * ORDERING: URL of the ordering API including its path
 * BILLING: URL of the billing API including its path
@@ -530,8 +543,7 @@ This settings points to the different APIs accessed by the charging backend. Con
 * USAGE: URL of the Usage API including its path
 * AUTHORIZE_SERVICE: Complete URL of the usage authorization service. This service is provided by the logic proxy, and is used to generate API Keys to be used by accounting systems when providing usage information.
 
-
-Once the services has been configured, the next step is configuring the database. In this case, the charging backend uses
+Once the services have been configured, the next step is configuring the database. In this case, the charging backend uses
 MongoDB, and its connection can be configured modifying the *DATABASES* setting of the *settings.py* file. ::
 
     DATABASES = {
@@ -608,14 +620,13 @@ This settings contain the following values:
 Moreover, the Charging Backend is the component that activates the purchased services. In this regard, the Charging Backend
 has the possibility of signing its acquisition notifications with a certificate, so the external system being offered can
 validate that is the Charging Backend the one making the request. To use this functionality it is needed to configure the
-Certificate and the private Key to be used by providing its path in the following settings of the *settings.py* file ::
+certificate and the private Key to be used by providing its path in the following settings of the *settings.py* file ::
 
     NOTIF_CERT_FILE = None
     NOTIF_CERT_KEY_FILE = None
 
-Finally, the last step is creating the context of the Charging Backend by creating two sites using the provided command.
-First, create the external site by executing the following command. Note that you have to provide the real URL where the
-proxy will be running. ::
+Finally, the last step is creating the context of the Charging Backend by creating two sites. First, create the external
+site by executing the following command. Note that you have to provide the real URL where the proxy will be running. ::
 
     $ ./manage.py createsite external http://<proxy_path>:<proxy_port>/
 
@@ -643,6 +654,114 @@ It is also possible to show current jobs or remove jobs using the commands:
 
     $ ./manage.py crontab remove
 
+Configure Apache for running the Charging Backend
+-------------------------------------------------
+
+The Charging Backend is a Django App that can be deployed in different ways. In this case, this installation guide covers
+two different mechanisms: using the Django *runserver* command (as seen in *Running the Charging Backend* section) or
+deploying it using an Apache server. This section explains how to configure Apache and the Charging Backend to do the later.
+
+The first step is installing Apache and mod-wsgi. In Ubuntu/Debian: ::
+
+    $ sudo apt-get install apache2 libapache2-mod-wsgi
+
+Or in CentOS: ::
+
+    $ sudo yum install httpd mod_wsgi
+
+The next step is populating the file *src/wsgi.py* provided with the Charging Backend ::
+
+    import os
+    import sys
+
+    path = 'charging_path/src'
+    if path not in sys.path:
+        sys.path.insert(0, path)
+
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+
+    import django.core.handlers.wsgi
+    application = django.core.handlers.wsgi.WSGIHandler()
+
+If you are using a virtualenv, then you will need to include its activation in your *wsgi.py* file, so it should look
+similar to the following: ::
+
+    import os
+    import sys
+    import site
+
+    site.addsitedir('virtualenv_path/local/lib/python2.7/site-packages')
+    path = 'charging_path/src'
+    if path not in sys.path:
+        sys.path.insert(0, path)
+
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+
+    # Activate your virtual env
+    activate_env=os.path.expanduser('virtualenv_path/bin/activate_this.py')
+    execfile(activate_env, dict(__file__=activate_env))
+
+    import django.core.handlers.wsgi
+    application = django.core.handlers.wsgi.WSGIHandler()
+
+.. note::
+    Pay special attention to *charging_path* and *virtualenv_path* which have to point to the Charging Backend and the
+    virtualenv paths respectively.
+
+Once WSGI has been configured in the Charging Backend, the next step is creating a vitualhost in Apache. To do that, you
+can create a new site configuration file in the Apache related directory (located in */etc/apache2/sites-available/*
+in an Ubuntu/Debian system or in */etc/httpd/conf.d* in a CentOS system) and populate it with the following content: ::
+
+    <VirtualHost *:8006>
+        WSGIDaemonProcess char_process
+        WSGIScriptAlias / charging_path/src/wsgi.py
+        WSGIProcessGroup char_process
+        WSGIPassAuthorization On
+
+        WSGIApplicationGroup %{GLOBAL}
+    </VirtualHost>
+
+.. note::
+    Pay special attention to *charging_path* which have to point to the Charging Backend path.
+
+Depending on the version of Apache you are using, you may need to explicitly allow the access to the directory where
+the Charging Backend is deployed in the configuration of the virtualhost. To do that, add the following lines to your virtualhost:
+
+Apache version < 2.4 ::
+
+    <Directory charging_path/src>
+        Order deny,allow
+        Allow from all
+    </Directory>
+
+
+Apache version 2.4+ ::
+
+    <Directory charging_path/src>
+        Require all granted
+    </Directory>
+
+Once you have included the new virtualhost configuration, the next step is configuring Apache to listen in the selected
+port (8006 in the example). To do that, edit */etc/apache2/ports.conf* in Ubuntu/Debian or */etc/httpd/conf/httpd.conf*
+in CentOS and include the following line: ::
+
+    Listen 8006
+
+Then, in Ubuntu/Debian systems, enable the site by linking the configuration file to the *sites-enabled* directory: ::
+
+    ln -s ../sites-available/001-charging.conf ./sites-enabled/001-charging.conf
+
+Once you have the site enabled, restart Apache. In Ubuntu/Debian ::
+
+    $ sudo service apache2 restart
+
+Or in CentOS ::
+
+    $ sudo apachectl restart
+
+.. note::
+    Ensure that the directory where the Changing Backend is installed can be accessed by the Apache user (www-data in
+    Ubuntu/Debian, and apache in CentOS)
 
 Configuring the Logic Proxy
 ===========================
@@ -665,7 +784,7 @@ If you want to run the proxy in HTTPS you can update *config.https* setting ::
         port: 443
     };
 
-In this case you have to set *enabled* to true, and provide the paths to certificate (*certFile*), to the private key (*keyFile*),
+In this case you have to set *enabled* to true, and provide the paths to the certificate (*certFile*), to the private key (*keyFile*),
 and to the CA certificate (*caFile*).
 
 Then, it is possible to modify some of the URLs of the system. Concretely, it is possible to provide a prefix for the API,
@@ -723,27 +842,28 @@ As already stated, the Proxy is the component that acts as the endpoint for acce
 the proxy needs to know the URLs of them in order to redirect the different requests. This endpoints can be configured using the
 following settings ::
 
-    config.appHost = 'localhost';
-
     config.endpoints = {
         'catalog': {
             'path': 'DSProductCatalog',
-            'port': '8080'
+            'host': 'localhost'
+            'port': '8080',
+            'appSsl': false
         },
         'ordering': {
-             'path': 'DSProductOrdering',
-            'port': '8080'
+            'path': 'DSProductOrdering',
+            'host': 'localhost'
+            'port': '8080',
+            'appSsl': false
         },
 
         ...
 
-The setting *config.appHost* contain the host where the APIs are running. On the other hand, *config.endpoints* contains
-the specific configuration of each of the APIs, including its *path*, and its *port*.
+The setting *config.endpoints* contains the specific configuration of each of the APIs, including its *path*, its *host*,
+its *port*, and whether the API is using SSL or not.
 
 .. note::
     The default configuration included in the config file is the one used by the installation script, so if you have used the script for
-    installing the Business API Ecosystem you do not need to modify this fields
-
+    installing the Business API Ecosystem you do not need to modify these fields
 
 Finally, there are two fields that allow to configure the behaviour of the system while running. On the one hand, *config.revenueModel*
 allows to configure the default percentage that the Business API Ecosystem is going to retrieve in all the transactions.
@@ -757,12 +877,23 @@ Final steps
 The Business API Ecosystem, allows to upload some product attachments and assets to be sold. These assets are uploaded
 by the Charging Backend that saves them in the file system, jointly with the generated PDF invoices.
 
-In this regard, the directories *src/medi*a and *src/media/bills* must exists within the Charging Backend directory, and must
+In this regard, the directories *src/medi*a, *src/media/bills*, and *src/media/assets* must exist within the Charging Backend directory, and must
 be writable by the user executing the Charging Backend. ::
 
     $ mkdir src/media
     $ mkdir src/media/bills
+    $ mkdir src/media/assets
     $ chown -R <your_user>:<your_user> src/media
+
+Additionally, the Business API Ecosystem uses indexes for efficiency and pagination. In this regards, the directory *indexes* must
+exist within the Logic Proxy directory, and must be writable by the user executing it. ::
+
+    $ mkdir indexes
+    $ chown -R <your_user>:<your_user> indexes
+
+You can populate at any time the indexes directory using the *fill_indexes.js* script provided with the Logic Proxy. ::
+
+    $ node fill_indexes.js
 
 ----------------------------------
 Running the Business API Ecosystem
@@ -782,7 +913,9 @@ Running the Charging Backend
 The Charging Backend creates some objects and connections on startup; in this way, the Glassfish APIs must be up an running
 before starting it.
 
-The Charging Backend can be started using the *runserver* command as follows ::
+**Using Django runserver**
+
+The Charging Backend can be started using the *runserver* command provided with Django as follows ::
 
     $ ./manage.py runserver 127.0.0.1:<charging_port>
 
@@ -793,6 +926,16 @@ Or in background ::
 .. note::
     If you have created a virtualenv when installing the backend or used the installation script, you will need to activate the
     virtualenv before starting the Charging Backend
+
+**Using Apache**
+
+If you have deployed the charging backend in Apache, you can stat it with the following command in a Debian/Ubuntu system ::
+
+    $ sudo service apache2 start
+
+Or in a CentOS system ::
+
+    $ sudo apachectl start
 
 Running the Logic Proxy
 =======================
