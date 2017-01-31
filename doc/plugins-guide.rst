@@ -125,6 +125,114 @@ or the HTTP method used, and account the usage made of the service so users can 
 Having this software deployed allows service owners to protect their services and offer them in the Business API Ecosystem
 without the need of making any modification in the specific service.
 
+Installation
+------------
+
+This software is a pure NodeJS server, to install basic dependencies execute the following command: ::
+
+    $ npm install
+
+Configuration
++++++++++++++
+
+All the Accounting Proxy configuration is saved in the *config.js* file in the root of the project.
+
+In order to have the accounting proxy running it is needed to fill the following information:
+
+* `config.accounting_proxy`: Basic information of the accounting deployment.
+   * `https`: set this variable to undefined to start the service over HTTP.
+      * `enabled`: set this option to true to start the service over HTTPS and activate the certificate validation for some administration requests (see *Proxy API*).
+      * `certFile`: path to the server certificate in PEM format.
+      * `keyFile`: path to the private key of the server.
+      * `caFile`: path to the CA file.
+   * `port`: port where the accounting proxy server is listening.
+::
+
+    {
+	    https: {
+            enabled: true,
+            certFile: 'ssl/server1.pem',
+            keyFile: 'ssl/server1.key',
+            caFile: 'ssl/fake_ca.pem'
+        },
+	    port: 9000
+    }
+
+
+* `config.database`: Database configuration used by the proxy.
+   * `type`: database type. Two possible options: `./db` (sqlite database) or `./db_Redis` (redis database).
+   * `name`: database name. If the database type select is redis, then this field selects the database number (0 to 14; 15 is reserved for testing).
+   * `redis_host`: redis database host.
+   * `redis_port`: redis database port.
+
+::
+
+    {
+	    type: './db',
+        name: 'accountingDB.sqlite',
+        redis_host: 'localhost',
+        redis_port: 6379
+    }
+
+
+* `config.modules`:  An array of supported accounting modules for accounting in different ways. Possible options are:
+   * `call`: the accounting is incremented in one unit each time the user send a request.
+   * `megabyte`: counts the response amount of data (in megabytes).
+   * `millisecond`: counts the request duration (in milliseconds).
+
+::
+
+    {
+	    accounting: [ 'call', 'megabyte', 'millisecond']
+    }
+
+Other accounting modules can be implemented and included to the proxy (see  *Accounting modules*).
+
+* `config.usageAPI`: the information of the usage management API where the usage specifications and the accounting information will be sent.
+   *`host`: Business API Ecosystem host.
+   * `port`: Business API Ecosystem port.
+   * `path`: path of the usage management API.
+   * `schedule`: defines the daemon service schedule to notify the accounting information to the Business API Ecosystem. The format is similar to the cron tab format:  "MINUTE HOUR DAY_OF_MONTH MONTH_OF_YEAR DAY_OF_WEEK YEAR (optional)". By the default, the usage notifications will be sent every day at 00:00.
+
+::
+
+    {
+	    host: 'localhost',
+        port: 8080,
+        path: '/DSUsageManagement/api/usageManagement/v2',
+        schedule: '00 00 * * *'
+    }
+
+* `config.api.administration_paths`: configuration of the administration paths. Default accounting paths are:
+
+::
+
+    {
+        api: {
+            administration_paths: {
+                keys: '/accounting_proxy/keys',
+                units: '/accounting_proxy/units',
+                newBuy: '/accounting_proxy/newBuy',
+                checkURL: '/accounting_proxy/urls',
+                deleteBuy: '/accounting_proxy/deleteBuy'
+            }
+        }
+    }
+
+The Accounting Proxy can be used to proxy an Orion Context Broker, supporting the accounting of subscriptions. To do that,
+the following configuration params are used:
+
+* `config.resources`: configuration of the resources accounted by the proxy.
+   * `contextBroker`: set this option to `true` if the resource accounted is an Orion Context Broker. Otherwise set this option to `false` (default value).
+   * `notification_port`: port where the accounting proxy is listening to subscription notifications from the Orion Context Broker (port 9002 by default).
+
+::
+
+    {
+	    contextBroker: true,
+	    notification_port: 9002
+    }
+
 Administration
 --------------
 
