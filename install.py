@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from sh import git, cd, mvn, mysql, asadmin, npm, node, cp, virtualenv, bash, mkdir, rm
+from sh import git, cd, mvn, mysql, mysqldump, sed, asadmin, npm, node, cp, virtualenv, bash, mkdir, rm
 from os.path import isfile
 import click
 import os.path
@@ -336,6 +336,23 @@ def proxyCommand(host, port, chargingport, glassfishport):
     node server.js
     """.format(host=host, port=port))
 
+@cli.command("migrate")
+def migrate():
+
+    print("Migrating from previous version")
+
+    for api in APIS[0:3]:
+        print("Migrating {} database...".format(api['name']))
+        name = api['bbdd']
+        dump_file = '/tmp/{}_dump.sql'.format(api['name'])
+        mysqldump('-u', DBUSER, '-p{}'.format(DBPWD), '-h', DBHOST, '-P', DBPORT, name, _out=dump_file)
+        sed('-i', "s|:([0123456789\.]*)||g", dump_file)
+
+        mysql('-u', DBUSER, '-p{}'.format(DBPWD), '-h', DBHOST, '-P', DBPORT, '-e', "DROP DATABASE {}".format(name))
+        mysql('-u', DBUSER, '-p{}'.format(DBPWD), '-h', DBHOST, '-P', DBPORT, '-e', "CREATE DATABASE {}".format(name))
+
+        mysql('-u', DBUSER, '-p{}'.format(DBPWD), '-h', DBHOST, '-P', DBPORT, name, '-e', "source {}".format(dump_file))
+        print("Database {} migrated".format(api['name']))
 
 @cli.command("all")
 @click.pass_context
