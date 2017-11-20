@@ -24,7 +24,7 @@ DATABASES = {
     }
 }
 
-BASEDIR = path.dirname(path.abspath(__file__))
+BASEDIR = "/business-ecosystem-charging-backend/src"
 
 STORE_NAME = 'WStore'
 AUTH_PROFILE_MODULE = 'wstore.models.UserProfile'
@@ -139,4 +139,4 @@ PAYMENT_CLIENT = CLIENTS[PAYMENT_METHOD]
 NOTIF_CERT_FILE = None
 NOTIF_CERT_KEY_FILE = None
 
-from services_settings import *
+from .services_settings import *
