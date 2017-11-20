@@ -2,6 +2,7 @@ version: '3'
 services:
     mongo:
         image: mongo:3.2
+        restart: always
         ports:
             - 27017:27017
         networks:
@@ -11,6 +12,7 @@ services:
 
     mysql:
         image: mysql:latest
+        restart: always
         ports:
             - 3333:3306
         volumes:
@@ -23,6 +25,7 @@ services:
 
     charging:
         image: conwetlab/biz-ecosystem-charging-backend:develop
+        restart: always
         links:
             - mongo
         depends_on:
@@ -46,6 +49,7 @@ services:
 
     proxy:
         image: conwetlab/biz-ecosystem-logic-proxy:develop
+        restart: always
         links:
             - mongo
         depends_on:
@@ -63,6 +67,7 @@ services:
 
     apis:
         image: conwetlab/biz-ecosystem-apis:develop
+        restart: always
         ports:
             - 4848:4848
             - 8080:8080
@@ -80,6 +85,7 @@ services:
 
     rss:
         image: conwetlab/biz-ecosystem-rss:develop
+        restart: always
         ports:
             - 9999:8080
             - 4444:4848
