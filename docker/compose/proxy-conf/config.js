@@ -11,6 +11,8 @@ config.version = {
 
 // The PORT used by
 config.port = 8000;
+config.host = 'proxy.docker';
+
 config.extPort = 8004;
 
 // Set this var to undefined if you don't want the server to listen on HTTPS
@@ -28,6 +30,7 @@ config.portalPrefix = '';
 config.logInPath = '/login';
 config.logOutPath = '/logOut';
 config.sessionSecret = 'keyboard cat';
+config.theme = '';
 
 // OAuth2 configuration
 config.oauth2 = {
