@@ -28,15 +28,17 @@ billing addresses and contact mediums.
 
 To configure the user profile, the first step is opening the user *Settings* located in the user menu.
 
-.. image:: /images/user/profile1.png
+
+.. image:: images/user/profile1.png
    :align: center
+
 
 In the displayed view, it can be seen that some information related to the account is already included (*Username*, *Email*, *Access token*).
 This information is the one provided by the IdM after the login process.
 
 To create the profile, fill in the required information and click on *Update*
 
-.. image:: /images/user/profile2.png
+.. image:: images/user/profile2.png
    :align: center
 
 .. note::
