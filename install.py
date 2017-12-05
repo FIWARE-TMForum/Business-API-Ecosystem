@@ -348,11 +348,20 @@ def migrate():
         mysqldump('-u', DBUSER, '-p{}'.format(DBPWD), '-h', DBHOST, '-P', DBPORT, name, _out=dump_file)
         sed('-i', "s|:([0123456789\.]*)||g", dump_file)
 
+        if api['name'] == APIS[2]['name']:
+            # Migrate bundle info in inventory API
+            sed('-ri', "s|([0-9]+) ([0-9]+) Media type|offering:\1 product:\2 Media Type|g", dump_file)
+            sed('-ri', "s|([0-9]+) ([0-9]+) Media Type|offering:\1 product:\2 Media Type|g", dump_file)
+            sed('-ri', "s|([0-9]+) ([0-9]+) Asset type|offering:\1 product:\2 Asset Type|g", dump_file)
+            sed('-ri', "s|([0-9]+) ([0-9]+) Asset Type|offering:\1 product:\2 Asset Type|g", dump_file)
+            sed('-ri', "s|([0-9]+) ([0-9]+) Location|offering:\1 product:\2 Location|g", dump_file)
+
         mysql('-u', DBUSER, '-p{}'.format(DBPWD), '-h', DBHOST, '-P', DBPORT, '-e', "DROP DATABASE {}".format(name))
         mysql('-u', DBUSER, '-p{}'.format(DBPWD), '-h', DBHOST, '-P', DBPORT, '-e', "CREATE DATABASE {}".format(name))
 
         mysql('-u', DBUSER, '-p{}'.format(DBPWD), '-h', DBHOST, '-P', DBPORT, name, '-e', "source {}".format(dump_file))
         print("Database {} migrated".format(api['name']))
+
 
 @cli.command("all")
 @click.pass_context
