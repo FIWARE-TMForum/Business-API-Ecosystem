@@ -43,6 +43,7 @@ services:
             - ./charging-assets:/business-ecosystem-charging-backend/src/media/assets
             - ./charging-plugins:/business-ecosystem-charging-backend/src/plugins
             - ./charging-settings:/business-ecosystem-charging-backend/src/user_settings
+            - ./charging-inst-plugins:/business-ecosystem-charging-backend/src/wstore/asset_manager/resource_plugins/plugins
         environment:
           - PAYPAL_CLIENT_ID=client_id
           - PAYPAL_CLIENT_SECRET=client_secret
