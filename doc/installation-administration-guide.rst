@@ -876,6 +876,9 @@ customers in the web portal.
 Final steps
 -----------
 
+Media and Indexes
+=================
+
 The Business API Ecosystem, allows to upload some product attachments and assets to be sold. These assets are uploaded
 by the Charging Backend that saves them in the file system, jointly with the generated PDF invoices.
 
@@ -896,6 +899,32 @@ exist within the Logic Proxy directory, and must be writable by the user executi
 You can populate at any time the indexes directory using the *fill_indexes.js* script provided with the Logic Proxy. ::
 
     $ node fill_indexes.js
+
+Configuring Themes
+==================
+
+The Business API Ecosystem provides a basic mechanism for the creation of themes intended to customize the web portal
+of the system. Themes include a set of files which can override any of the default portal files located in the *public/resources*
+or *views* directories of the logic proxy. To do that, themes map the directory structure and include files with the same
+name of the default ones to be overridden.
+
+The Logic Proxy can include multiple themes which should be stored in the *themes* directory located at the root of the
+project.
+
+To enable themes, the *config.theme* setting is provided within the *config.js* file of the Logic Proxy. Themes are
+enabled by providing the name of the theme directory in this setting. ::
+
+    config.theme = 'dark-theme';
+
+.. note::
+    Setting *config.theme* to an empty string makes the Business API Ecosystem to use its default theme
+
+To start using a theme the following command has to be executed: ::
+
+    $ node collect_static.js
+
+This command merges the theme files and the default ones into a *static* directory used by the Logic Proxy to retrieve
+portal static files.
 
 ----------------------------------
 Running the Business API Ecosystem
