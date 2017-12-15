@@ -479,6 +479,31 @@ Once the code has been downloaded, Node dependencies can be installed with the p
 
     $ ./install.sh
 
+Upgrading from 5.4.1
+====================
+
+For upgrading Business API Ecosystem version 5.4.1 installations to version 6.4.0 a new command has been incorporated
+within the *install.py* script. This command downloads new components software, updates it, and and migrates the
+different databases, so it lets the software ready to be used.
+
+.. note::
+    It is highly recommended to make a backup of the different databases before upgrading the software
+
+The first step for upgrading the Business API Ecosystem is downloading new version of the main repository in order to
+update installation scripts. ::
+
+    cd Business-API-Ecosystem
+    git fetch
+    git checkout v6.4.0
+    git pull origin v6.4.0
+
+Once the main repository is upgraded, the next step is using the provided script for upgrading the software. ::
+
+    $ ./install.py migrate
+
+This command no not change your configuration parameters. Nevertheless, you should review the *Configuration* section
+as new settings has been included.
+
 -------------
 Configuration
 -------------
