@@ -14,36 +14,6 @@ then
     exit 1
 fi
 
-if [ -z $ADMIN_EMAIL ];
-then
-    echo ADMIN_EMAIL environment variable not set
-    exit 1
-fi
-
-if [ -z $BIZ_ECOSYS_PORT ];
-then
-    echo BIZ_ECOSYS_PORT environment variable not set
-    exit 1
-fi
-
-if [ -z $BIZ_ECOSYS_HOST ];
-then
-    echo BIZ_ECOSYS_HOST environment variable not set
-    exit 1
-fi
-
-if [[ -z $OAUTH2_CLIENT_ID ]];
-then
-    echo OAUTH2_CLIENT_ID is not set
-    exit 1
-fi
-
-if [[ -z $OAUTH2_CLIENT_SECRET ]];
-then
-    echo OAUTH2_CLIENT_SECRET is not set
-    exit 1
-fi
-
 if [[ -z $MYSQL_ROOT_PASSWORD ]];
 then
     echo MYSQL_ROOT_PASSWORD is not set
@@ -56,80 +26,200 @@ then
     exit 1
 fi
 
-############################################################################################
+###############################################################################################
 
-function create_tables {
+function test_connection {
+    echo "Testing $1 connection"
+    exec 10<>/dev/tcp/$2/$3
+    STATUS=$?
+    I=0
 
-    echo "Creating Database tables"
-    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS DSPRODUCTCATALOG2;"
+    while [[ ${STATUS} -ne 0  && ${I} -lt 50 ]]; do
+        echo "Connection refused, retrying in 5 seconds..."
+        sleep 5
 
-    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS DSPRODUCTORDERING;"
+        if [[ ${STATUS} -ne 0 ]]; then
+            exec 10<>/dev/tcp/$2/$3
+            STATUS=$?
 
-    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS DSPRODUCTINVENTORY;"
+        fi
+        I=${I}+1
+    done
 
-    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS DSPARTYMANAGEMENT;"
+    exec 10>&- # close output connection
+    exec 10<&- # close input connection
 
-    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS DSBILLINGMANAGEMENT;"
+    if [[ ${STATUS} -ne 0 ]]; then
+        echo "It has not been possible to connect to $1"
+        exit 1
+    fi
 
-    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS DSCUSTOMER;"
-
-    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS DSUSAGEMANAGEMENT;"
-
-    mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $MYSQL_HOST -e "CREATE DATABASE IF NOT EXISTS RSS;"
+    echo "$1 connection, OK"
 }
 
-function glassfish_related {
-    echo "Deploying APIs"
-    python /apis-entrypoint.py
-    python /rss-entrypoint.py
-}
+function setup_charging {
 
-function done_mongo {
+    echo "Deploying Charging module"
+    # Check that the settings files have been included
+    if [ ! -f /business-ecosystem-charging-backend/src/user_settings/settings.py ]; then
+        echo "Missing settings.py file"
+        exit 1
+    fi
 
-    cd business-ecosystem-charging-backend/src
+    if [ ! -f /business-ecosystem-charging-backend/src/user_settings/services_settings.py ]; then
+        echo "Missing services_settings.py file"
+        exit 1
+    fi
 
+    if [ ! -f /business-ecosystem-charging-backend/src/user_settings/__init__.py ]; then
+        touch /business-ecosystem-charging-backend/src/user_settings/__init__.py
+    fi
+
+    cd /business-ecosystem-charging-backend/src
+
+    # Configure PayPal settings
     sed -i "s|PAYPAL_CLIENT_ID = ''|PAYPAL_CLIENT_ID = '$PAYPAL_CLIENT_ID'|g" ./wstore/charging_engine/payment_client/paypal_client.py
-
     sed -i "s|PAYPAL_CLIENT_SECRET = ''|PAYPAL_CLIENT_SECRET = '$PAYPAL_CLIENT_SECRET'|g" ./wstore/charging_engine/payment_client/paypal_client.py
 
-    sed -i "s|WSTOREMAIL = 'wstore_email'|WSTOREMAIL = '$ADMIN_EMAIL'|g" ./settings.py
+    # Ensure mongodb is running
+    # Get MongoDB host and port from settings
+    MONGO_HOST=`grep -o "'HOST':.*" ./user_settings/settings.py | grep -o ": '.*'" | grep -oE "[^:' ]+"`
 
-    if [[ ! -z $EMAIL_USER ]];
-    then
-        sed -i "s|WSTOREMAILUSER = 'email_user'|WSTOREMAILUSER = '$EMAIL_USER'|g" ./settings.py
+    if [ -z ${MONGO_HOST} ]; then
+        MONGO_HOST=localhost
     fi
 
-    if [[ ! -z $EMAIL_PASSWD ]];
-    then
-        sed -i "s|WSTOREMAILPASS = 'wstore_email_passwd'|WSTOREMAILPASS = '$EMAIL_PASSWD'|g" ./settings.py
+    MONGO_PORT=`grep -o "'PORT':.*" ./user_settings/settings.py | grep -o ": '.*'" | grep -oE "[^:' ]+"`
+
+    if [ -z ${MONGO_PORT} ]; then
+        MONGO_PORT=27017
     fi
 
-    if [[ ! -z $EMAIL_SERVER ]];
-    then
-        sed -i "s|SMTPSERVER = 'wstore_smtp_server'|SMTPSERVER = '$EMAIL_SERVER'|g" ./settings.py
-    fi
+    test_connection "MongoDB" ${MONGO_HOST} ${MONGO_PORT}
 
-    if [[ ! -z $EMAIL_SERVER_PORT ]];
-    then
-        sed -i "s|SMTPPORT = 587|SMTPPORT = $EMAIL_SERVER_PORT|g" ./settings.py
-    fi
+    # Check that the required APIs are running
+    APIS_HOST=`grep "CATALOG =.*" ./user_settings/services_settings.py | grep -o "://.*:" | grep -oE "[^:/]+"`
+    APIS_PORT=`grep "CATALOG =.*" ./user_settings/services_settings.py | grep -oE ":[0-9]+" | grep -oE "[^:/]+"`
 
-    sed -i "s|AUTHORIZE_SERVICE = 'http://localhost:8004/authorizeService/apiKeys'|AUTHORIZE_SERVICE = 'http://localhost:8000/authorizeService/apiKeys'|g" ./services_settings.py
+    test_connection "APIs" ${APIS_HOST} ${APIS_PORT}
 
+    # Check that the RSS is running
+    RSS_HOST=`grep "RSS =.*" ./user_settings/services_settings.py | grep -o "://.*:" | grep -oE "[^:/]+"`
+    RSS_PORT=`grep "RSS =.*" ./user_settings/services_settings.py | grep -oE ":[0-9]+" | grep -oE "[^:/]+"`
 
-    python ./manage.py createsite external http://$BIZ_ECOSYS_HOST:$BIZ_ECOSYS_PORT/
-    python ./manage.py createsite internal http://127.0.0.1:8006/
+    test_connection "RSS" ${RSS_HOST} ${RSS_PORT}
 
     echo "Starting charging server"
     service apache2 restart
 
-    cd ../../business-ecosystem-logic-proxy
+    cd /
+    echo "Charging module deployed"
+}
 
-    sed -i "s|config\.port|'$BIZ_ECOSYS_PORT'|" lib/tmfUtils.js
-    python /proxy-entrypoint.py
+function setup_proxy {
+    echo "Deploying logic proxy module"
 
-    /node-v6.9.1-linux-x64/bin/node fill_indexes.js
+    cd /business-ecosystem-logic-proxy
+    # Get mongodb host and port from config file
+    MONGO_HOST=`/business-ecosystem-logic-proxy/node-v6.9.1-linux-x64/bin/node getConfig mongohost`
+    MONGO_PORT=`/business-ecosystem-logic-proxy/node-v6.9.1-linux-x64/bin/node getConfig mongoport`
+
+    # Wait for mongodb to be running
+    test_connection 'MongoDB' ${MONGO_HOST} ${MONGO_PORT}
+
+    # Get glassfish host and port from config
+    GLASSFISH_HOST=`/business-ecosystem-logic-proxy/node-v6.9.1-linux-x64/bin/node getConfig glasshost`
+    GLASSFISH_PORT=`/business-ecosystem-logic-proxy/node-v6.9.1-linux-x64/bin/node getConfig glassport`
+
+    # Wait for glassfish to be running
+    test_connection 'Glassfish' ${GLASSFISH_HOST} ${GLASSFISH_PORT}
+
+    # Wait for APIs to be deployed
+    GLASSFISH_SCH=`/business-ecosystem-logic-proxy/node-v6.9.1-linux-x64/bin/node getConfig glassprot`
+    GLASSFISH_PATH=`/business-ecosystem-logic-proxy/node-v6.9.1-linux-x64/bin/node getConfig glasspath`
+
+    echo "Testing Glasfish APIs deployed"
+    wget ${GLASSFISH_SCH}://${GLASSFISH_HOST}:${GLASSFISH_PORT}/${GLASSFISH_PATH}
+    STATUS=$?
+    I=0
+    while [[ ${STATUS} -ne 0  && ${I} -lt 50 ]]; do
+        echo "Glassfish APIs not deployed yet, retrying in 5 seconds..."
+
+        sleep 5
+        wget ${GLASSFISH_SCH}://${GLASSFISH_HOST}:${GLASSFISH_PORT}/${GLASSFISH_PATH}
+        STATUS=$?
+
+        I=${I}+1
+    done
+
+    # Include this setting to avoid inconsistencies between docker container port and used port
+    sed -i "s|config\.port|config\.extPort|" /business-ecosystem-logic-proxy/lib/tmfUtils.js
+
+    echo "Cleaning indexes"
+    rm -rf ./indexes/*
+
+    echo "Creating indexes..."
+    /business-ecosystem-logic-proxy/node-v6.9.1-linux-x64/bin/node fill_indexes.js
+    /business-ecosystem-logic-proxy/node-v6.9.1-linux-x64/bin/node collect_static.js
+
     cd ..
+    echo "Logic proxy module deployed"
+}
+
+function setup_rss {
+    echo "Deploying RSS module..."
+
+    # Check if the properties files have been included
+    if [ ! -f /etc/default/rss/oauth.properties ]; then
+        echo "Missing oauth.properties file"
+        exit 1
+    fi
+
+    if [ ! -f /etc/default/rss/database.properties ]; then
+        echo "Missing database.properties file"
+        exit 1
+    fi
+
+    # Get MySQL info
+    MYSQL_RSS_HOST=`grep -o 'database\.url=.*' /etc/default/rss/database.properties | grep -oE '//.+:' | grep -oE '[^/:]+'`
+    MYSQL_RSS_PORT=`grep -o 'database\.url=.*' /etc/default/rss/database.properties | grep -oE ':[0-9]+/' | grep -oE '[0-9]+'`
+
+    test_connection "RSS MySQL" ${MYSQL_RSS_HOST} ${MYSQL_RSS_PORT}
+
+    echo "Creating RSS database"
+    mysql -u root --password=${MYSQL_ROOT_PASSWORD} -h ${MYSQL_RSS_HOST} --port=${MYSQL_RSS_PORT} -e "CREATE DATABASE IF NOT EXISTS RSS;"
+
+    echo "Deploying RSS WAR file..."
+    asadmin deploy --force true --contextroot DSRevenueSharing --name DSRevenueSharing /apis/business-ecosystem-rss/fiware-rss/target/DSRevenueSharing.war
+
+    cp /apis/business-ecosystem-rss/fiware-rss/target/DSRevenueSharing.war /apis/wars-ext/
+    echo "RSS module deployed"
+}
+
+function setup_apis {
+    echo "Deploying TMF APIs..."
+    cd /apis
+
+    # Check MySQL connection for APIs
+    test_connection "APIs MySQL" ${MYSQL_HOST} 3306
+
+    echo "Creating Database tables"
+    mysql -u root --password=${MYSQL_ROOT_PASSWORD} -h ${MYSQL_HOST} -e "CREATE DATABASE IF NOT EXISTS DSPRODUCTCATALOG2;"
+    mysql -u root --password=${MYSQL_ROOT_PASSWORD} -h ${MYSQL_HOST} -e "CREATE DATABASE IF NOT EXISTS DSPRODUCTORDERING;"
+    mysql -u root --password=${MYSQL_ROOT_PASSWORD} -h ${MYSQL_HOST} -e "CREATE DATABASE IF NOT EXISTS DSPRODUCTINVENTORY;"
+    mysql -u root --password=${MYSQL_ROOT_PASSWORD} -h ${MYSQL_HOST} -e "CREATE DATABASE IF NOT EXISTS DSPARTYMANAGEMENT;"
+    mysql -u root --password=${MYSQL_ROOT_PASSWORD} -h ${MYSQL_HOST} -e "CREATE DATABASE IF NOT EXISTS DSBILLINGMANAGEMENT;"
+    mysql -u root --password=${MYSQL_ROOT_PASSWORD} -h ${MYSQL_HOST} -e "CREATE DATABASE IF NOT EXISTS DSCUSTOMER;"
+    mysql -u root --password=${MYSQL_ROOT_PASSWORD} -h ${MYSQL_HOST} -e "CREATE DATABASE IF NOT EXISTS DSUSAGEMANAGEMENT;"
+
+    test_connection "Glassfish" 127.0.0.1 4848
+
+    python /apis-entrypoint.py
+
+    cp /apis/wars/* /apis/wars-ext/
+    cd ..
+
+    echo "TMF APIs deployed"
 }
 
 ########################################################################################
@@ -137,96 +227,13 @@ function done_mongo {
 set -o monitor
 
 export PATH=$PATH:/glassfish4/glassfish/bin
-
 service mongodb start
-
 asadmin start-domain
 
-i=1
+setup_apis
+setup_rss
+setup_charging
+setup_proxy
 
-exec 8<>/dev/tcp/$MYSQL_HOST/3306
-mysqlStatus=$?
-doneTables=1
-
-exec 9<>/dev/tcp/127.0.0.1/4848
-glassfishStatus=$?
-doneGlassfish=1
-
-exec 10<>/dev/tcp/127.0.0.1/27017
-mongodbStatus=$?
-doneMongo=1
-
-if [[ $mysqlStatus -eq 0 ]]; then
-    create_tables
-    doneTables=0
-fi
-
-if [[ $glassfishStatus -eq 0 && $mysqlStatus -eq 0 ]]; then
-    glassfish_related
-    doneGlassfish=0
-fi
-
-if [[ $mongodbStatus -eq 0 && $doneGlassfish -eq 0 ]]; then
-    done_mongo
-    doneMongo=0
-fi
-
-
-while [[ ($doneTables -ne 0 || $doneGlassfish -ne 0 || $doneMongo -ne 0) && $i -lt 50 ]]; do
-
-    echo "Checking deployment status: "
-    echo "MySQL databases: $doneTables"
-    echo "API deployment: $doneGlassfish"
-    echo "Charging startup: $doneMongo"
-
-    sleep 5
-    i=$i+1
-
-    if [[ $mysqlStatus -eq 0 && $doneTables -eq 1 ]]; then
-	    create_tables
-	    doneTables=0
-
-    elif [[ $mysqlStatus -ne 0 ]]; then
-	    exec 8<>/dev/tcp/$MYSQL_HOST/3306
-	    mysqlStatus=$?
-
-    fi
-
-    if [[ $glassfishStatus -eq 0 && $doneGlassfish -eq 1 && $mysqlStatus -eq 0 && $doneTables -eq 0 ]]; then
-	    glassfish_related
-	    doneGlassfish=0
-
-    elif [[ $glassfishStatus -ne 0 ]]; then
-	    exec 9<>/dev/tcp/127.0.0.1/4848
-	    glassfishStatus=$?
-    fi
-
-    if [[ $mongodbStatus -eq 0 && $doneMongo -eq 1 && $glassfishStatus -eq 0 && $doneGlassfish -eq 0 ]]; then
-	    done_mongo
-	    doneMongo=0
-
-    elif [[ $mongodbStatus -ne 0 ]]; then
-	    exec 10<>/dev/tcp/127.0.0.1/27017
-	    mongodbStatus=$?
-    fi
-done
-
-if [[ $i -eq 50 ]];
-then
-    echo "It has not been possible to start the Business API Ecosystem due to a timeout waiting for a required service"
-    echo Conection to Mongo returned $mongodbStatus
-    echo Conection to MySQL returned $mysqlStatus
-    echo Conection to Glassfish returned $glassfishStatus
-    exit 1
-fi
-
-
-exec 8>&- # close output connection
-exec 8<&- # close input connection
-exec 9>&- # close output connection
-exec 9<&- # close input connection
-exec 10>&- # close output connection
-exec 10<&- # close input connection
-
-cd business-ecosystem-logic-proxy
-/node-v6.9.1-linux-x64/bin/node server.js
+cd /business-ecosystem-logic-proxy
+/business-ecosystem-logic-proxy/node-v6.9.1-linux-x64/bin/node server.js
