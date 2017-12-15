@@ -6,7 +6,7 @@ Installation and Administration Guide
 Introduction
 ------------
 
-This installation and administration guide covers the Business API Ecosystem version 5.4.1, corresponding to FIWARE release 5.
+This installation and administration guide covers the Business API Ecosystem version 6.4.0, corresponding to FIWARE release 6.
 Any feedback on this document is highly welcomed, including bugs, typos or things you think should be included but aren't.
 Please send them to the "Contact Person" email that appears in the `Catalogue page for this GEi`_. Or create an issue at `GitHub Issues`_
 
@@ -81,10 +81,10 @@ To execute the script, run the following command from the root directory of the 
 During the execution of the script you will be prompted some times in order to accept Oracle Java 8 terms and conditions
 and to provide MySQL root password.
 
-.. image:: /images/installation/java-terms.png
+.. image:: ./images/installation/java-terms.png
    :align: center
 
-.. image:: /images/installation/mysql-root.png
+.. image:: ./images/installation/mysql-root.png
    :align: center
 
 
@@ -340,7 +340,7 @@ The installation for all of them is similar. The first step is cloning the repos
 
     $ git clone https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2.git
     $ cd DSPRODUCTCATALOG2
-    $ git checkout v5.4.1
+    $ git checkout v6.4.0
 
 Once the software has been downloaded, it is needed to create the connection to the database. To do that, the first step
 is editing the *src/main/resources/META-INF/persistence.xml* to have something similar to the following: ::
@@ -403,7 +403,7 @@ The first step for installing the RSS component is downloading it and moving to 
 
     $ git clone https://github.com/FIWARE-TMForum/business-ecosystem-rss.git
     $ cd business-ecosystem-rss
-    $ git checkout v5.4.1
+    $ git checkout v6.4.0
 
 Then, the next step is coping, *database.properties* and *oauth.properties* files to its default location at */etc/default/rss* ::
 
@@ -450,7 +450,7 @@ The first step for installing the charging backend component is downloading it a
 
     $ git clone https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend.git
     $ cd business-ecosystem-charging-backend
-    $ git checkout v5.4.1
+    $ git checkout v6.4.0
 
 Once the code has been downloaded, it is recommended to create a virtualenv for installing python dependencies (This is not mandatory). ::
 
@@ -473,11 +473,11 @@ The first step for installing the logic proxy component is downloading it and mo
 
     $ git clone https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy.git
     $ cd business-ecosystem-logic-proxy
-    $ git checkout v5.4.1
+    $ git checkout v6.4.0
 
-Once the code has been downloaded, Node dependencies can be installed with npm as follows ::
+Once the code has been downloaded, Node dependencies can be installed with the provided script as follows ::
 
-    $ npm install
+    $ ./install.sh
 
 -------------
 Configuration
@@ -525,6 +525,9 @@ The Charging Backend creates some objects and connections in the different APIs 
 configuring the different URLs of the Business API Ecosystem components by modifying the file *services_settings.py*,
 which by default contains the following content: ::
 
+    SITE = 'http://localhost:8004/'
+    LOCAL_SITE = 'http://localhost:8006/'
+
     CATALOG = 'http://localhost:8080/DSProductCatalog'
     INVENTORY = 'http://localhost:8080/DSProductInventory'
     ORDERING = 'http://localhost:8080/DSProductOrdering'
@@ -535,6 +538,8 @@ which by default contains the following content: ::
 
 This settings points to the different APIs accessed by the charging backend. In particular:
 
+* SITE: External URL of the complete Business API Ecosystem using for Href creation
+* LOCAL_SITE: URL where the Charging Backend is going to run
 * CATALOG: URL of the catalog API including its path
 * INVENTORY: URL of the inventory API including its path
 * ORDERING: URL of the ordering API including its path
@@ -625,21 +630,13 @@ certificate and the private Key to be used by providing its path in the followin
     NOTIF_CERT_FILE = None
     NOTIF_CERT_KEY_FILE = None
 
-Finally, the last step is creating the context of the Charging Backend by creating two sites. First, create the external
-site by executing the following command. Note that you have to provide the real URL where the proxy will be running. ::
-
-    $ ./manage.py createsite external http://<proxy_path>:<proxy_port>/
-
-Then, you have to create the local site by providing the real URL where the Charging Backend will be running as follows ::
-
-    $ ./manage.py createsite local http://localhost:<charging_port>/
-
 The Charging Backend uses a Cron task to check the status of recurring and usage subscriptions, and for paying sellers.
 The periodicity of this tasks can be configured using the CRONJOBS setting of settings.py using the standard Cron format ::
 
     CRONJOBS = [
         ('0 5 * * *', 'django.core.management.call_command', ['pending_charges_daemon']),
-        ('0 6 * * *', 'django.core.management.call_command', ['resend_cdrs'])
+        ('0 6 * * *', 'django.core.management.call_command', ['resend_cdrs']),
+        ('0 4 * * *', 'django.core.management.call_command', ['resend_upgrade']
     ]
 
 Once the Cron task has been configured, it is necessary to include it in the Cron tasks using the command:
@@ -770,9 +767,10 @@ The first step for configuring the proxy is creating the configuration file by c
 
     $ cp config.js.template config.js
 
-The first setting to be configured is the port where the proxy is going to run, this setting is located in *config.js* ::
+The first setting to be configured is the port and host where the proxy is going to run, this settings are located in *config.js* ::
 
     config.port = 80;
+    config.host = 'localhost';
 
 If you want to run the proxy in HTTPS you can update *config.https* setting ::
 
@@ -795,6 +793,10 @@ a prefix for the portal, and modifying the login and logout URLS ::
     config.logInPath = '/login';
     config.logOutPath = '/logOut';
 
+In addition, it is possible to configure the theme to be used by providing its name. Details about the configuration of
+Themes are provided in the *Configuring Themes* section::
+
+    config.theme = '';
 
 Additionally, the proxy is the component that acts as the front end of the Business API Ecosystem, both providing a web portal,
 and providing the endpoint for accessing to the different APIs. In this regard, the Proxy has to have the OAUth2 configuration
@@ -877,7 +879,7 @@ Final steps
 The Business API Ecosystem, allows to upload some product attachments and assets to be sold. These assets are uploaded
 by the Charging Backend that saves them in the file system, jointly with the generated PDF invoices.
 
-In this regard, the directories *src/medi*a, *src/media/bills*, and *src/media/assets* must exist within the Charging Backend directory, and must
+In this regard, the directories *src/media*, *src/media/bills*, and *src/media/assets* must exist within the Charging Backend directory, and must
 be writable by the user executing the Charging Backend. ::
 
     $ mkdir src/media
@@ -982,9 +984,11 @@ To remove an asset plugin, execute the following command providing the plugin id
 
 At the time of writing, the following plugins are available:
 
+* `Basic File <https://github.com/FIWARE-TMForum/biz-basic-plugins>`__: Allows the creation of products by providing files as digital assets. No validations or processing is done
+* `Basic URL <https://github.com/FIWARE-TMForum/biz-basic-plugins>`__: Allows the creation of products by providing URLs as digital assets. No validations or processing is done
 * `WireCloud Component <https://github.com/FIWARE-TMForum/wstore-wirecloud-plugin>`__: Allows the monetization of WireCloud components, including Widgets, operators, and mashups
-* `Accountable Service <https://github.com/FIWARE-TMForum/wstore-orion-plugin>`__ : Allows the monetization of services protected by the `Accounting Proxy <https://github.com/FIWARE-TMForum/Accounting-Proxy>`__, including Orion Context Broker queries
-* `CKAN Dataset <https://github.com/FIWARE-TMForum/wstore-ckan-plugin>`__ : Allows the monetization of CKAN datasets
+* `Accountable Service <https://github.com/FIWARE-TMForum/biz-accountable-service-plugin>`__ : Allows the monetization of services protected by the `Accounting Proxy <https://github.com/FIWARE-TMForum/Accounting-Proxy>`__, including Orion Context Broker queries
+* `CKAN Dataset <https://github.com/FIWARE-TMForum/biz-ckan-plugin>`__ : Allows the monetization of CKAN datasets
 
 
 -----------------------
@@ -1007,43 +1011,43 @@ To Check if the Business API Ecosystem is running, follow the next steps:
 1. Open a browser and enter to the Business API Ecosystem
 2. Click on the *Sign In* Button
 
-.. image:: /images/installation/sanity1.png
+.. image:: ./images/installation/sanity1.png
 
 3. Provide your credentials in the IdM page
 
-.. image:: /images/installation/sanity2.png
+.. image:: ./images/installation/sanity2.png
 
 4. Go to the *Revenue Sharing* section
 
-.. image:: /images/installation/sanity3.png
+.. image:: ./images/installation/sanity3.png
 
 5. Ensure that the default RS Model has been created
 
-.. image:: /images/installation/sanity4.png
+.. image:: ./images/installation/sanity4.png
 
 6. Go to *My Stock* section
 
-.. image:: /images/installation/sanity5.png
+.. image:: ./images/installation/sanity5.png
 
 7. Click on *New* for creating a new catalog
 
-.. image:: /images/installation/sanity6.png
+.. image:: ./images/installation/sanity6.png
 
 8. Provide a name and a description and click on *Next*. Then click on *Create*
 
-.. image:: /images/installation/sanity7.png
-.. image:: /images/installation/sanity8.png
-.. image:: /images/installation/sanity9.png
+.. image:: ./images/installation/sanity7.png
+.. image:: ./images/installation/sanity8.png
+.. image:: ./images/installation/sanity9.png
 
 9. Click on *Launched*, and then click on *Update*
 
-.. image:: /images/installation/sanity10.png
-.. image:: /images/installation/sanity11.png
+.. image:: ./images/installation/sanity10.png
+.. image:: ./images/installation/sanity11.png
 
 10. Go to *Home*, and ensure the new catalog appears
 
-.. image:: /images/installation/sanity12.png
-.. image:: /images/installation/sanity13.png
+.. image:: ./images/installation/sanity12.png
+.. image:: ./images/installation/sanity13.png
 
 List of Running Processes
 =========================
