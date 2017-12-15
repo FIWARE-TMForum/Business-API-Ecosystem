@@ -926,6 +926,29 @@ To start using a theme the following command has to be executed: ::
 This command merges the theme files and the default ones into a *static* directory used by the Logic Proxy to retrieve
 portal static files.
 
+Enabling Production
+===================
+
+The default installation of the Business API Ecosystem deploys its different components in *debug* mode. This is useful
+for development and testing but it is not adequate for production environments.
+
+Enabling the production mode makes the different components to start caching requests and views and minimizing JavaScript
+files.
+
+To enable the production mode, the first step is setting the environment variable *NODE_ENV* to *production* in the machine
+containing the Logic Proxy. ::
+
+    $ export NODE_ENV=production
+
+Then, it is needed to collect static files in order to compress JavaScript files. ::
+
+    $ node collect_static.js
+
+
+Finally, change the setting *DEBUG* of the Charging Backend to False. ::
+
+    DEBUG=False
+
 ----------------------------------
 Running the Business API Ecosystem
 ----------------------------------
