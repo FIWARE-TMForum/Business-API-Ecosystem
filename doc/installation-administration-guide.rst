@@ -483,7 +483,7 @@ Upgrading from 5.4.1
 ====================
 
 For upgrading Business API Ecosystem version 5.4.1 installations to version 6.4.0 a new command has been incorporated
-within the *install.py* script. This command downloads new components software, updates it, and and migrates the
+within the *install.py* script. This command downloads new components software, updates it, and  migrates the
 different databases, so it lets the software ready to be used.
 
 .. note::
@@ -501,7 +501,7 @@ Once the main repository is upgraded, the next step is using the provided script
 
     $ ./install.py upgrade
 
-This command no not change your configuration parameters. Nevertheless, you should review the *Configuration* section
+This command do not change your configuration parameters. Nevertheless, you should review the *Configuration* section
 as new settings has been included.
 
 -------------

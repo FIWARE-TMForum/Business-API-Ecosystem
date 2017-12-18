@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from sh import git, cd, mvn, mysql, mysqldump, sed, asadmin, npm, node, cp, virtualenv, bash, mkdir, rm
+from sh import git, cd, mvn, mysql, mysqldump, sed, asadmin, npm, node, cp, virtualenv, bash, mkdir, rm, bash
 from os.path import isfile
 import click
 import os.path
@@ -258,7 +258,7 @@ def redeployall(directory):
 
 @cli.command("charging")
 @click.pass_context
-def chargingbackend(ctx):
+def chargingbackend():
     print("Installing charging backend")
     name = charg.get("url").split("/")[-1][:-4]
     cd(name)
@@ -295,7 +295,7 @@ def proxyCommand(host, port, chargingport, glassfishport):
     print("Installing logic proxy")
     name = proxy.get("url").split("/")[-1][:-4]
     cd(name)
-    npm("install")
+    bash('install.sh')
     if not os.path.isfile("config.js"):
         shutil.copy2("config.js.template", "config.js")
 
@@ -314,12 +314,15 @@ def proxyCommand(host, port, chargingport, glassfishport):
         with open("config.js", "w") as f:
             f.write(text)
 
-        mkdir('indexes')
-        node('fill_indexes.js')
+    if os.path.isdir('indexes'):
+        rm('-rf', 'indexes')
+
+    mkdir('indexes')
+    node('fill_indexes.js')
 
     print("""
     Finished!
-    Now, go to https://account.lab.fiware.org and create an application with this settings:
+    Now, go to your IdM instance (e.g. https://account.lab.fiware.org) and create an application with this settings:
 
     - URL: http://{host}:{port}
     - Callback URL: http://{host}:{port}/auth/fiware/callback
@@ -332,8 +335,8 @@ def proxyCommand(host, port, chargingport, glassfishport):
     - config.oauth2.clientSecret: The client Secret that you got when you created the Application
     - config.oauth2.callbackURL = http://{host}:{port}/auth/fiware/callback
 
-    Once you've done all, execute the proxy with:
-    node server.js
+    Please refer to http://business-api-ecosystem.readthedocs.io/en/latest/installation-administration-guide.html#configuration
+    for details on configuration settings
     """.format(host=host, port=port))
 
 
@@ -373,9 +376,7 @@ def migrate():
         if api['name'] == APIS[2]['name']:
             # Migrate bundle info in inventory API
             sed('-ri', "s|([0-9]+) ([0-9]+) Media type|offering:\1 product:\2 Media Type|g", dump_file)
-            sed('-ri', "s|([0-9]+) ([0-9]+) Media Type|offering:\1 product:\2 Media Type|g", dump_file)
             sed('-ri', "s|([0-9]+) ([0-9]+) Asset type|offering:\1 product:\2 Asset Type|g", dump_file)
-            sed('-ri', "s|([0-9]+) ([0-9]+) Asset Type|offering:\1 product:\2 Asset Type|g", dump_file)
             sed('-ri', "s|([0-9]+) ([0-9]+) Location|offering:\1 product:\2 Location|g", dump_file)
 
         mysql('-u', DBUSER, '-p{}'.format(DBPWD), '-h', DBHOST, '-P', DBPORT, '-e', "DROP DATABASE {}".format(name))
@@ -392,6 +393,8 @@ def upgrade(ctx):
     ctx.invoke(migrate)
     ctx.invoke(maveninstall)
     ctx.invoke(redeployall, directory=tuple())
+
+    ctx.invoke(proxyCommand)
 
 
 @cli.command("all")
