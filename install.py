@@ -264,17 +264,20 @@ def chargingbackend():
     name = charg.get("url").split("/")[-1][:-4]
     cd(name)
 
-    virtualenv("virtenv")
+    if os.path.isdir('virtenv'):
+        virtualenv("virtenv")
 
     bash("python-dep-install.sh")
 
     cd('src')
-    mkdir('media')
-    cd('media')
-    mkdir('assets')
-    mkdir('bills')
 
-    cd("..")
+    if not os.path.isdir('media'):
+        mkdir('media')
+        cd('media')
+        mkdir('assets')
+        mkdir('bills')
+        cd("..")
+
     cd("..")
     cd("..")
 
@@ -440,6 +443,7 @@ def upgrade(ctx):
     ctx.invoke(redeployall, directory=tuple())
 
     ctx.invoke(migrate)
+    ctx.invoke(chargingbackend)
     ctx.invoke(proxyCommand)
 
 
