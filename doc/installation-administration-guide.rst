@@ -499,7 +499,7 @@ update installation scripts. ::
 
 Once the main repository is upgraded, the next step is using the provided script for upgrading the software. ::
 
-    $ ./install.py migrate
+    $ ./install.py upgrade
 
 This command no not change your configuration parameters. Nevertheless, you should review the *Configuration* section
 as new settings has been included.

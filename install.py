@@ -12,49 +12,49 @@ DBHOST = "localhost"
 DBPORT = 3306
 
 APIS = [{"url": "https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2.git",
-         "branch": "v5.4.1",
+         "branch": "v6.4.0",
          "bbdd": "DSPRODUCTCATALOG2",
          "war": "target/DSProductCatalog.war",
          "root": "DSProductCatalog",
          "name": "catalog",
          "resourcename": "jdbc/pcatv2"},
         {"url": "https://github.com/FIWARE-TMForum/DSPRODUCTORDERING.git",
-         "branch": "v5.4.1",
+         "branch": "v6.4.0",
          "bbdd": "DSPRODUCTORDERING",
          "war": "target/DSProductOrdering.war",
          "root": "DSProductOrdering",
          "name": "ordering",
          "resourcename": "jdbc/podbv2"},
         {"url": "https://github.com/FIWARE-TMForum/DSPRODUCTINVENTORY.git",
-         "branch": "v5.4.1",
+         "branch": "v6.4.0",
          "bbdd": "DSPRODUCTINVENTORY",
          "war": "target/DSProductInventory.war",
          "root": "DSProductInventory",
          "name": "inventory",
          "resourcename": "jdbc/pidbv2"},
         {"url": "https://github.com/FIWARE-TMForum/DSPARTYMANAGEMENT.git",
-         "branch": "v5.4.1",
+         "branch": "v6.4.0",
          "bbdd": "DSPARTYMANAGEMENT",
          "war": "target/DSPartyManagement.war",
          "root": "DSPartyManagement",
          "name": "party",
          "resourcename": "jdbc/partydb"},
         {"url": "https://github.com/FIWARE-TMForum/DSBILLINGMANAGEMENT.git",
-         "branch": "v5.4.1",
+         "branch": "v6.4.0",
          "bbdd": "DSBILLINGMANAGEMENT",
          "war": "target/DSBillingManagement.war",
          "root": "DSBillingManagement",
          "name": "billing",
          "resourcename": "jdbc/bmdbv2"},
         {"url": "https://github.com/FIWARE-TMForum/DSCUSTOMER.git",
-         "branch": "v5.4.1",
+         "branch": "v6.4.0",
          "bbdd": "DSCUSTOMER",
          "war": "target/DSCustomerManagement.war",
          "root": "DSCustomerManagement",
          "name": "customer",
          "resourcename": "jdbc/customerdbv2"},
         {"url": "https://github.com/FIWARE-TMForum/DSUSAGEMANAGEMENT.git",
-         "branch": "v5.4.1",
+         "branch": "v6.4.0",
          "bbdd": "DSUSAGEMANAGEMENT",
          "war": "target/DSUsageManagement.war",
          "root": "DSUsageManagement",
@@ -62,18 +62,18 @@ APIS = [{"url": "https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2.git",
          "resourcename": "jdbc/usagedbv2"}]
 
 rss = {"url": "https://github.com/FIWARE-TMForum/business-ecosystem-rss.git",
-       "branch": "v5.4.1",
+       "branch": "v6.4.0",
        "bbdd": "RSS",
        "war": "fiware-rss/target/DSRevenueSharing.war",
        "name": "rss",
        "root": "DSRevenueSharing"}
 
 charg = {"url": "https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend.git",
-         "branch": "v5.4.1",
+         "branch": "v6.4.0",
          "name": "charging"}
 
 proxy = {"url": "https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy.git",
-         "branch": "v5.4.1"}
+         "branch": "v6.4.0"}
 
 
 @click.group(chain=True)
@@ -336,9 +336,31 @@ def proxyCommand(host, port, chargingport, glassfishport):
     node server.js
     """.format(host=host, port=port))
 
+
+def _download_module(name, directory, branch):
+    print("Downloading {} version {}".format(name, branch))
+    cd(directory)
+
+    git('stash')
+    git('fetch')
+    git('checkout', branch)
+    git('pull', 'origin', branch)
+    git('stash', 'pop')
+
+
+@cli.command("download")
+def download():
+    # Download new APIs software version
+    for api in APIS:
+        _download_module(api['name'], api['url'].split("/")[-1][:-4], api['branch'])
+
+    _download_module('rss', rss['url'].split("/")[-1][:-4], rss['branch'])
+    _download_module('charging', charg['url'].split("/")[-1][:-4], charg['branch'])
+    _download_module('proxy', proxy['url'].split("/")[-1][:-4], proxy['branch'])
+
+
 @cli.command("migrate")
 def migrate():
-
     print("Migrating from previous version")
 
     for api in APIS[0:3]:
@@ -363,6 +385,15 @@ def migrate():
         print("Database {} migrated".format(api['name']))
 
 
+@cli.command("upgrade")
+def upgrade(ctx):
+    print("Upgrading from version 5.4.1 to 6.4.0")
+    ctx.invoke(download)
+    ctx.invoke(migrate)
+    ctx.invoke(maveninstall)
+    ctx.invoke(redeployall, directory=tuple())
+
+
 @cli.command("all")
 @click.pass_context
 def doall(ctx):
@@ -377,6 +408,7 @@ def doall(ctx):
 
     ctx.invoke(chargingbackend)
     ctx.invoke(proxyCommand)
+
 
 if __name__ == "__main__":
     cli()
