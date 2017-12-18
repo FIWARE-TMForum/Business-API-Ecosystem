@@ -4,6 +4,7 @@ from sh import git, cd, mvn, mysql, mysqldump, sed, asadmin, npm, node, cp, virt
 from os.path import isfile
 import click
 import os.path
+import pymysql
 import shutil
 
 DBUSER = "root"
@@ -362,6 +363,23 @@ def download():
     _download_module('proxy', proxy['url'].split("/")[-1][:-4], proxy['branch'])
 
 
+def _process_ids(ids, offering_id):
+    # Check if the ids are referring to a product or offering
+    if len(ids) == 2:
+        return ['offering:{}'.format(ids[0]), 'product:{}'.format(ids[1])]
+
+    # If there is only one Id it is needed to check in the catalog whether the id is an offering or a product
+    conn = pymysql.connect(host=DBHOST, port=DBPORT, user=DBUSER, passwd=DBPWD, db=APIS[0]['bbdd'])
+    cur = conn.cursor()
+
+    cur.execute("SELECT IS_BUNDLE FROM CRI_PRODUCT_OFFERING WHERE ID='{}'".format(offering_id))
+    res = cur.fetchone()[0]
+
+    prefix = 'product' if res == 0 else 'offering'
+
+    return ['{}:{}'.format(prefix, ids[0])]
+
+
 @cli.command("migrate")
 def migrate():
     print("Migrating from previous version")
@@ -373,16 +391,40 @@ def migrate():
         mysqldump('-u', DBUSER, '-p{}'.format(DBPWD), '-h', DBHOST, '-P', DBPORT, name, _out=dump_file)
         sed('-i', "s|:([0123456789\.]*)||g", dump_file)
 
-        if api['name'] == APIS[2]['name']:
-            # Migrate bundle info in inventory API
-            sed('-ri', "s|([0-9]+) ([0-9]+) Media type|offering:\1 product:\2 Media Type|g", dump_file)
-            sed('-ri', "s|([0-9]+) ([0-9]+) Asset type|offering:\1 product:\2 Asset Type|g", dump_file)
-            sed('-ri', "s|([0-9]+) ([0-9]+) Location|offering:\1 product:\2 Location|g", dump_file)
-
         mysql('-u', DBUSER, '-p{}'.format(DBPWD), '-h', DBHOST, '-P', DBPORT, '-e', "DROP DATABASE {}".format(name))
         mysql('-u', DBUSER, '-p{}'.format(DBPWD), '-h', DBHOST, '-P', DBPORT, '-e', "CREATE DATABASE {}".format(name))
 
         mysql('-u', DBUSER, '-p{}'.format(DBPWD), '-h', DBHOST, '-P', DBPORT, name, '-e', "source {}".format(dump_file))
+
+        if api['name'] == 'inventory':
+            conn = pymysql.connect(host=DBHOST, port=DBPORT, user=DBUSER, passwd=DBPWD, db=api['bbdd'])
+            cur = conn.cursor()
+            cur.execute("select * from PRODUCT_CHARACTERISTIC")
+
+            results = cur.fetchall()
+            for res in results:
+                sp_name = res[2].split(' ')
+
+                cur.execute(
+                    "SELECT PRODUCT_OFFERING.ID FROM PRODUCT INNER JOIN PRODUCT_OFFERING ON PRODUCT.PRODUCT_OFFERING_PRODUCT_HJID=PRODUCT_OFFERING.HJID WHERE PRODUCT.ID={}".format(res[4]))
+
+                off_id = cur.fetchone()[0]
+                new_ids = None
+                if res[2].lower().endswith('asset type') or res[2].lower().endswith('media type') and len(sp_name) > 2:
+                    new_ids = _process_ids(sp_name[0:-2], off_id)
+                    name = '{} {}'.format(sp_name[-2], sp_name[-1])
+
+                elif res[2].lower().endswith('location') and len(sp_name) > 1:
+                    new_ids = _process_ids(sp_name[0:-1], off_id)
+                    name = sp_name[-1]
+
+                if new_ids is not None:
+                    # Update characteristic name
+                    new_name = ' '.join(new_ids)
+                    new_name = new_name + ' ' + name
+
+                    cur.execute("UPDATE PRODUCT_CHARACTERISTIC SET NAME_ = {} WHERE HJID={}".format(new_name, res[0]))
+
         print("Database {} migrated".format(api['name']))
 
 
@@ -390,10 +432,10 @@ def migrate():
 def upgrade(ctx):
     print("Upgrading from version 5.4.1 to 6.4.0")
     ctx.invoke(download)
-    ctx.invoke(migrate)
     ctx.invoke(maveninstall)
     ctx.invoke(redeployall, directory=tuple())
 
+    ctx.invoke(migrate)
     ctx.invoke(proxyCommand)
 
 
