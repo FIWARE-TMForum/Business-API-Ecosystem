@@ -374,6 +374,7 @@ def _process_ids(ids, offering_id):
 
     cur.execute("SELECT IS_BUNDLE FROM CRI_PRODUCT_OFFERING WHERE ID='{}'".format(offering_id))
     res = cur.fetchone()[0]
+    conn.close()
 
     prefix = 'product' if res == 0 else 'offering'
 
@@ -410,7 +411,7 @@ def migrate():
 
                 off_id = cur.fetchone()[0]
                 new_ids = None
-                if res[2].lower().endswith('asset type') or res[2].lower().endswith('media type') and len(sp_name) > 2:
+                if (res[2].lower().endswith('asset type') or res[2].lower().endswith('media type')) and len(sp_name) > 2:
                     new_ids = _process_ids(sp_name[0:-2], off_id)
                     name = '{} {}'.format(sp_name[-2], sp_name[-1])
 
@@ -423,7 +424,10 @@ def migrate():
                     new_name = ' '.join(new_ids)
                     new_name = new_name + ' ' + name
 
-                    cur.execute("UPDATE PRODUCT_CHARACTERISTIC SET NAME_ = {} WHERE HJID={}".format(new_name, res[0]))
+                    cur.execute("UPDATE PRODUCT_CHARACTERISTIC SET NAME_ = '{}' WHERE HJID={}".format(new_name, res[0]))
+
+            conn.commit()
+            conn.close()
 
         print("Database {} migrated".format(api['name']))
 
