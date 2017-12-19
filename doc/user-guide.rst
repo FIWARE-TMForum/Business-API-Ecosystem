@@ -705,44 +705,60 @@ customers.
 
 .. image:: ./images/user/search1.png
    :align: center
+   :scale: 50%
 
-Additionally, customers can select an specific catalog of offerings by clicking on it.
+Additionally, customers can select a specific catalog of offerings by clicking on it.
 
 .. image:: ./images/user/search2.png
    :align: center
+   :scale: 50%
 
 .. image:: ./images/user/search3.png
    :align: center
+   :scale: 50%
 
 Moreover, customers can filter the shown offerings by category using the categories dropdown and choosing the wanted one.
 
 .. image:: ./images/user/search4.png
    :align: center
+   :scale: 50%
 
-Finally, customers can also filter bundle or single offerings using the *Filters* modal.
+Customers can also filter bundle or single offerings using the *Filters* modal as well as choosing its sorting.
 
 .. image:: ./images/user/search5.png
    :align: center
+   :scale: 50%
 
 .. image:: ./images/user/search6.png
    :align: center
+   :scale: 50%
+
+Finally, customers can search offerings by keyword using the provided search bar
+
+.. image:: ./images/user/search6b.png
+   :align: center
+   :scale: 50%
 
 Customers can open the details of an offering by clicking on it
 
 .. image:: ./images/user/search7.png
    :align: center
+   :scale: 50%
 
 In the displayed view, it is shown the general info about the offering and its included product, the characteristics of
 the product, the price plans of the offering, and the existing relationships.
 
 .. image:: ./images/user/search8.png
    :align: center
+   :scale: 50%
 
 .. image:: ./images/user/search9.png
    :align: center
+   :scale: 50%
 
 .. image:: ./images/user/search10.png
    :align: center
+   :scale: 50%
 
 Create Order
 ------------
