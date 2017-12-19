@@ -497,12 +497,24 @@ update installation scripts. ::
     git checkout v6.4.0
     git pull origin v6.4.0
 
+The new version of *install.py* has a new dependency (PyMSQL) that has to be manually solved in order to execute
+the upgrading command. ::
+
+    $ pip3 install pymysql
+
 Once the main repository is upgraded, the next step is using the provided script for upgrading the software. ::
 
     $ ./install.py upgrade
 
 This command do not change your configuration parameters. Nevertheless, you should review the *Configuration* section
 as new settings has been included.
+
+The *upgrade* command uses a set of new commands that have been incorporated within *install.py* in order to manage the
+upgrade. In particular:
+
+* **download**: Downloads the new software for the different components of the Business API Ecosystem
+* **dump**: Creates a dump of the different MySQL databases within */tmp*
+* **migrate**: Migrates database contents from v5.4.1 to v6.4.0
 
 -------------
 Configuration
