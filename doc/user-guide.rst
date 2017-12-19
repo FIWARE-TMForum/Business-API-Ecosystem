@@ -2,9 +2,8 @@
 User Guide
 ==========
 
-------------
 Introduction
-------------
+============
 
 This user guide covers the Business API Ecosystem version 6.4.0, corresponding to FIWARE release 6.
 Any feedback on this document is highly welcomed, including bugs, typos or things you think should be included but aren't.
@@ -13,9 +12,6 @@ Please send them to the "Contact Person" email that appears in the `Catalogue pa
 .. _Catalogue page for this GEi: https://catalogue.fiware.org/enablers/business-api-ecosystem-biz-ecosystem-ri
 .. _GitHub Issues: https://github.com/FIWARE-TMForum/Business-API-Ecosystem/issues/new
 
-----------
-User Guide
-----------
 
 This user guide contains a description of the different tasks that can be performed in the Business API Ecosystem using
 its web interface. This section is organized so the actions related to a particular user role are grouped together.
@@ -504,12 +500,25 @@ Sellers can also edit their offerings. To do that click on the offering to be up
 
 .. image:: ./images/user/offering21.png
    :align: center
+   :scale: 50%
 
 In the displayed form, change the fields you want to edit and click on *Update*. Note that for start selling you offering
 you have to update its status to *Launched*
 
 .. image:: ./images/user/offering22.png
    :align: center
+   :scale: 50%
+
+It is also possible to update the *Price Plans* and *Categories* of the offering by accessing to the related tab.
+
+.. image:: ./images/user/offering23.png
+   :align: center
+   :scale: 50%
+
+.. image:: ./images/user/offering24.png
+   :align: center
+   :scale: 50%
+
 
 Manage Revenue Sharing Models
 -----------------------------
