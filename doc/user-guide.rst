@@ -771,29 +771,39 @@ in the offering panel when searching, or you can click on the *Add to Cart* butt
 
 .. image:: ./images/user/order1.png
    :align: center
+   :scale: 50%
 
 .. image:: ./images/user/order2.png
    :align: center
+   :scale: 50%
 
-If the offering has configurable characteristics or multiple price plans, a modal will be displayed where you can select
+If the offering has configurable characteristics, multiple price plans or terms and conditions, a modal will be displayed where you can select
 your preferred options
 
 .. image:: ./images/user/order3.png
    :align: center
+   :scale: 50%
 
 .. image:: ./images/user/order4.png
    :align: center
+   :scale: 50%
+
+.. image:: ./images/user/order4b.png
+   :align: center
+   :scale: 50%
 
 Once you have selected your preferences for the offering click on *Add to Cart*
 
 .. image:: ./images/user/order5.png
    :align: center
+   :scale: 50%
 
 Once you have included all the offerings you want to acquire to the shopping cart, you can create the order clicking on
 *Shopping Cart*, and then on *Checkout*
 
 .. image:: ./images/user/order6.png
    :align: center
+   :scale: 50%
 
 In the displayed form, you can include an optional name, an optional description, or an optional note. Notes can include
 any additional information you want to provide to the sellers of the acquired offerings.
