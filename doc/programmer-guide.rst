@@ -171,6 +171,7 @@ of a product containing the asset. Concretely, the following events have been de
 * **get_pending_accounting**: This method must be implemented when the flag *pull_accounting* is set to true. This method
   must implement the client able to access to the service the plugin is defining in order to retrieve pending accounting
   information for a giving contract. It must return the list of pending accounting including:
+
   * *date*: Timestamp of the accounting record
   * *unit*: Monitored unit
   * *value*: Actual usage made by the customer
