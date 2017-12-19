@@ -259,7 +259,7 @@ def redeployall(directory):
 
 @cli.command("charging")
 @click.pass_context
-def chargingbackend():
+def chargingbackend(ctx):
     print("Installing charging backend")
     name = charg.get("url").split("/")[-1][:-4]
     cd(name)
@@ -352,7 +352,13 @@ def _download_module(name, directory, branch):
     git('fetch')
     git('checkout', branch)
     git('pull', 'origin', branch)
-    git('stash', 'pop')
+
+    try:
+        git('stash', 'pop')
+    except:
+        pass
+
+    cd('..')
 
 
 @cli.command("download")
@@ -384,6 +390,22 @@ def _process_ids(ids, offering_id):
     return ['{}:{}'.format(prefix, ids[0])]
 
 
+@cli.command("dump")
+def dump():
+    def save_api(api):
+        print("Saving {} database...".format(api['name']))
+        name = api['bbdd']
+        dump_file = '/tmp/{}_dump.sql'.format(api['name'])
+        mysqldump('-u', DBUSER, '-p{}'.format(DBPWD), '-h', DBHOST, '-P', DBPORT, name, _out=dump_file)
+
+        print('File {} created'.format(dump_file))
+
+    for api in APIS:
+        save_api(api)
+
+    save_api(rss)
+
+
 @cli.command("migrate")
 def migrate():
     print("Migrating from previous version")
@@ -391,8 +413,11 @@ def migrate():
     for api in APIS[0:3]:
         print("Migrating {} database...".format(api['name']))
         name = api['bbdd']
-        dump_file = '/tmp/{}_dump.sql'.format(api['name'])
-        mysqldump('-u', DBUSER, '-p{}'.format(DBPWD), '-h', DBHOST, '-P', DBPORT, name, _out=dump_file)
+        dump_file_bk = '/tmp/{}_dump.sql'.format(api['name'])
+        dump_file = '/tmp/{}_dump_cp.sql'.format(api['name'])
+
+        cp(dump_file_bk, dump_file)
+
         sed('-i', "s|:([0123456789\.]*)||g", dump_file)
 
         mysql('-u', DBUSER, '-p{}'.format(DBPWD), '-h', DBHOST, '-P', DBPORT, '-e', "DROP DATABASE {}".format(name))
@@ -436,10 +461,13 @@ def migrate():
 
 
 @cli.command("upgrade")
+@click.pass_context
 def upgrade(ctx):
     print("Upgrading from version 5.4.1 to 6.4.0")
     ctx.invoke(download)
     ctx.invoke(maveninstall)
+
+    ctx.invoke(dump)
     ctx.invoke(redeployall, directory=tuple())
 
     ctx.invoke(migrate)
