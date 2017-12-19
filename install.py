@@ -303,7 +303,6 @@ def proxyCommand(host, port, chargingport, glassfishport):
     if not os.path.isfile("config.js"):
         shutil.copy2("config.js.template", "config.js")
 
-        text = ""
         with open("config.js") as f:
             text = f.read()
 
@@ -311,7 +310,7 @@ def proxyCommand(host, port, chargingport, glassfishport):
                    .replace("'/proxy'", "''")
 
         texts = text.split("\n")
-        texts = texts[:47] + generate_endpoints(glassfishport, chargingport) + texts[109:]
+        texts = texts[:59] + generate_endpoints(glassfishport, chargingport) + texts[121:]
 
         text = "\n".join(texts)
 
