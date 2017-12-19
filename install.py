@@ -264,7 +264,7 @@ def chargingbackend(ctx):
     name = charg.get("url").split("/")[-1][:-4]
     cd(name)
 
-    if os.path.isdir('virtenv'):
+    if not os.path.isdir('virtenv'):
         virtualenv("virtenv")
 
     bash("python-dep-install.sh")
