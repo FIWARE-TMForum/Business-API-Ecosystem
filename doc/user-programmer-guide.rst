@@ -20,6 +20,19 @@ User Guide
 This user guide contains a description of the different tasks that can be performed in the Business API Ecosystem using
 its web interface. This section is organized so the actions related to a particular user role are grouped together.
 
+Using Organizations
+===================
+
+Starting on version 6.4.0, the Business API Ecosystem supports organizations as defined by the FIWARE IdM. These organizations
+can use the system as if they were users, being possible to create organizations catalogs and offerings or acquire them.
+
+To use the platform on behalf an organization the user belongs, it is needed to change the platform context. To do that,
+it is used the *Switch Session* option of the user menu.
+
+.. image:: ./images/user/org.png
+   :align: center
+   :scale: 50%
+
 Profile Configuration
 =====================
 
@@ -34,13 +47,22 @@ To configure the user profile, the first step is opening the user *Settings* loc
 In the displayed view, it can be seen that some information related to the account is already included (*Username*, *Email*, *Access token*).
 This information is the one provided by the IdM after the login process.
 
-To create the profile, fill in the required information and click on *Update*
+The profile to be updated depends on whether the user is acting on behalf an organization or himself. In both cases, to
+update the profile, fill in the required information and click on *Update*.
+
+For users, personal information is provided.
 
 .. image:: ./images/user/profile2.png
    :align: center
 
 .. note::
    Only the *First name* and *Last name* fields are mandatory
+
+For organizations, general organization info is provided.
+
+.. image:: ./images/user/profileOrg.png
+   :align: center
+   :scale: 50%
 
 Once you have created your profile, you can include contact mediums by going to the *Contact mediums* section.
 
