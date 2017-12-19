@@ -30,7 +30,7 @@ Index
 :doc:`user-guide`
   The guide for users that explains how to use it.
 
-:doc: `programmer-guide`
+:doc:`programmer-guide`
   The guide for programmers that explains how to develop plugins
 
 :doc:`plugins-guide`

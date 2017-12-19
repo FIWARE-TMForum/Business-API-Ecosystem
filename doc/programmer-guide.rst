@@ -2,9 +2,8 @@
 Programmer Guide
 ================
 
-------------
 Introduction
-------------
+============
 
 This programmer guide covers the Business API Ecosystem version 6.4.0, corresponding to FIWARE release 6.
 Any feedback on this document is highly welcomed, including bugs, typos or things you think should be included but aren't.
@@ -12,10 +11,6 @@ Please send them to the "Contact Person" email that appears in the `Catalogue pa
 
 .. _Catalogue page for this GEi: https://catalogue.fiware.org/enablers/business-api-ecosystem-biz-ecosystem-ri
 .. _GitHub Issues: https://github.com/FIWARE-TMForum/Business-API-Ecosystem/issues/new
-
-----------------
-Programmer Guide
-----------------
 
 The Business API Ecosystem allows to offer any kind of digital asset. In this regard, some kind of digital assets may
 require to perform specific actions and validations that require to know the format of the asset. To deal with this
@@ -42,6 +37,18 @@ of the behaviour of the plugin and contains the following fields:
 * module: This field is used to specify the main class of the Plugin.
 * version: Current version of the plugin.
 * media_types: List of allowed media types that can be selected when providing an asset of the given type
+* pull_accounting (optional): This flag is used to indicate that the service defined by the plugin is not pushing accounting
+  information to the usage API of the Business API Ecosystem, but exposing an API that must be queried to retrieve this information.
+* form (optional): This field is used to define a custom form that will be displayed for retrieving asset-specific meta data.
+  This field is defined as an object where keys are the name of the metadata property and values define the following information:
+
+  * type: Type of the particular metadata property. Allowed values are *text*, *textarea*, *checkbox* and *select* mapping
+    the form input types to be displayed for retrieving the data.
+  * label: Label to be displayed jointly with the form input.
+  * default: Default value to be used if no value provided for the property
+  * placeholder (text and textarea): Placeholder to be included within the form input
+  * options (select): List of valid options when the input is a select. It includes *text* and *value* for each entry.
+
 
 Following you can find an example of a *package.json* file:
 
@@ -53,7 +60,30 @@ Following you can find an example of a *package.json* file:
         "formats": ["FILE"],
         "module": "plugin.TestPlugin",
         "version": "1.0",
-        "media_types": ["application/zip"]
+        "media_types": ["application/zip"],
+        "form": {
+            "auth_type": {
+                "type": "select",
+                "label": "Auth type",
+                "options": [{
+                    "text": "OAuth2",
+                    "value": "oauth2"
+                }, {
+                    "text": "API Key",
+                    "value": "key"
+                }]
+            },
+            "token_required": {
+                "type": "checkbox",
+                "label": "Token required?",
+                "default": true
+            },
+            "auth_server": {
+                "type": "text",
+                "label": "Auth Server",
+                "placeholder": "https://authservice.com/auth"
+            }
+        }
     }
 
 The source code of the plugin must be written in Python and must contain a main class that must be a child class of
@@ -76,6 +106,12 @@ the Plugin class defined in the Charging Backend of the Business API Ecosystem. 
         def on_post_product_spec_attachment(self, asset, asset_t, product_spec):
             pass
 
+        def on_pre_product_spec_upgrade(self, asset, asset_t, product_spec):
+            pass
+
+        def on_post_product_spec_upgrade(self, asset, asset_t, product_spec):
+            pass
+
         def on_pre_product_offering_validation(self, asset, product_offering):
             pass
 
@@ -88,6 +124,11 @@ the Plugin class defined in the Charging Backend of the Business API Ecosystem. 
         def on_product_suspension(self, asset, contract, order):
             pass
 
+        def get_usage_specs(self):
+            return []
+
+        def get_pending_accounting(self, asset, contract, order):
+            return [], Date()
 
 
 Implementing Event Handlers
@@ -97,14 +138,42 @@ It can be seen in the previous section that the main class of a plugin can imple
 the Charging Backend Plugin class. This methods can be used to implement handlers of the different events of the life cycle
 of a product containing the asset. Concretely, the following events have been defined:
 
-* **on_pre_product_spec_validation**: This method is executed when creating a new digital product containing an asset of the given type, before validating the product spec contents and saving the asset info in the database. This method can be used for validating the asset format or the seller permissions to sell the asset.
-* **on_post_product_spec_validation**: This method is executed when creating a new digital product containing an asset of the given type, after validating the product spec and saving the asset info in the database. This method can be used if the plugin require to know some specific info of the asset model
-* **on_pre_product_spec_attachment**: This method is executed when creating a new digital product containing an asset of the given type, after saving the product spec in the catalog API database but before attaching the product spec id to the asset model. This method can be used if the plugin require to know the id in the catalog of the product spec
-* **on_post_product_spec_attachment**: This method is executed when creating a new digital product containing an asset of the given type, after saving the product spec in the catalog API database and after attaching the product spec id to the asset model. This method can be used if the plugin require to know the id in the catalog of the product spec
-* **on_pre_product_offering_validation**: This method is executed when creating a new product offering containing an asset of the given type, before validating its pricing model. This method can be used to make extra validations on the pricing model, for example check if the unit of an usage model is supported by the given asset
-* **on_post_product_offering_validation**: This method is executed when creating a new product offering containing an asset of the given type, after validating its pricing model. This method can be used to make extra validations on the pricing model, for example check if the unit of an usage model is supported by the given asset
-* **on_product_acquisition**: This method is called when a product containing an asset of the given type has been acquired. This method can be used to activate the service for the customer and give him access rights.
-* **on_product_suspension**: This method is called when a product containing an asset of the given type has been suspended for a customer (e.g he has not paid). Tjis method can be used to suspend the service for the customer and remove his access rights
+* **on_pre_product_spec_validation**: This method is executed when creating a new digital product containing an asset of
+  the given type, before validating the product spec contents and saving the asset info in the database. This method can
+  be used for validating the asset format or the seller permissions to sell the asset.
+* **on_post_product_spec_validation**: This method is executed when creating a new digital product containing an asset
+  of the given type, after validating the product spec and saving the asset info in the database. This method can be used
+  if the plugin require to know some specific info of the asset model
+* **on_pre_product_spec_attachment**: This method is executed when creating a new digital product containing an asset of
+  the given type, after saving the product spec in the catalog API database but before attaching the product spec id to
+  the asset model. This method can be used if the plugin require to know the id in the catalog of the product spec
+* **on_post_product_spec_attachment**: This method is executed when creating a new digital product containing an asset of
+  the given type, after saving the product spec in the catalog API database and after attaching the product spec id to the
+  asset model. This method can be used if the plugin require to know the id in the catalog of the product spec
+* **on_pre_product_spec_upgrade**: This method is executed when a digital product is being upgraded (a new version of the
+  asset has been provided). This method can be used in order to validate the new digital asset before saving the upgrade
+* **on_post_product_spec_upgrade**: This method is executed when a digital product have been upgraded. This method can be
+  used to send notifications or retrieve new information of the product specification.
+* **on_pre_product_offering_validation**: This method is executed when creating a new product offering containing an asset
+  of the given type, before validating its pricing model. This method can be used to make extra validations on the pricing
+  model, for example check if the unit of an usage model is supported by the given asset
+* **on_post_product_offering_validation**: This method is executed when creating a new product offering containing an
+  asset of the given type, after validating its pricing model. This method can be used to make extra validations on the
+  pricing model, for example check if the unit of an usage model is supported by the given asset
+* **on_product_acquisition**: This method is called when a product containing an asset of the given type has been acquired.
+  This method can be used to activate the service for the customer and give him access rights.
+* **on_product_suspension**: This method is called when a product containing an asset of the given type has been suspended
+  for a customer (e.g he has not paid). Tjis method can be used to suspend the service for the customer and remove his
+  access rights
+* **get_usage_specs**: This method must be implemented when the flag *pull_accounting* is set to true and must return the list
+  of usage specifications the service is able to monitor. For each usage specification a *name* and a *description* must be
+  provided (e.g name: API Call, description: Number of calls made to...)
+* **get_pending_accounting**: This method must be implemented when the flag *pull_accounting* is set to true. This method
+  must implement the client able to access to the service the plugin is defining in order to retrieve pending accounting
+  information for a giving contract. It must return the list of pending accounting including:
+  * *date*: Timestamp of the accounting record
+  * *unit*: Monitored unit
+  * *value*: Actual usage made by the customer
 
 As can be seen in the Plugin example, the different handler methods receive some parameters with relevant information and
 objects. In particular:
@@ -139,6 +208,22 @@ on_post_product_spec_attachment
 * **asset_t**: String containing the asset type, it must be equal to the one defined in package.json
 * **product_spec**: JSON with the raw product specification information that has been used for the attachment. (The structure of this JSON object can be found in the Open Api documentation)
 
+on_pre_product_spec_upgrade
+---------------------------
+
+* **asset**: Asset object that have been upgraded
+* **asset_t**: String containing the asset type, it must be equal to the one defined in package.json
+* **product_spec**: JSON with the raw product specification information that is going to be used for the upgrade. (The structure of this JSON object can be found in the Open Api documentation)
+
+
+on_post_product_spec_upgrade
+----------------------------
+
+* **asset**: Asset object that have been upgraded
+* **asset_t**: String containing the asset type, it must be equal to the one defined in package.json
+* **product_spec**: JSON with the raw product specification information that has been used for the upgrade. (The structure of this JSON object can be found in the Open Api documentation)
+
+
 on_pre_product_offering_validation
 ----------------------------------
 
@@ -159,10 +244,17 @@ on_product_acquisition
 * **contract**: Contract object including the information of the acquired offering which contains the asset. (The Contract object is described later)
 * **order**: Order object including the information of the order where the asset was acquired. (The Order object is described later)
 
-on_product_acquisition
-----------------------
+on_product_suspension
+---------------------
 
 * **asset**: Asset object that has been suspended
+* **contract**: Contract object including the information of the acquired offering which contains the asset
+* **order**: Order object including the information of the order where the asset was acquired
+
+get_pending_accounting
+----------------------
+
+* **asset**: Asset object whose usage information has to be retrieved
 * **contract**: Contract object including the information of the acquired offering which contains the asset
 * **order**: Order object including the information of the order where the asset was acquired
 
