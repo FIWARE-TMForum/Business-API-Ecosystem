@@ -219,28 +219,34 @@ go to *My Stock* section and click on *Product Specifications*
 
 .. image:: ./images/user/product1.png
    :align: center
+   :scale: 50%
 
-The different product specifications can be filtered by status or by if they are bundles or not. To filter products, click
-on *Filters*, choose the appropriate ones, and click on *Close*
+In the same way as catalogs, product specifications can be searched by keyword, sorted, or filtered by status and whether
+they are bundles or not. To filter products or sort products, click on *Filters*, choose the appropriate properties, and click on *Close*
 
 .. image:: ./images/user/product2.png
    :align: center
+   :scale: 50%
 
 .. image:: ./images/user/product3.png
    :align: center
+   :scale: 50%
 
 Additionally, it is possible to switch between the grid view and the tabular view using the provided buttons.
 
 .. image:: ./images/user/product4.png
    :align: center
+   :scale: 50%
 
 .. image:: ./images/user/product5.png
    :align: center
+   :scale: 50%
 
 To create a new product specification click on *New*
 
 .. image:: ./images/user/product6.png
    :align: center
+   :scale: 50%
 
 In the displayed view, provide the general information of the product spec. including its name, version, and an optional
 description. In addition, you have to include the product brand (Your brand), and an ID number which identifies the product
@@ -328,12 +334,47 @@ Sellers can update their products. To do that click on the product specification
 
 .. image:: ./images/user/product20.png
    :align: center
+   :scale: 50%
 
 Update the required values and click on *Update*. Note that for start selling an offering that includes the product specification
 you will be required to change its status to *Launched*
 
 .. image:: ./images/user/product21.png
    :align: center
+   :scale: 50%
+
+.. note::
+   For digital products it is not allowed to update the version using this form. Instead it is required to follow the
+   process for upgrading the product version.
+
+The basic information of the product specification is not the only information that can be updated, but it is also possible
+to update the *Attachments* and the *Relationships* by clicking of the related tab.
+
+.. image:: ./images/user/product22.png
+   :align: center
+   :scale: 50%
+
+.. image:: ./images/user/product23.png
+   :align: center
+   :scale: 50%
+
+The displayed details form can be used for digital products specifications in order to provide new versions of the digital assets
+being offered. This can be done by clicking on *Upgrade*.
+
+.. image:: ./images/user/product24.png
+   :align: center
+   :scale: 50%
+
+In the displayed form, it is required to include a new version for the product specification and to provide the new digital
+asset to be offered.
+
+.. image:: ./images/user/product25.png
+   :align: center
+   :scale: 50%
+
+.. note::
+   All the customers who have acquired an offering including the current product specifications will be able to access to
+   the new version of the digital asset.
 
 Manage Product Offerings
 ------------------------
