@@ -160,6 +160,7 @@ catalogs, product specifications and product offerings. All these objects are ma
 
 .. image:: ./images/user/catalog1.png
    :align: center
+   :scale: 50%
 
 Manage Catalogs
 ---------------
@@ -169,20 +170,26 @@ contains the catalogs the seller has created.
 
 .. image:: ./images/user/catalog2.png
    :align: center
+   :scale: 50%
 
-Additionally, it is possible to filter the shown catalogs by status and the role you are playing by clicking on *Filters*,
-choosing the required ones, and clicking on *Close*
+Additionally, it has been defined several mechanisms for searching and filtering the list of catalogs displayed. On the one
+hand, it is possible to search catalogs by keyword using the search input provided in the menu bar. On the other hand,
+it is possible to specify how catalog list should be sorted or filter the shown catalogs by status and the role you are
+playing. To do that, click on *Filters*, choose the required parameters, and click on *Close*.
 
 .. image:: ./images/user/catalog8.png
    :align: center
+   :scale: 50%
 
 .. image:: ./images/user/catalog9.png
    :align: center
+   :scale: 50%
 
 To create a new catalog click on the *New* button.
 
 .. image:: ./images/user/catalog3.png
    :align: center
+   :scale: 50%
 
 Then, provide a name and an optional description for the catalog. Once you have filled the fields, click on *Next*, and then on *Create*
 
@@ -196,6 +203,7 @@ Sellers can also update their catalogs. To do that, click on the name of the cat
 
 .. image:: ./images/user/catalog6.png
    :align: center
+   :scale: 50%
 
 Then, update the fields you want to modify and click on *Update*. In this view, it is possible to change the *Status* of the
 catalog. To start monetizing the catalog, and make it appear in the *Home* you have to change its status to *Launched*
