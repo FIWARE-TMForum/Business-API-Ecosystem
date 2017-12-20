@@ -6,12 +6,25 @@ Plugins Guide
 Introduction
 ------------
 
-This plugins guide covers the available plugins (defining digital asset types) for the Business API Ecosystem v5.4.1.
+This plugins guide covers the available plugins (defining digital asset types) for the Business API Ecosystem v6.4.0
 Any feedback on this document is highly welcomed, including bugs, typos or things you think should be included but aren't.
 Please send them to the "Contact Person" email that appears in the `Catalogue page for this GEi`_. Or create an issue at `GitHub Issues`_
 
 .. _Catalogue page for this GEi: https://catalogue.fiware.org/enablers/business-api-ecosystem-biz-ecosystem-ri
 .. _GitHub Issues: https://github.com/FIWARE-TMForum/Business-API-Ecosystem/issues/new
+
+
+------------------------
+Basic File and Basic URL
+------------------------
+
+The *Basic File* and *Basic URL* plugins are available at `GitHub <https://github.com/FIWARE-TMForum/biz-basic-plugins>`__
+These plugins are intended to enable the creation of digital products in the Business API Ecosystem without the need
+of specifying a particular type or validation process. In this regard, these plugins allow the publication of any file
+or any URL as digital asset respectively, and can be used for the creation of simple file catalogs or for testing the
+Business API Ecosystem.
+
+These plugins do not implement any event handler.
 
 -------------------
 WireCloud Component
@@ -29,10 +42,10 @@ In addition, the plugin only allows the media type *Mashable application compone
 metainfo to determine the type of the WireCloud component (Widget, Operator, or Mashup) and overrides the media type with the
 proper one understood by the WireCloud platform (*wirecloud/widget*, *wirecloud/operator* or *wirecloud/mashup*).
 
-.. image:: /images/plugin/wirecloud1.png
+.. image:: ./images/plugin/wirecloud1.png
    :align: center
 
-.. image:: /images/plugin/wirecloud2.png
+.. image:: ./images/plugin/wirecloud2.png
    :align: center
 
 This plugin implements the following event handlers:
@@ -40,15 +53,19 @@ This plugin implements the following event handlers:
 * **on_post_product_spec_validation**: In this handler the plugin validates the WGT file to ensure that it is a valid WireCloud Component
 * **on_post_product_spec_attachment**: In this handler the plugin determines the media type of the WGT file and overrides the media type value in the specific product specification
 
+---------------------------------
+CKAN Dataset and CKAN API Dataset
+---------------------------------
 
-------------
-CKAN Dataset
-------------
-
-The *CKAN Dataset* plugin ia available in `GitHub <https://github.com/FIWARE-TMForum/wstore-ckan-plugin>`__.
-This plugin defines an asset type intended to manage and monetize datasets offered in a CKAN instance. In particular,
-this plugin is able to validate the dataset, validate the rights of the seller creating a product specification to sell
+The *CKAN Dataset* and *CKAN API Dataset* plugins are available in `GitHub <https://github.com/FIWARE-TMForum/biz-ckan-plugin>`__.
+These plugins define an asset type intended to manage and monetize datasets offered in a CKAN instance. In particular,
+these plugins are able to validate the dataset, validate the rights of the seller creating a product specification to sell
 the provided dataset, and manage the access to the dataset of those customers who acquire it.
+
+The difference between both plugins is the type of data included as a resource in the CKAN dataset. In particular,
+*CKAN API Dataset* expects the data to be served by an external API secured with the FIWARE security framework. In this
+regard, the *CKAN API Dataset* also validates the permissions of the seller in the data service and grants customers access to it
+using the FIWARE IdM roles and permissions.
 
 Is important to notice that by default CKAN does not provide a mechanism to publish protected datasets or an API for
 managing the access rights to the published datasets. In this regard, the CKAN instance to be monetized has to be extended
@@ -63,12 +80,12 @@ with the following CKAN plugins:
   extension exposes an API that can be used to add or remove authorized users from a dataset.
 
 In addition, if the `ckanext-storepublisher <https://github.com/FIWARE-TMForum/ckanext-storepublisher>`__ plugin is installed
-in CKAN, the *CKAN dataset* plugin must be installed in the Business API Ecosystem, since the aforementioned CKAN extension
-uses the *CKAN Dataset* asset type for creating product specifications.
+in CKAN, the *CKAN dataset* or *CKAN API Dataset* plugin must be installed in the Business API Ecosystem, since the aforementioned CKAN extension
+uses the *CKAN Dataset* or *CKAN API Dataset* asset type (depending on the dataset resource) for creating product specifications.
 
-The CKAN Dataset plugin only allows to provide the asset with a URL that must match the dataset URL in CKAN.
+The *CKAN Dataset* plugin only allows to provide the asset with a URL that must match the dataset URL in CKAN.
 
-.. image:: /images/plugin/ckan1.png
+.. image:: ./images/plugin/ckan1.png
    :align: center
 
 This plugin implements the following event handlers:
@@ -80,12 +97,46 @@ This plugin implements the following event handlers:
 * **on_product_suspension**: In this handler the plugin uses the CKAN instance API in order to revoke access to a dataset
   when a user has not paid or when the user cancels a subscription.
 
+On the other hand, the *CKAN API Dataset* also requires an *Acquisition role* to be provided. This role is the one that
+will be granted to customers in the IdM in order to enable their access to the backend service, so the role must exist
+and define a proper set of permissions for accessing the data.
+
+.. image:: ./images/plugin/ckan2.png
+   :align: center
+   :scale: 50%
+
+This plugins implements the following event handlers:
+
+* **on_pre_product_spec_validation**: In this handler the plugin validates that the provided URL is a valid CKAN dataset and
+  that the user creating the product specification is its owner.
+* **on_post_product_spec_validation**: In this handler, the plugin validates that the API resources included in the CKAN
+  dataset are valid, the permissions of the seller to offer that services, and that the provided acquisition role exist and
+  is valid.
+* **on_post_product_offering_validation**: In this handler the plugin validates that pricing models are supported when
+  creating a pay-per-use offering
+* **on_product_acquisition**: In this handler the plugin uses the CKAN instance API in order to grant access to the user
+  who has acquired a dataset.
+* **on_product_suspension**: In this handler the plugin uses the CKAN instance API in order to revoke access to a dataset
+  when a user has not paid or when the user cancels a subscription.
+* **get_pending_accounting**: In this handler, the plugins retrieves pending accounting information when the access to the
+  data has been acquired under a pay-per-use pricing model.
+
+
+In addition, the *CKAN API Dataset* requires some settings to be configured before being deployed. This settings are available
+in the *setting.py* file, and are:
+
+* **AUTH_METHOD**: Authorization mechanism used by the backend service, *idm* or *umbrella*
+* **UMBRELLA_KEY**: API Key used for accessing to the API Umbrella instance used to secure the backend service
+* **UMBRELLA_ADMIN_TOKEN**: Admin token used for accessing to the API Umbrella instance used to secure the backend service
+* **KEYSTONE_USER**: Keystone user used for authenticate requests to the FIWARE IdM
+* **KEYSTONE_PASSWORD**: Keystone password used for authenticate requests to the FIWARE IdM
+* **KEYSTONE_HOST**: Host of the Keystone service of the FIWARE IdM used for authorizing customers
 
 -------------------
 Accountable Service
 -------------------
 
-The *Accountable Service* plugin is available in `GitHub <https://github.com/FIWARE-TMForum/wstore-orion-plugin>`__.
+The *Accountable Service* plugin is available in `GitHub <hhttps://github.com/FIWARE-TMForum/biz-accountable-service-plugin>`__.
 This plugin defines a generic asset type which is used jointly with the `Accounting Proxy <https://github.com/FIWARE-TMForum/Accounting-Proxy>`__
 in order to offer services under a pay-per-use model. In particular, this plugin is able to validate services URLs,
 validate sellers permissions, generate API keys for the Accounting Proxy, validate offering pricing models, and manage
@@ -97,7 +148,7 @@ Accounting Proxy section.
 
 The *Accountable Service* plugin only allows to provide the assets with a URL that must match the service one.
 
-.. image:: /images/plugin/accounting1.png
+.. image:: ./images/plugin/accounting1.png
    :align: center
 
 This plugin implements the following event handlers:
