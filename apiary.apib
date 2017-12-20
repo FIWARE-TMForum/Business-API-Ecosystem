@@ -3083,10 +3083,14 @@ This API uses the following fields:
 * **period** - Period of time of the charge. The value of this field depends on the type of charges. If the type is *one time*, the field is empty. If the type is *recurring*, this field contains the period until next payment, since recurring charges are paid on advance. Finally, if the type is *usage*, this field contains the period since last charge
 
 
-## Billing Charge Collection [/DSBillingManagement/api/billingManagement/v2/appliedCustomerBillingCharge]
+## Billing Charge Collection [/DSBillingManagement/api/billingManagement/v2/appliedCustomerBillingCharge{?serviceId.id}]
 
 ### List Billing Charges [GET]
 
++ Parameters
+
+    + serviceId.id: 1 - Id of the inventory product whose charges are retrieved
+    
 + Request
 
     + Headers
@@ -3275,6 +3279,7 @@ Note, that for a usage document to be processed and understood by the system, it
     + Headers
 
             Authorization: Bearer YOUR_OAUTH2_TOKEN
+            X-API-Key: API_KEY
 
     + Body
     
@@ -3589,6 +3594,7 @@ Note, that for a usage document to be processed and understood by the system, it
     + Headers
 
             Authorization: Bearer YOUR_OAUTH2_TOKEN
+            X-API-Key: API_KEY
 
     + Body
 
