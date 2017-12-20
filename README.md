@@ -132,7 +132,8 @@ The way of executing the unit tests is described in each of the components repos
 
 # Advanced Topics
 
-* [User & Programmers Guide](doc/user-guide.rst)
+* [User Guide](doc/user-guide.rst)
+* [Programmer Guide](doc/programmer-guide.rst)
 * [Installation & Administration Guide](doc/installation-administration-guide.rst)
 
 You can also find this documentation on [ReadTheDocs](http://business-api-ecosystem.readthedocs.io)
