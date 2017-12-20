@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
-from sh import git, cd, mvn, mysql, asadmin, npm, node, cp, virtualenv, bash, mkdir, rm
+from sh import git, cd, mvn, mysql, mysqldump, sed, asadmin, npm, node, cp, virtualenv, bash, mkdir, rm, bash
 from os.path import isfile
 import click
 import os.path
+import pymysql
 import shutil
 
 DBUSER = "root"
@@ -12,49 +13,49 @@ DBHOST = "localhost"
 DBPORT = 3306
 
 APIS = [{"url": "https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2.git",
-         "branch": "v5.4.1",
+         "branch": "v6.4.0",
          "bbdd": "DSPRODUCTCATALOG2",
          "war": "target/DSProductCatalog.war",
          "root": "DSProductCatalog",
          "name": "catalog",
          "resourcename": "jdbc/pcatv2"},
         {"url": "https://github.com/FIWARE-TMForum/DSPRODUCTORDERING.git",
-         "branch": "v5.4.1",
+         "branch": "v6.4.0",
          "bbdd": "DSPRODUCTORDERING",
          "war": "target/DSProductOrdering.war",
          "root": "DSProductOrdering",
          "name": "ordering",
          "resourcename": "jdbc/podbv2"},
         {"url": "https://github.com/FIWARE-TMForum/DSPRODUCTINVENTORY.git",
-         "branch": "v5.4.1",
+         "branch": "v6.4.0",
          "bbdd": "DSPRODUCTINVENTORY",
          "war": "target/DSProductInventory.war",
          "root": "DSProductInventory",
          "name": "inventory",
          "resourcename": "jdbc/pidbv2"},
         {"url": "https://github.com/FIWARE-TMForum/DSPARTYMANAGEMENT.git",
-         "branch": "v5.4.1",
+         "branch": "v6.4.0",
          "bbdd": "DSPARTYMANAGEMENT",
          "war": "target/DSPartyManagement.war",
          "root": "DSPartyManagement",
          "name": "party",
          "resourcename": "jdbc/partydb"},
         {"url": "https://github.com/FIWARE-TMForum/DSBILLINGMANAGEMENT.git",
-         "branch": "v5.4.1",
+         "branch": "v6.4.0",
          "bbdd": "DSBILLINGMANAGEMENT",
          "war": "target/DSBillingManagement.war",
          "root": "DSBillingManagement",
          "name": "billing",
          "resourcename": "jdbc/bmdbv2"},
         {"url": "https://github.com/FIWARE-TMForum/DSCUSTOMER.git",
-         "branch": "v5.4.1",
+         "branch": "v6.4.0",
          "bbdd": "DSCUSTOMER",
          "war": "target/DSCustomerManagement.war",
          "root": "DSCustomerManagement",
          "name": "customer",
          "resourcename": "jdbc/customerdbv2"},
         {"url": "https://github.com/FIWARE-TMForum/DSUSAGEMANAGEMENT.git",
-         "branch": "v5.4.1",
+         "branch": "v6.4.0",
          "bbdd": "DSUSAGEMANAGEMENT",
          "war": "target/DSUsageManagement.war",
          "root": "DSUsageManagement",
@@ -62,18 +63,18 @@ APIS = [{"url": "https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2.git",
          "resourcename": "jdbc/usagedbv2"}]
 
 rss = {"url": "https://github.com/FIWARE-TMForum/business-ecosystem-rss.git",
-       "branch": "v5.4.1",
+       "branch": "v6.4.0",
        "bbdd": "RSS",
        "war": "fiware-rss/target/DSRevenueSharing.war",
        "name": "rss",
        "root": "DSRevenueSharing"}
 
 charg = {"url": "https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend.git",
-         "branch": "v5.4.1",
+         "branch": "v6.4.0",
          "name": "charging"}
 
 proxy = {"url": "https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy.git",
-         "branch": "v5.4.1"}
+         "branch": "v6.4.0"}
 
 
 @click.group(chain=True)
@@ -263,17 +264,20 @@ def chargingbackend(ctx):
     name = charg.get("url").split("/")[-1][:-4]
     cd(name)
 
-    virtualenv("virtenv")
+    if not os.path.isdir('virtenv'):
+        virtualenv("virtenv")
 
     bash("python-dep-install.sh")
 
     cd('src')
-    mkdir('media')
-    cd('media')
-    mkdir('assets')
-    mkdir('bills')
 
-    cd("..")
+    if not os.path.isdir('media'):
+        mkdir('media')
+        cd('media')
+        mkdir('assets')
+        mkdir('bills')
+        cd("..")
+
     cd("..")
     cd("..")
 
@@ -295,11 +299,10 @@ def proxyCommand(host, port, chargingport, glassfishport):
     print("Installing logic proxy")
     name = proxy.get("url").split("/")[-1][:-4]
     cd(name)
-    npm("install")
+    bash('install.sh')
     if not os.path.isfile("config.js"):
         shutil.copy2("config.js.template", "config.js")
 
-        text = ""
         with open("config.js") as f:
             text = f.read()
 
@@ -307,19 +310,22 @@ def proxyCommand(host, port, chargingport, glassfishport):
                    .replace("'/proxy'", "''")
 
         texts = text.split("\n")
-        texts = texts[:47] + generate_endpoints(glassfishport, chargingport) + texts[109:]
+        texts = texts[:59] + generate_endpoints(glassfishport, chargingport) + texts[121:]
 
         text = "\n".join(texts)
 
         with open("config.js", "w") as f:
             f.write(text)
 
-        mkdir('indexes')
-        node('fill_indexes.js')
+    if os.path.isdir('indexes'):
+        rm('-rf', 'indexes')
+
+    mkdir('indexes')
+    node('fill_indexes.js')
 
     print("""
     Finished!
-    Now, go to https://account.lab.fiware.org and create an application with this settings:
+    Now, go to your IdM instance (e.g. https://account.lab.fiware.org) and create an application with this settings:
 
     - URL: http://{host}:{port}
     - Callback URL: http://{host}:{port}/auth/fiware/callback
@@ -332,9 +338,140 @@ def proxyCommand(host, port, chargingport, glassfishport):
     - config.oauth2.clientSecret: The client Secret that you got when you created the Application
     - config.oauth2.callbackURL = http://{host}:{port}/auth/fiware/callback
 
-    Once you've done all, execute the proxy with:
-    node server.js
+    Please refer to http://business-api-ecosystem.readthedocs.io/en/latest/installation-administration-guide.html#configuration
+    for details on configuration settings
     """.format(host=host, port=port))
+
+
+def _download_module(name, directory, branch):
+    print("Downloading {} version {}".format(name, branch))
+    cd(directory)
+
+    git('stash')
+    git('fetch')
+    git('checkout', branch)
+    git('pull', 'origin', branch)
+
+    try:
+        git('stash', 'pop')
+    except:
+        pass
+
+    cd('..')
+
+
+@cli.command("download")
+def download():
+    # Download new APIs software version
+    for api in APIS:
+        _download_module(api['name'], api['url'].split("/")[-1][:-4], api['branch'])
+
+    _download_module('rss', rss['url'].split("/")[-1][:-4], rss['branch'])
+    _download_module('charging', charg['url'].split("/")[-1][:-4], charg['branch'])
+    _download_module('proxy', proxy['url'].split("/")[-1][:-4], proxy['branch'])
+
+
+def _process_ids(ids, offering_id):
+    # Check if the ids are referring to a product or offering
+    if len(ids) == 2:
+        return ['offering:{}'.format(ids[0]), 'product:{}'.format(ids[1])]
+
+    # If there is only one Id it is needed to check in the catalog whether the id is an offering or a product
+    conn = pymysql.connect(host=DBHOST, port=DBPORT, user=DBUSER, passwd=DBPWD, db=APIS[0]['bbdd'])
+    cur = conn.cursor()
+
+    cur.execute("SELECT IS_BUNDLE FROM CRI_PRODUCT_OFFERING WHERE ID='{}'".format(offering_id))
+    res = cur.fetchone()[0]
+    conn.close()
+
+    prefix = 'product' if res == 0 else 'offering'
+
+    return ['{}:{}'.format(prefix, ids[0])]
+
+
+@cli.command("dump")
+def dump():
+    def save_api(api):
+        print("Saving {} database...".format(api['name']))
+        name = api['bbdd']
+        dump_file = '/tmp/{}_dump.sql'.format(api['name'])
+        mysqldump('-u', DBUSER, '-p{}'.format(DBPWD), '-h', DBHOST, '-P', DBPORT, name, _out=dump_file)
+
+        print('File {} created'.format(dump_file))
+
+    for api in APIS:
+        save_api(api)
+
+    save_api(rss)
+
+
+@cli.command("migrate")
+def migrate():
+    print("Migrating from previous version")
+
+    for api in APIS[0:3]:
+        print("Migrating {} database...".format(api['name']))
+        name = api['bbdd']
+        dump_file_bk = '/tmp/{}_dump.sql'.format(api['name'])
+        dump_file = '/tmp/{}_dump_cp.sql'.format(api['name'])
+
+        cp(dump_file_bk, dump_file)
+
+        sed('-i', "s|:([0123456789\.]*)||g", dump_file)
+
+        mysql('-u', DBUSER, '-p{}'.format(DBPWD), '-h', DBHOST, '-P', DBPORT, '-e', "DROP DATABASE {}".format(name))
+        mysql('-u', DBUSER, '-p{}'.format(DBPWD), '-h', DBHOST, '-P', DBPORT, '-e', "CREATE DATABASE {}".format(name))
+
+        mysql('-u', DBUSER, '-p{}'.format(DBPWD), '-h', DBHOST, '-P', DBPORT, name, '-e', "source {}".format(dump_file))
+
+        if api['name'] == 'inventory':
+            conn = pymysql.connect(host=DBHOST, port=DBPORT, user=DBUSER, passwd=DBPWD, db=api['bbdd'])
+            cur = conn.cursor()
+            cur.execute("select * from PRODUCT_CHARACTERISTIC")
+
+            results = cur.fetchall()
+            for res in results:
+                sp_name = res[2].split(' ')
+
+                cur.execute(
+                    "SELECT PRODUCT_OFFERING.ID FROM PRODUCT INNER JOIN PRODUCT_OFFERING ON PRODUCT.PRODUCT_OFFERING_PRODUCT_HJID=PRODUCT_OFFERING.HJID WHERE PRODUCT.ID={}".format(res[4]))
+
+                off_id = cur.fetchone()[0]
+                new_ids = None
+                if (res[2].lower().endswith('asset type') or res[2].lower().endswith('media type')) and len(sp_name) > 2:
+                    new_ids = _process_ids(sp_name[0:-2], off_id)
+                    name = '{} {}'.format(sp_name[-2], sp_name[-1])
+
+                elif res[2].lower().endswith('location') and len(sp_name) > 1:
+                    new_ids = _process_ids(sp_name[0:-1], off_id)
+                    name = sp_name[-1]
+
+                if new_ids is not None:
+                    # Update characteristic name
+                    new_name = ' '.join(new_ids)
+                    new_name = new_name + ' ' + name
+
+                    cur.execute("UPDATE PRODUCT_CHARACTERISTIC SET NAME_ = '{}' WHERE HJID={}".format(new_name, res[0]))
+
+            conn.commit()
+            conn.close()
+
+        print("Database {} migrated".format(api['name']))
+
+
+@cli.command("upgrade")
+@click.pass_context
+def upgrade(ctx):
+    print("Upgrading from version 5.4.1 to 6.4.0")
+    ctx.invoke(download)
+    ctx.invoke(maveninstall)
+
+    ctx.invoke(dump)
+    ctx.invoke(redeployall, directory=tuple())
+
+    ctx.invoke(migrate)
+    ctx.invoke(chargingbackend)
+    ctx.invoke(proxyCommand)
 
 
 @cli.command("all")
@@ -351,6 +488,7 @@ def doall(ctx):
 
     ctx.invoke(chargingbackend)
     ctx.invoke(proxyCommand)
+
 
 if __name__ == "__main__":
     cli()

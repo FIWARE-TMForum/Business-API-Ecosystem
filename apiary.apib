@@ -2,8 +2,8 @@ FORMAT: 1A
 HOST: https://store.lab.fiware.org/
 TITLE: FIWARE Business API Ecosystem Open API Specification
 DATE: 23 January 2017
-VERSION: v5.4.1
-PREVIOUS_VERSION: v5.4.0
+VERSION: v6.4.0
+PREVIOUS_VERSION: v5.4.1
 APIARY_PROJECT: fiwaretmfbizecosystem
 SPEC_URL: https://fiware-tmforum.github.io/Business-API-Ecosystem/
 GITHUB_SOURCE: https://github.com/FIWARE-TMForum
@@ -90,6 +90,33 @@ XML Example
 | 422 | Unprocessable Entity | The entity included in the request cannot be processed (e.g. It includes invalid fields)
 | 500 | Internal server error | There was an internal error in the system so your request cannot be completed |
 
+# Group Software Status API
+
+API for retrieving information about the running instance. It manages the following fields:
+
+* **version** - Current version of the software
+* **release_date** - Release date of the current version
+* **uptime** - Time the current version is up and running
+* **git_hash** - Hash of the release of the current version
+* **doc** - URL of the documentation
+* **user_doc** - URL of the user guide
+
+## Status API [/version]
+
+### Get Status [GET]
+
++ Response 200 (application/json)
+
+        {
+            "version": "v6.4.0",
+            "release_date": "2017-12-20",
+            "uptime": "2 d, 3 h, 15 m, 50 s",
+            "git_hash": "808f4bf995bddf0f6a05576956987f2568522062",
+            "doc": "http://business-api-ecosystem.readthedocs.io/",
+            "user_doc": "http://business-api-ecosystem.readthedocs.io/en/v6.4.0/user-guide.html"
+        }
+
+
 # Group Asset Type Management API
 
 API for the management of asset types. These asset types represent the different kind of digital assets that can be validated, managed, and activated by the system.
@@ -105,6 +132,7 @@ This API manages the following fields:
 * **mediaTypes** - List of media types that are valid when provided an asset of the given type. If this field is empty, any media type is allowed
 * **formats** - List of formats that are valid when providing an asset of the given type. URL and FILE formats are supported
 * **overrides** - List of product fields whose value will be overrided by the plugin implementation, when a product spec is created including the asset
+* **form** - (Optional) Defines the structure of a dynamic form to be used for rertieving asset-specific metadata
 
 ## Asset Types Collection [/charging/api/assetManagement/assetTypes]
 
@@ -127,7 +155,30 @@ This API manages the following fields:
                 "version": "1",
                 "mediaTypes": ["application/zip"],
                 "formats": ["FILE"],
-                "overrides": []
+                "overrides": [],
+                "form": {
+                    "auth_type": {
+                        "type": "select",
+                        "label": "Auth type",
+                        "options": [{
+                            "text": "OAuth2",
+                            "value": "oauth2"
+                        }, {
+                            "text": "API Key",
+                            "value": "key"
+                        }]
+                    },
+                    "token_required": {
+                        "type": "checkbox",
+                        "label": "Token required?",
+                        "default": true
+                    },
+                    "auth_server": {
+                        "type": "text",
+                        "label": "Auth Server",
+                        "placeholder": "https://authservice.com/auth"
+                    }
+                }
             }
         ]
 
@@ -283,7 +334,6 @@ the asset metadata and including the asset as a file in the HTTP request.
     + Body
 
             {
-                "version": "1.0",
                 "contentType": "application/zip",
                 "isPublic": false,
                 "metadata": {},
@@ -302,7 +352,60 @@ the asset metadata and including the asset as a file in the HTTP request.
     + Body
 
             {
-                "version": "1.0",
+                "contentType": "application/zip",
+                "isPublic": false,
+                "metadata": {},
+            }
+            
+            +
+            
+            FILE
+
++ Response 201
+
+    + Headers
+
+            Location: URL_TO_YOUR_ASSET
+
+## Ugrade asset task [/charging/api/assetManagement/assets/{id}/upgradeJob/]
+
+In a similar way as it is done for uploading assets, it is possible to encode the new version of 
+an asset in base64 and make a pure JSON request including the encoded data, or it is possible to
+make a multipart form request.
+
+### Upgrade base64 encoded asset [POST]
+
++ Parameters
+
+    + id: 1 - Id of the asset to be upgraded
+    
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
+    + Body
+
+            {
+                "contentType": "application/zip",
+                "isPublic": false,
+                "metadata": {},
+                "content": {
+                    "name": "application.war",
+                    "data": "encoded data"
+                }
+            }
+
++ Request (multipart/form-data)
+
+    + Headers
+
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
+    + Body
+
+            {
                 "contentType": "application/zip",
                 "isPublic": false,
                 "metadata": {},
@@ -487,7 +590,7 @@ The product catalog management API uses the following fields:
 * **lifecycleStatus** - Current lifecycle status
 * **relatedParty** - List of parties and its roles related to the current catalog. For each party, it is included the id and the href as described in the Party Management section. Additionally, it is inlcluded a *role* field specifing the role of the user in the current catalog
 
-## Product Catalog Collection [/DSProductCatalog/api/catalogManagement/v2/catalog{?offset}{?size}{?name}{?relatedParty.id}{?lifecycleStatus}]
+## Product Catalog Collection [/DSProductCatalog/api/catalogManagement/v2/catalog{?offset}{?size}{?name}{?relatedParty.id}{?lifecycleStatus}{?sort}{?body}]
 
 ### List Product Catalogs [GET]
 
@@ -498,6 +601,8 @@ The product catalog management API uses the following fields:
     + name: Cloud (optional) - Optional paramener used to filter the returned catalogs by name
     + relatedParty.id: fdelavega (optional) - Optional parameter used to filter the returned catalogs by owner
     + lifecycleStatus: Active (optional) - Optional parameter used to filter the returned catalogs by lifecycle status
+    + sort: name (optional) - Optional parameter used to specify how to sort results
+    + body: Cloud (optional) - Optional parameter used to make keyword searches
     
 + Request
 
@@ -706,7 +811,7 @@ The Product Specification Management API uses the folowing fields:
         * **valueTo** - Ending value of the characteristic when it is a range. If this field is included, valueFrom must be also included and value must be empty
         * **valueType** - The kind of value the characteristic could have. Valid values are *String* and *Number*
 
-## Product Specification Collection [/DSProductCatalog/api/catalogManagement/v2/productSpecification{?offset}{?size}{?isBundle}{?productNumber}{?relatedParty.id}{?lifecycleStatus}]
+## Product Specification Collection [/DSProductCatalog/api/catalogManagement/v2/productSpecification{?offset}{?size}{?isBundle}{?productNumber}{?relatedParty.id}{?lifecycleStatus}{?sort}{?body}]
 
 ### List Product Specifications [GET]
 
@@ -718,6 +823,8 @@ The Product Specification Management API uses the folowing fields:
     + productNumber: 1 (optional)- Optional parameter used to filter the returned product specifications by product number
     + relatedParty.id: fdelavega (optional) - Optional parameter used to filter the returned product specifications by owner
     + lifecycleStatus: Active (optional) - Optional parameter used to filter the returned product specifications by lifecycle status
+    + sort: name (optional) - Optional parameter used to specify how to sort results
+    + body: Cloud (optional) - Optional parameter used to make keyword searches
     
 + Request
 
@@ -1124,7 +1231,7 @@ The Product Offering Management API uses the following fields:
         * **priceCondition** - Condition of the alteration with the format [lt | le | eq | ge | gt ] <price>
         * **price** - fixed price or percentage for be deducted or added to the final price
 
-## Product Offering Collection [/DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?offset}{?size}{?isBundle}{?name}{?relatedParty.id}{?category.id}{?category.name}{?productSpecification.id}{bundledProductOffering.id}{?lifecycleStatus}]
+## Product Offering Collection [/DSProductCatalog/api/catalogManagement/v2/catalog/{catId}/productOffering{?offset}{?size}{?isBundle}{?name}{?relatedParty.id}{?category.id}{?category.name}{?productSpecification.id}{bundledProductOffering.id}{?lifecycleStatus}{?sort}{?body}]
 
 ### List Product Offerings [GET]
 
@@ -1141,6 +1248,8 @@ The Product Offering Management API uses the following fields:
     + productSpecification.id: 1 (optional) - Optional parameter used to filter the returned product offerings by product specification id
     + bundledProductOffering.id: 1 (optional) - Optional parameter used to filter the returned product offerings by bundled offerings id
     + lifecycleStatus: Active (optional) - Optional parameter used to filter the returned product offering by lifecycle status
+    + sort: name (optional) - Optional parameter used to specify how to sort results
+    + body: Cloud (optional) - Optional parameter used to make keyword searches
     
 + Request
 
@@ -2040,7 +2149,7 @@ This API manages the following fields:
 * **relatedParty** - Defines parties which are involved in the product and the role they are playing. For each party, it is included the id and the href as described in the Party Management section. Additionally, it is inlcluded a *role* field specifing the role of the user in the current product
 * **productPrice** - Price model of the product offering selected by the user when the order was created
 
-## Product Collection [/DSProductInventory/api/productInventory/v2/product{?offset}{?size}{?name}{?relatedParty.id}{?status}]
+## Product Collection [/DSProductInventory/api/productInventory/v2/product{?offset}{?size}{?name}{?relatedParty.id}{?status}{?sort}{?body}]
 
 ### List Products [GET]
 
@@ -2051,6 +2160,8 @@ This API manages the following fields:
     + name: Broadband (optional) - Optional parameter used to filter the returned products by name
     + relatedParty.id: fdelavega (optional) - Optional parameter used to filter the returned products by owner
     + status: Active (optional) - Optional parameter used to filter the returned products by status
+    + sort: name (optional) - Optional parameter used to specify how to sort results
+    + body: Cloud (optional) - Optional parameter used to make keyword searches
     
 + Request
 
@@ -2292,7 +2403,7 @@ For the different individuals of the system the following information is used:
 
 + Parameters
 
-    + id: 1 - Id of the individual to be retrieved
+    + id: francisco-de-la-vega - Id of the individual to be retrieved
     
 + Request
 
@@ -2328,7 +2439,7 @@ For the different individuals of the system the following information is used:
 
 + Parameters
 
-    + id: 1 - Id of the individual to be updated
+    + id: francisco-de-la-vega - Id of the individual to be updated
 
 + Request - Partial update of the individual, only the fields to be updated need to be provided - (application/json)
 
@@ -2901,7 +3012,7 @@ the Billing Account includes a reference to a Customer Account which links to a 
 
 ## Billing Account Entry [/DSBillingManagement/api/billingManagement/v2/billingAccount/{id}]
 
-### Get Customer [GET]
+### Get Billing Account [GET]
 
 + Parameters
 
@@ -2938,7 +3049,7 @@ the Billing Account includes a reference to a Customer Account which links to a 
         }
 
 
-### Update Customer Account [PATCH]
+### Update Billing Account [PATCH]
 
 + Parameters
 
@@ -2999,10 +3110,14 @@ This API uses the following fields:
 * **period** - Period of time of the charge. The value of this field depends on the type of charges. If the type is *one time*, the field is empty. If the type is *recurring*, this field contains the period until next payment, since recurring charges are paid on advance. Finally, if the type is *usage*, this field contains the period since last charge
 
 
-## Billing Charge Collection [/DSBillingManagement/api/billingManagement/v2/appliedCustomerBillingCharge]
+## Billing Charge Collection [/DSBillingManagement/api/billingManagement/v2/appliedCustomerBillingCharge{?serviceId.id}]
 
 ### List Billing Charges [GET]
 
++ Parameters
+
+    + serviceId.id: 1 - Id of the inventory product whose charges are retrieved
+    
 + Request
 
     + Headers
@@ -3191,6 +3306,7 @@ Note, that for a usage document to be processed and understood by the system, it
     + Headers
 
             Authorization: Bearer YOUR_OAUTH2_TOKEN
+            X-API-Key: API_KEY
 
     + Body
     
@@ -3505,6 +3621,7 @@ Note, that for a usage document to be processed and understood by the system, it
     + Headers
 
             Authorization: Bearer YOUR_OAUTH2_TOKEN
+            X-API-Key: API_KEY
 
     + Body
 

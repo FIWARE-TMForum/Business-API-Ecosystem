@@ -20,6 +20,7 @@ fi
 
 pip3 install sh
 pip3 install click
+pip3 install pymysql
 
 mkdir /opt/biz-ecosystem/
 

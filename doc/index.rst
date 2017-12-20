@@ -12,7 +12,7 @@ standard APIs; concretely, it includes the catalog management, ordering manageme
 usage management, billing, customer, and party APIs.
 
 The Business API Ecosystem is not a single software repository, but it is composed of different projects which
-work coordinatelly to provide the complete functionality.
+work coordinately to provide the complete functionality.
 
 Concretely, the Business API Ecosystem is made of the following components:
 
@@ -27,8 +27,11 @@ Index
 :doc:`installation-administration-guide`
   The guide for maintainers that explains how to install it.
 
-:doc:`user-programmer-guide`
-  The guide for users and programmers that explains how to use it.
+:doc:`user-guide`
+  The guide for users that explains how to use it.
+
+:doc:`programmer-guide`
+  The guide for programmers that explains how to develop plugins
 
 :doc:`plugins-guide`
   The guide for admins that cover the available plugins
@@ -40,5 +43,6 @@ Index
     :caption: Documentation
 
     installation-administration-guide
-    user-programmer-guide
+    user-guide
+    programmer-guide
     plugins-guide
