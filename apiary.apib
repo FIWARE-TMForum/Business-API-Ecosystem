@@ -90,6 +90,33 @@ XML Example
 | 422 | Unprocessable Entity | The entity included in the request cannot be processed (e.g. It includes invalid fields)
 | 500 | Internal server error | There was an internal error in the system so your request cannot be completed |
 
+# Group Software Status API
+
+API for retrieving information about the running instance. It manages the following fields:
+
+* *version* - Current version of the software
+* *release_date* - Release date of the current version
+* *uptime* - Time the current version is up and running
+* *git_hash* - Hash of the release of the current version
+* *doc* - URL of the documentation
+* *user_doc* - URL of the user guide
+
+## Status API [/version]
+
+### Get Status [GET]
+
++ Response 200 (application/json)
+
+        {
+            "version": "vInclude6.4.0",
+            "release_date": "2017-12-20",
+            "uptime": "2 d, 3 h, 15 m, 50 s",
+            "git_hash": "808f4bf995bddf0f6a05576956987f2568522062",
+            "doc": "http://business-api-ecosystem.readthedocs.io/",
+            "user_doc": "http://business-api-ecosystem.readthedocs.io/en/v6.4.0/user-guide.html"
+        }
+
+
 # Group Asset Type Management API
 
 API for the management of asset types. These asset types represent the different kind of digital assets that can be validated, managed, and activated by the system.
