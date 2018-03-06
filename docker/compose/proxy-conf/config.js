@@ -13,7 +13,12 @@ config.version = {
 config.port = 8000;
 config.host = 'proxy.docker';
 
-config.extPort = 8004;
+config.proxy = {
+    enabled: true,
+    host: 'proxy.docker',
+    secured: false,
+    port: 8004
+};
 
 // Set this var to undefined if you don't want the server to listen on HTTPS
 config.https = {
