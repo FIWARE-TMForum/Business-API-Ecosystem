@@ -1,7 +1,9 @@
 from __future__ import unicode_literals
 
+VERIFY_REQUESTS = True
+
 SITE = 'http://proxy.docker:8004/'
-LOCAL_SITE = 'http://localhost:8006/'
+LOCAL_SITE = 'http://charging.docker:8006/'
 
 CATALOG = 'http://apis.docker:8080/DSProductCatalog'
 INVENTORY = 'http://apis.docker:8080/DSProductInventory'
