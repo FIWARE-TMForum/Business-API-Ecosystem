@@ -3219,6 +3219,7 @@ Note, that for a usage document to be processed and understood by the system, it
 * **unit** - Unit being monitored while accounting the service (e.g second, call, megabyte, etc)
 * **value** - Usage made of the service of the given unit
 
+
 ## Usage Specification Collection [/DSUsageManagement/api/usageManagement/v2/usageSpecification]
 
 ### List Usage Specifications [GET]
@@ -3297,6 +3298,17 @@ Note, that for a usage document to be processed and understood by the system, it
         ]
 
 ### Create Usage Specification [POST]
+
+As can be seen, the *Create Usage Specification* request includes a header *X-API-Key*. This header
+has been included in order to enable the authentication of accounting applications which generate
+the usage information.
+
+It is important to note, that the API key which must be used to create usage records cannot be
+requested directly by users of the platform, since they are only issued to approved applications.
+In this regard, there are two mechanisms to get an API Key:
+
+* **manually** - The API key can be requested to an admin of the system who can manually create and deliver it.
+* **automatically** - The API key can be generated automatically from the code of an asset plugin and then send it to the application using the plugin event handlers. See the [programmer guide](http://business-api-ecosystem.readthedocs.io/en/latest/programmer-guide.html) for details on this topic 
 
 + Request (application/json)
 
