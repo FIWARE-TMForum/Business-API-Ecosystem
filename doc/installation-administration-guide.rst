@@ -623,6 +623,24 @@ This settings contain the following values:
 * PROVIDER_ROLE: IDM role of the users with seller privileges
 * CUSTOMER_ROLE: IDM role of the users with customer privileges
 
+The charging backend is the component in charge of maintaining the supported currencies and the timeframe of the different
+periods using in recurring pricing models. To configure both, the following settings are used: ::
+
+    CURRENCY_CODES = [
+        ('EUR', 'Euro'),
+        ('AUD', 'Australia Dollar'),
+        ...
+    ]
+    CHARGE_PERIODS = {
+        'daily': 1,  # One day
+        'weekly': 7,  # One week
+        'monthly': 30,  # One month
+        ...
+    }
+
+* CURRENCY_CODES: Includes the list of currencies supported by the system as a tuple of currency code and currency name.
+* CHARGE_PERIODS: Includes the list of supported periods for recurring models, specifing the time (in days) between periodic charges
+
 The Charging Backend component is able to send email notifications to the users when they are charged or receive a payment.
 In this way, it is possible to provide email configuration in the *settings.py* file by modifying the following fields: ::
 
@@ -821,6 +839,17 @@ If you want to run the proxy in HTTPS you can update *config.https* setting ::
 
 In this case you have to set *enabled* to true, and provide the paths to the certificate (*certFile*), to the private key (*keyFile*),
 and to the CA certificate (*caFile*).
+
+The logic proxy supports the BAE to be deployed behind a proxy (or NGINX, Apache, etc) not sending X-Forwarding headers. In this
+regard, the following setting is used in order to provide information about the actual endpoint which is used to access to the
+Business API Ecosystem: ::
+
+    config.proxy = {
+        enabled: true,
+        host: 'store.lab.fiware.org',
+        secured: true,
+        port: 443
+    };
 
 Then, it is possible to modify some of the URLs of the system. Concretely, it is possible to provide a prefix for the API,
 a prefix for the portal, and modifying the login and logout URLS ::
