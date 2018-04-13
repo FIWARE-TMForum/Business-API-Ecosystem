@@ -10,7 +10,7 @@ config.version = {
 };
 
 // The PORT used by
-config.port = 8000;
+config.port = 8004;
 config.host = 'proxy.docker';
 
 config.proxy = {

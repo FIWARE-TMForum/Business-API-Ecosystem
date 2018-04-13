@@ -33,6 +33,43 @@ ADMIN_ROLE = 'provider'
 PROVIDER_ROLE = 'seller'
 CUSTOMER_ROLE = 'customer'
 
+CHARGE_PERIODS = {
+    'daily': 1,  # One day
+    'weekly': 7,  # One week
+    'monthly': 30,  # One month
+    'quarterly': 90,  # Three months
+    'yearly': 365,  # One year
+    'quinquennial': 1825,  # Five years
+}
+
+CURRENCY_CODES = [
+    ('EUR', 'Euro'),
+    ('AUD', 'Australia Dollar'),
+    ('BRL', 'Brazil Real'),
+    ('CAD', 'Canada Dollar'),
+    ('CHF', 'Switzerland Franc'),
+    ('CZK', 'Czech Republic Koruna'),
+    ('DKK', 'Denmark Krone'),
+    ('GBP', 'United Kingdom Pound'),
+    ('HKD', 'Hong Kong Dollar'),
+    ('HUF', 'Hungary Forint'),
+    ('ILS', 'Israel Shekel'),
+    ('JPY', 'Japan Yen'),
+    ('MXN', 'Mexico Peso'),
+    ('MYR', 'Malaysia Ringgit'),
+    ('NOK', 'Norway Krone'),
+    ('NZD', 'New Zealand Dollar'),
+    ('PHP', 'Philippines Peso'),
+    ('PLN', 'Poland Zloty'),
+    ('RUB', 'Russia Ruble'),
+    ('SEK', 'Sweden Krona'),
+    ('SGD', 'Singapore Dollar'),
+    ('THB', 'Thailand Baht'),
+    ('TRY', 'Turkey Lira'),
+    ('TWD', 'Taiwan New Dollar'),
+    ('USD', 'US Dollar'),
+]
+
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 MEDIA_DIR = 'media/'
 MEDIA_ROOT = path.join(BASEDIR, MEDIA_DIR)
