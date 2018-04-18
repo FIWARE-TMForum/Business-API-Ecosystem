@@ -130,6 +130,9 @@ config.endpoints = {
 // Percentage of the generated revenues that belongs to the system
 config.revenueModel = 30;
 
+// Tax rate
+config.taxRate = 20;
+
 // Billing Account owner role
 config.billingAccountOwnerRole = 'bill receiver';
 
