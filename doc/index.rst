@@ -30,6 +30,9 @@ Index
 :doc:`user-guide`
   The guide for users that explains how to use it.
 
+:doc: `monetization-how-to`
+  The guide for users that explains how to use the different pricing models supported by the system and what are its requirements
+
 :doc:`programmer-guide`
   The guide for programmers that explains how to develop plugins
 
