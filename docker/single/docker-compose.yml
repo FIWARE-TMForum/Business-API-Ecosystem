@@ -2,7 +2,7 @@ version: "3"
 
 services:
     mysql:
-        image: mysql:latest
+        image: mysql:5.7
         ports:
             - "3333:3306"
         volumes:
@@ -18,7 +18,7 @@ services:
             - ./mongo-data:/data/db
 
     biz_ecosystem:
-        image: conwetlab/business-api-ecosystem:develop
+        image: conwetlab/business-api-ecosystem:v6.4.0
         ports:
             - "8004:8000"
         links:
