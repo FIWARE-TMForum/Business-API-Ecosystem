@@ -11,7 +11,7 @@ services:
             - ./mongo-data:/data/db
 
     mysql:
-        image: mysql:latest
+        image: mysql:5.7
         restart: always
         ports:
             - 3333:3306
@@ -24,7 +24,7 @@ services:
             - MYSQL_DATABASE=RSS
 
     charging:
-        image: conwetlab/biz-ecosystem-charging-backend:develop
+        image: conwetlab/biz-ecosystem-charging-backend:v6.4.0
         restart: always
         links:
             - mongo
@@ -49,7 +49,7 @@ services:
           - PAYPAL_CLIENT_SECRET=client_secret
 
     proxy:
-        image: conwetlab/biz-ecosystem-logic-proxy:develop
+        image: conwetlab/biz-ecosystem-logic-proxy:v6.4.0
         restart: always
         links:
             - mongo
@@ -71,7 +71,7 @@ services:
             - NODE_ENV=development
 
     apis:
-        image: conwetlab/biz-ecosystem-apis:develop
+        image: conwetlab/biz-ecosystem-apis:v6.4.0
         restart: always
         ports:
             - 4848:4848
@@ -91,7 +91,7 @@ services:
             - MYSQL_HOST=mysql
 
     rss:
-        image: conwetlab/biz-ecosystem-rss:develop
+        image: conwetlab/biz-ecosystem-rss:v6.4.0
         restart: always
         ports:
             - 9999:8080
