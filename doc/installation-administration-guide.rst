@@ -818,14 +818,18 @@ Or in CentOS ::
 Configuring the Logic Proxy
 ===========================
 
-The first step for configuring the proxy is creating the configuration file by coping *config.js.template* to *config.js* ::
-
-    $ cp config.js.template config.js
+Configuration of the Logic Proxy is located at *config.js* and can be provided in two different ways: providing the values
+in the file or using the defined environment variables. Note that the environment variables override the values in *config.js*.
 
 The first setting to be configured is the port and host where the proxy is going to run, this settings are located in *config.js* ::
 
     config.port = 80;
     config.host = 'localhost';
+
+In addition, the environment variables *BAE_LP_PORT* and *BAE_LP_HOST* can be used to override those values. ::
+
+    export BAE_LP_PORT=80
+    export BAE_LP_HOST=localhost
 
 If you want to run the proxy in HTTPS you can update *config.https* setting ::
 
@@ -840,6 +844,14 @@ If you want to run the proxy in HTTPS you can update *config.https* setting ::
 In this case you have to set *enabled* to true, and provide the paths to the certificate (*certFile*), to the private key (*keyFile*),
 and to the CA certificate (*caFile*).
 
+In order to provide the HTTPS configuration using the environment, the following variables has been defined. ::
+
+    export BAE_LP_HTTPS_ENABLED=true
+    export BAE_LP_HTTPS_CERT=cert/cert.crt
+    export BAE_LP_HTTPS_CA=cert/key.key
+    export BAE_LP_HTTPS_KEY=cert/ca.crt
+    export BAE_LP_HTTPS_PORT=443
+
 The logic proxy supports the BAE to be deployed behind a proxy (or NGINX, Apache, etc) not sending X-Forwarding headers. In this
 regard, the following setting is used in order to provide information about the actual endpoint which is used to access to the
 Business API Ecosystem: ::
@@ -850,6 +862,10 @@ Business API Ecosystem: ::
         secured: true,
         port: 443
     };
+
+Which can be also configured using the *BAE_SERVICE_HOST* environment variable. ::
+
+    export BAE_SERVICE_HOST=https://store.lab.fiware.org/
 
 Then, it is possible to modify some of the URLs of the system. Concretely, it is possible to provide a prefix for the API,
 a prefix for the portal, and modifying the login and logout URLS ::
@@ -864,8 +880,12 @@ Themes are provided in the *Configuring Themes* section::
 
     config.theme = '';
 
+The theme can be configured using the *BAE_LP_THEME* variable. ::
+
+    export BAE_LP_THEME=fiwaretheme
+
 Additionally, the proxy is the component that acts as the front end of the Business API Ecosystem, both providing a web portal,
-and providing the endpoint for accessing to the different APIs. In this regard, the Proxy has to have the OAUth2 configuration
+and providing the endpoint for accessing to the different APIs. In this regard, the Proxy has to have the OAuth2 configuration
 of the FIWARE IDM.
 
 To provide OAUth2 configuration, an application has to be created in an instance of the FIWARE IdM (e.g `https://account.lab.fiware.org`),
@@ -873,7 +893,7 @@ providing the following information:
 
 * URL: http|https://<proxy_host>:<proxy_port>
 * Callback URL: http|https://<PROXY_HOST>:<PROXY_PORT>/auth/fiware/callback
-* Create a role *Seller*
+* Create a role *Seller*, a role *Admin*, and a role *orgAdmin*
 
 Once the application has been created in the IdM, it is possible to provide OAuth2 configuration by modifying the following settings ::
 
@@ -882,15 +902,39 @@ Once the application has been created in the IdM, it is possible to provide OAut
         'clientID': '<client_id>',
         'clientSecret': '<client_secret>',
         'callbackURL': 'http://<proxy_host>:<proxy_port>/auth/fiware/callback',
+        'isLegacy': false,
         'roles': {
-            'admin': 'provider',
+            'admin': 'admin',
             'customer': 'customer',
-            'seller': 'seller'
+            'seller': 'seller',
+            'orgAdmin': 'orgAdmin'
         }
     };
 
 In this settings, it is needed to include the IDM instance being used (*server*), the client id given by the IdM (*clientID*),
-the client secret given by the IdM (*clientSecret*), and the callback URL configured in the IdM (*callbackURL*)
+the client secret given by the IdM (*clientSecret*), and the callback URL configured in the IdM (*callbackURL*).
+
+In addition, the different roles allow to specify what users are admins of the system (*Admin*), what users can create products
+and offerings (*Seller*), and what users are admins of a particular organization, enabling to manage its information (*orgAdmin*).
+Note that while *admin* and *seller* roles are granted directly to the users in the Business API Ecosystem application, the *orgAdmin*
+role has to be granted to users within IdM organizations.
+
+.. note::
+    Admin, Seller, and orgAdmin roles are configured in the Proxy settings, so any name can be chosen for them in the IDM
+
+The *isLegacy* flag is used to specify whether the configured IDM is version 6 or lower, by default this setting is false. 
+
+The OAuth2 settings cane be configured using the environment as follows: ::
+
+    export BAE_LP_OAUTH2_SERVER=https://account.lab.fiware.org
+    export BAE_LP_OAUTH2_CLIENT_ID=client_id
+    export BAE_LP_OAUTH2_CLIENT_SECRET=client_secret
+    export BAE_LP_OAUTH2_CALLBACK=http://<proxy_host>:<proxy_port>/auth/fiware/callback
+    export BAE_LP_OAUTH2_ADMIN_ROLE=admin
+    export BAE_LP_OAUTH2_SELLER_ROLE=seller
+    export BAE_LP_OAUTH2_ORG_ADMIN_ROLE=orgAdmin
+
+    export BAE_LP_OAUTH2_IS_LEGACY=false
 
 Moreover, the Proxy uses MongoDB for maintaining some info, such as the current shopping cart of a user. you can configure
 the connection to MongoDB by updating the following setting: ::
@@ -905,6 +949,14 @@ the connection to MongoDB by updating the following setting: ::
 
 In this setting you can configure the host (*server*), the port (*port*), the database user (*user*), the database user password
 (*password*), and the database name (*db*).
+
+In addition, the database connection can be configured with the environment as following: ::
+
+    export BAE_LP_MONGO_USER=user
+    export BAE_LP_MONGO_PASS=pass
+    export BAE_LP_MONGO_SERVER=localhost
+    export BAE_LP_MONGO_PORT=27017
+    export BAE_LP_MONGO_DB=belp
 
 As already stated, the Proxy is the component that acts as the endpoint for accessing the different APIs. In this way,
 the proxy needs to know the URLs of them in order to redirect the different requests. This endpoints can be configured using the
@@ -933,10 +985,17 @@ its *port*, and whether the API is using SSL or not.
     The default configuration included in the config file is the one used by the installation script, so if you have used the script for
     installing the Business API Ecosystem you do not need to modify these fields
 
+Each of the different APIs can be configured with environment variables with the following pattern: ::
+
+    export BAE_LP_ENDPOINT_CATALOG_PATH=DSProductCatalog
+    export BAE_LP_ENDPOINT_CATALOG_PORT=8080
+    export BAE_LP_ENDPOINT_CATALOG_HOST=localhost
+    export BAE_LP_ENDPOINT_CATALOG_SECURED=false
+
 Finally, there are two fields that allow to configure the behaviour of the system while running. On the one hand, *config.revenueModel*
 allows to configure the default percentage that the Business API Ecosystem is going to retrieve in all the transactions.
 On the other hand, *config.usageChartURL* allows to configure the URL of the chart to be used to display product usage to
-customers in the web portal.
+customers in the web portal. They can be configured with environment variables with *BAE_LP_REVENUE_MODEL* and *BAE_LP_USAGE_CHART*
 
 -----------
 Final steps
