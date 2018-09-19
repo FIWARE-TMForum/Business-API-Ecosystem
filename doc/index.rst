@@ -27,6 +27,9 @@ Index
 :doc:`installation-administration-guide`
   The guide for maintainers that explains how to install it.
 
+:doc: `configuration-guide`
+  The guide for administrations which explains the different configuration options
+
 :doc:`user-guide`
   The guide for users that explains how to use it.
 
