@@ -2342,59 +2342,6 @@ For the different individuals of the system the following information is used:
                 }]
             }
         ]
-
-### Create Individual [POST]
-
-+ Request (application/json)
-
-    + Headers
-
-            Authorization: Bearer YOUR_OAUTH2_TOKEN
-
-    + Body
-
-            {
-                "id": "francisco-de-la-vega",
-                "birthDate": "1970-01-04T01:00:00+01:00",
-                "countryOfBirth": "DZ",
-                "familyName": "de la Vega",
-                "gender": "Male",
-                "givenName": "Francisco",
-                "maritalStatus": "Married",
-                "nationality": "spanish",
-                "placeOfBirth": "Madrid",
-                "title": "Mr",
-                "contactMedium": [{
-                    "type": "Email",
-                    "preferred": "false",
-                    "medium": {
-                         "emailAddress": "fdelavega@conwet.com"
-                    }
-                }]
-            }
-
-+ Response 201 (application/json)
-
-        {
-            "id": "francisco-de-la-vega",
-            "href": "http://store.lab.fiware.org/DSPartyManagement/api/partyManagement/v2/individual/francisco-de-la-vega",
-            "birthDate": "1970-01-04T01:00:00+01:00",
-            "countryOfBirth": "DZ",
-            "familyName": "de la Vega",
-            "gender": "Male",
-            "givenName": "Francisco",
-            "maritalStatus": "Married",
-            "nationality": "spanish",
-            "placeOfBirth": "Madrid",
-            "title": "Mr",
-            "contactMedium": [{
-                "type": "Email",
-                "preferred": "false",
-                "medium": {
-                    "emailAddress": "fdelavega@conwet.com"
-                }
-            }]
-        }
             
 ## Individual Entry [/DSPartyManagement/api/partyManagement/v2/individual/{id}]
 
