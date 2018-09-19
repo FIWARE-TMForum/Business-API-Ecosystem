@@ -27,13 +27,13 @@ Index
 :doc:`installation-administration-guide`
   The guide for maintainers that explains how to install it.
 
-:doc: `configuration-guide`
+:doc:`configuration-guide`
   The guide for administrations which explains the different configuration options
 
 :doc:`user-guide`
   The guide for users that explains how to use it.
 
-:doc: `monetization-how-to`
+:doc:`monetization-how-to`
   The guide for users that explains how to use the different pricing models supported by the system and what are its requirements
 
 :doc:`programmer-guide`
@@ -49,6 +49,8 @@ Index
     :caption: Documentation
 
     installation-administration-guide
+    configuration-guide
     user-guide
+    monetization-how-to
     programmer-guide
     plugins-guide
