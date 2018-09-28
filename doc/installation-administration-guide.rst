@@ -311,14 +311,14 @@ In addition to the *all* option, *install.py* also provides several options that
 process, so you can have more control over it. Concretely, the script provides the following options:
 
 * **clone**: Downloads from GitHub the different components of the Business API Ecosystem
+* **persistence**: Builds persistence.xml files of the different APIs
 * **maven**: Compiles the downloaded APIs using Maven
 * **tables**: Creates the required databases in MySQL
-* **persistence**: Builds persistence.xml files of the different APIs
 * **pools**: Creates database pools in Glassfish
 * **resources**: Creates database resources in Glassfish
 * **redeploy**: Deploys APIs and RSS war files in Glassfish
-* **proxy**: Installs proxy Node libs
 * **charging**: Installs charging Python libs
+* **proxy**: Installs proxy Node libs
 
 Installing the Business API Ecosystem Manually
 ----------------------------------------------
