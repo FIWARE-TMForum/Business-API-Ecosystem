@@ -2,15 +2,7 @@
 Programmer Guide
 ================
 
-Introduction
-============
-
-This programmer guide covers the Business API Ecosystem version 7.4.0, corresponding to FIWARE release 6.
-Any feedback on this document is highly welcomed, including bugs, typos or things you think should be included but aren't.
-Please send them to the "Contact Person" email that appears in the `Catalogue page for this GEi`_. Or create an issue at `GitHub Issues`_
-
-.. _Catalogue page for this GEi: https://catalogue.fiware.org/enablers/business-api-ecosystem-biz-ecosystem-ri
-.. _GitHub Issues: https://github.com/FIWARE-TMForum/Business-API-Ecosystem/issues/new
+This programmer guide covers the Business API Ecosystem version 7.4.0, corresponding to FIWARE release 7.
 
 The Business API Ecosystem allows to offer any kind of digital asset. In this regard, some kind of digital assets may
 require to perform specific actions and validations that require to know the format of the asset. To deal with this

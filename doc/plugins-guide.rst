@@ -3,11 +3,6 @@ Plugins Guide
 =============
 
 This plugins guide covers the available plugins (defining digital asset types) for the Business API Ecosystem v7.4.0
-Any feedback on this document is highly welcomed, including bugs, typos or things you think should be included but aren't.
-Please send them to the "Contact Person" email that appears in the `Catalogue page for this GEi`_. Or create an issue at `GitHub Issues`_
-
-.. _Catalogue page for this GEi: https://catalogue.fiware.org/enablers/business-api-ecosystem-biz-ecosystem-ri
-.. _GitHub Issues: https://github.com/FIWARE-TMForum/Business-API-Ecosystem/issues/new
 
 ------------------------
 Installing Asset Plugins
@@ -45,9 +40,11 @@ At the time of writing, the following plugins are available:
 
 * `Basic File <https://github.com/FIWARE-TMForum/biz-basic-plugins>`__: Allows the creation of products by providing files as digital assets. No validations or processing is done
 * `Basic URL <https://github.com/FIWARE-TMForum/biz-basic-plugins>`__: Allows the creation of products by providing URLs as digital assets. No validations or processing is done
+* `CKAN Dataset <https://github.com/FIWARE-TMForum/biz-ckan-plugin>`__ : Allows the monetization of CKAN datasets
+* `CKAN API Dataset <https://github.com/FIWARE-TMForum/biz-ckan-plugin/tree/umbrella-backend>`__ Allows the monetization of CKAN datasets whose resources are served by an external APIs (e.g NGSI Queries) secured with `API Umbrella <https://github.com/apinf/api-umbrella>`__.
+* `Umbrella Service <https://github.com/FIWARE-TMForum/biz-umbrella-service>`__ Allows the monetization of services secured by API Umbrella with FIWARE IDM users and roles.
 * `WireCloud Component <https://github.com/FIWARE-TMForum/wstore-wirecloud-plugin>`__: Allows the monetization of WireCloud components, including Widgets, operators, and mashups
 * `Accountable Service <https://github.com/FIWARE-TMForum/biz-accountable-service-plugin>`__ : Allows the monetization of services protected by the `Accounting Proxy <https://github.com/FIWARE-TMForum/Accounting-Proxy>`__, including Orion Context Broker queries
-* `CKAN Dataset <https://github.com/FIWARE-TMForum/biz-ckan-plugin>`__ : Allows the monetization of CKAN datasets
 
 
 -----------------
@@ -64,34 +61,6 @@ or any URL as digital asset respectively, and can be used for the creation of si
 Business API Ecosystem.
 
 These plugins do not implement any event handler.
-
-
-WireCloud Component
--------------------
-
-The *WireCloud Component* plugin is available in `GitHub <https://github.com/FIWARE-TMForum/wstore-wirecloud-plugin>`__.
-This plugin defines an asset type intended to manage and monetize the different WireCloud components (Widgets, Operators,
-and Mashups) in  particular by enabling the creation of product specifications providing the WGT file of the specific
-component. (For more details on the WireCloud platform see its documentation in `ReadTheDocs <https://wirecloud.readthedocs.io>`__)
-
-The WireCloud component plugin allows to provide the WGT file in the two ways supported by the Business API Ecosystem,
-that is, uploading the WGT file when creating the product and providing a URL where the platform can download the file.
-
-In addition, the plugin only allows the media type *Mashable application component*. Nevertheless, the plugin code uses the WGT
-metainfo to determine the type of the WireCloud component (Widget, Operator, or Mashup) and overrides the media type with the
-proper one understood by the WireCloud platform (*wirecloud/widget*, *wirecloud/operator* or *wirecloud/mashup*).
-
-.. image:: ./images/plugin/wirecloud1.png
-   :align: center
-
-.. image:: ./images/plugin/wirecloud2.png
-   :align: center
-
-This plugin implements the following event handlers:
-
-* **on_post_product_spec_validation**: In this handler the plugin validates the WGT file to ensure that it is a valid WireCloud Component
-* **on_post_product_spec_attachment**: In this handler the plugin determines the media type of the WGT file and overrides the media type value in the specific product specification
-
 
 CKAN Dataset and CKAN API Dataset
 ---------------------------------
@@ -170,6 +139,49 @@ in the *setting.py* file, and are:
 * **KEYSTONE_USER**: Keystone user used for authenticate requests to the FIWARE IdM
 * **KEYSTONE_PASSWORD**: Keystone password used for authenticate requests to the FIWARE IdM
 * **KEYSTONE_HOST**: Host of the Keystone service of the FIWARE IdM used for authorizing customers
+
+
+Umbrella Service
+----------------
+
+The *Umbrella Service* plugin is available in `GitHub <https://github.com/FIWARE-TMForum/biz-umbrella-service>`__.
+This plugin deines an asset type intended to managa and monetize any HTTP service secured with the combination of a
+FIWARE IDM for users and roles management and API Umbrella as PEP proxy.
+
+The Umbrella Service plugin allows to provide services in different ways using the options it defined in its metadata
+form. In particular, ...
+
+Moreover, this plugin support pay-per-use pricing supporting the *api call* unit. The accounting information is retrieved
+from the API Umbrella logging API using the service details provided as metadata when the product is created.
+
+
+
+
+WireCloud Component
+-------------------
+
+The *WireCloud Component* plugin is available in `GitHub <https://github.com/FIWARE-TMForum/wstore-wirecloud-plugin>`__.
+This plugin defines an asset type intended to manage and monetize the different WireCloud components (Widgets, Operators,
+and Mashups) in  particular by enabling the creation of product specifications providing the WGT file of the specific
+component. (For more details on the WireCloud platform see its documentation in `ReadTheDocs <https://wirecloud.readthedocs.io>`__)
+
+The WireCloud component plugin allows to provide the WGT file in the two ways supported by the Business API Ecosystem,
+that is, uploading the WGT file when creating the product and providing a URL where the platform can download the file.
+
+In addition, the plugin only allows the media type *Mashable application component*. Nevertheless, the plugin code uses the WGT
+metainfo to determine the type of the WireCloud component (Widget, Operator, or Mashup) and overrides the media type with the
+proper one understood by the WireCloud platform (*wirecloud/widget*, *wirecloud/operator* or *wirecloud/mashup*).
+
+.. image:: ./images/plugin/wirecloud1.png
+   :align: center
+
+.. image:: ./images/plugin/wirecloud2.png
+   :align: center
+
+This plugin implements the following event handlers:
+
+* **on_post_product_spec_validation**: In this handler the plugin validates the WGT file to ensure that it is a valid WireCloud Component
+* **on_post_product_spec_attachment**: In this handler the plugin determines the media type of the WGT file and overrides the media type value in the specific product specification
 
 
 Accountable Service
