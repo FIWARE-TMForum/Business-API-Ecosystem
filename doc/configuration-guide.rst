@@ -15,6 +15,26 @@ settings of the RSS properties files.
 Configuring the TMF APIs
 ------------------------
 
+When the TMF APIs are deployed from sources, the connection to the MySQL database is configured during the installation process
+setting up the jdbc connection as described in the *Installation and Administration* guide.
+
+On the other hand, the Docker image biz-ecosystem-apis which is used to the deploy TMF APIs using Docker uses two environment
+variables for configuring such connection. ::
+
+    MYSQL_ROOT_PASSWORD=my-secret-pw
+    MYSQL_HOST=mysql
+
+Finally, the TMF APIs can optinally use a configuration file called *settings.properties* which is located by default at */etc/default/apis*.
+This file include a setting *server* which allows to provide the URL used to access to the Business API Ecosystem and, in particular, by the APIs
+in order to generate *hrefs* with the proper reference.
+
+    server=https://store.lab.fiware.org/
+
+This setting can also be configured using the environment variable *BAE_SERVICE_HOST* ::
+
+    export BAE_SERVICE_HOST=https://store.lab.fiware.org/
+
+
 -------------------
 Configuring the RSS
 -------------------

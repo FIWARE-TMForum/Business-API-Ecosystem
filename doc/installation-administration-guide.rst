@@ -2,10 +2,6 @@
 Installation and Administration Guide
 =====================================
 
-------------
-Introduction
-------------
-
 This guide covers the installation of the Business API Ecosystem v7.4.0 from the sources available in GitHub, installing manually
 the software dependencies and using the existing scripts for setting up the system.
 

@@ -156,9 +156,10 @@ services:
             main:
                 aliases:
                     - apis.docker
-        volumes:
-            - ./apis-conf:/etc/default/tmf/
+        # volumes:
+        #    - ./apis-conf:/etc/default/tmf/  # Used if not configured by environment
         environment:
+            - BAE_SERVICE_HOST=http://proxy.docker:8004/
             - MYSQL_ROOT_PASSWORD=my-secret-pw
             - MYSQL_HOST=mysql
 
@@ -177,8 +178,14 @@ services:
             main:
                 aliases:
                     - rss.docker
-        volumes:
-            - ./rss-conf:/etc/default/rss
+        # volumes:
+        #    - ./rss-conf:/etc/default/rss  # Used if not configured by environment
+        environment:
+            - BAE_SERVICE_HOST=http://proxy.docker:8004/
+            - BAE_LP_OAUTH2_ADMIN_ROLE=admin  # Role defined in the IDM client app for admins of the BAE 
+            - BAE_LP_OAUTH2_SELLER_ROLE=seller  # Role defined in the IDM client app for sellers of the BAE 
+            - BAE_RSS_MYSQL_ROOT_PASSWORD=my-secret-pw
+            - BAE_RSS_MYSQL_ROOT_HOST=mysql
 
 networks:
     main:
