@@ -543,54 +543,6 @@ You can populate at any time the indexes directory using the *fill_indexes.js* s
 
     $ node fill_indexes.js
 
-Configuring Themes
-==================
-
-The Business API Ecosystem provides a basic mechanism for the creation of themes intended to customize the web portal
-of the system. Themes include a set of files which can override any of the default portal files located in the *public/resources*
-or *views* directories of the logic proxy. To do that, themes map the directory structure and include files with the same
-name of the default ones to be overridden.
-
-The Logic Proxy can include multiple themes which should be stored in the *themes* directory located at the root of the
-project.
-
-To enable themes, the *config.theme* setting is provided within the *config.js* file of the Logic Proxy. Themes are
-enabled by providing the name of the theme directory in this setting. ::
-
-    config.theme = 'dark-theme';
-
-.. note::
-    Setting *config.theme* to an empty string makes the Business API Ecosystem to use its default theme
-
-To start using a theme the following command has to be executed: ::
-
-    $ node collect_static.js
-
-This command merges the theme files and the default ones into a *static* directory used by the Logic Proxy to retrieve
-portal static files.
-
-Enabling Production
-===================
-
-The default installation of the Business API Ecosystem deploys its different components in *debug* mode. This is useful
-for development and testing but it is not adequate for production environments.
-
-Enabling the production mode makes the different components to start caching requests and views and minimizing JavaScript
-files.
-
-To enable the production mode, the first step is setting the environment variable *NODE_ENV* to *production* in the machine
-containing the Logic Proxy. ::
-
-    $ export NODE_ENV=production
-
-Then, it is needed to collect static files in order to compress JavaScript files. ::
-
-    $ node collect_static.js
-
-
-Finally, change the setting *DEBUG* of the Charging Backend to False. ::
-
-    DEBUG=False
 
 ----------------------------------
 Running the Business API Ecosystem
@@ -644,46 +596,6 @@ The Logic Proxy can be started using Node as follows ::
 Or if you want to start it in background: ::
 
     $ nohup node server.js &
-
-------------------------
-Installing Asset Plugins
-------------------------
-
-The Business API Ecosystem is intended to support the monetization of different kind of digital assets. The different
-kind of assets that may be wanted to be monetized will be heterogeneous and potentially very different between them.
-
-Additionally, for each type of asset different validations and activation mechanisms will be required. For example, if the
-asset is a CKAN dataset, it will be required to validate that the provider is the owner of the dataset. Moreover, when a customer
-acquires the dataset, it will be required to notify CKAN that a new user has access to it.
-
-The huge differences between the different types of assets that can be monetized in the Business API Ecosystem makes
-impossible to include its validations and characteristics as part of the core software. For this reason, it has been created
-a plugin based solution, where all the characteristics of an asset type are implemented in a plugin that can be loaded
-in the Business API Ecosystem.
-
-To include an asset plugin execute the following command in the Charging Backend: ::
-
-    $ ./manage.py loadplugin ckandataset.zip
-
-It is possible to list the existing plugins with the following command: ::
-
-    $ ./manage.py listplugins
-
-To remove an asset plugin, execute the following command providing the plugin id given by the *listplugins* command ::
-
-    $ ./manage.py removeplugin ckan-dataset
-
-
-.. note::
-    For specific details on how to create a plugin and its internal structure, have a look at the Business API Ecosystem Programmer Guide
-
-At the time of writing, the following plugins are available:
-
-* `Basic File <https://github.com/FIWARE-TMForum/biz-basic-plugins>`__: Allows the creation of products by providing files as digital assets. No validations or processing is done
-* `Basic URL <https://github.com/FIWARE-TMForum/biz-basic-plugins>`__: Allows the creation of products by providing URLs as digital assets. No validations or processing is done
-* `WireCloud Component <https://github.com/FIWARE-TMForum/wstore-wirecloud-plugin>`__: Allows the monetization of WireCloud components, including Widgets, operators, and mashups
-* `Accountable Service <https://github.com/FIWARE-TMForum/biz-accountable-service-plugin>`__ : Allows the monetization of services protected by the `Accounting Proxy <https://github.com/FIWARE-TMForum/Accounting-Proxy>`__, including Orion Context Broker queries
-* `CKAN Dataset <https://github.com/FIWARE-TMForum/biz-ckan-plugin>`__ : Allows the monetization of CKAN datasets
 
 
 -----------------------

@@ -5,7 +5,7 @@ Programmer Guide
 Introduction
 ============
 
-This programmer guide covers the Business API Ecosystem version 6.4.0, corresponding to FIWARE release 6.
+This programmer guide covers the Business API Ecosystem version 7.4.0, corresponding to FIWARE release 6.
 Any feedback on this document is highly welcomed, including bugs, typos or things you think should be included but aren't.
 Please send them to the "Contact Person" email that appears in the `Catalogue page for this GEi`_. Or create an issue at `GitHub Issues`_
 

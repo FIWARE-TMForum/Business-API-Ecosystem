@@ -5,7 +5,7 @@ User Guide
 Introduction
 ============
 
-This user guide covers the Business API Ecosystem version 6.4.0, corresponding to FIWARE release 6.
+This user guide covers the Business API Ecosystem version 7.4.0, corresponding to FIWARE release 6.
 Any feedback on this document is highly welcomed, including bugs, typos or things you think should be included but aren't.
 Please send them to the "Contact Person" email that appears in the `Catalogue page for this GEi`_. Or create an issue at `GitHub Issues`_
 
@@ -19,7 +19,7 @@ its web interface. This section is organized so the actions related to a particu
 Using Organizations
 ===================
 
-Starting on version 6.4.0, the Business API Ecosystem supports organizations as defined by the FIWARE IdM. These organizations
+Starting on version 7.4.0, the Business API Ecosystem supports organizations as defined by the FIWARE IdM. These organizations
 can use the system as if they were users, being possible to create organizations catalogs and offerings or acquire them.
 
 To use the platform on behalf an organization the user belongs, it is needed to change the platform context. To do that,
