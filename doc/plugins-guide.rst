@@ -187,6 +187,10 @@ This plugin implements the following event handlers:
 Accountable Service
 -------------------
 
+.. warning::
+    This plugin is deprecated, and will not evolve. This plugin has been replaced by Umbrella Service Plugin
+
+
 The *Accountable Service* plugin is available in `GitHub <hhttps://github.com/FIWARE-TMForum/biz-accountable-service-plugin>`__.
 This plugin defines a generic asset type which is used jointly with the `Accounting Proxy <https://github.com/FIWARE-TMForum/Accounting-Proxy>`__
 in order to offer services under a pay-per-use model. In particular, this plugin is able to validate services URLs,
@@ -228,7 +232,7 @@ Having this software deployed allows service owners to protect their services an
 without the need of making any modification in the specific service.
 
 Installation
-------------
+############
 
 This software is a pure NodeJS server, to install basic dependencies execute the following command: ::
 
@@ -336,7 +340,7 @@ the following configuration params are used:
     }
 
 Administration
---------------
+##############
 
 The Accounting Proxy is able to manage multiple services. In this regard, it has been provided a *cli* tool that can be
 used by admins in order to register, delete, and manage its services. The available commands are:
@@ -410,7 +414,7 @@ To display a brief description of the *cli* tool you can use : `./cli -h` or `./
 information for a specific command you can use: `./cli help [cmd]`.
 
 Authentication and Authorization
---------------------------------
+################################
 
 The Accounting Proxy relies on the FIWARE IdM for authenticating users. To do that, the proxy expects that all the requests
 include a header *Authorization: Bearer access_token* or *X-Auth-Token: access_token* with a valid access token given
@@ -433,7 +437,7 @@ it in a header *X-API-Key: api_key* when making requests, enables it to know wha
     around the request
 
 Proxy API
----------
+#########
 
 The Accounting Proxy runs by default in the port 9000; nevertheless, this port can be configured as described in *Configuration*
 section. In this regard, the different services configured though the administration *cli* tool can be accessed directly
@@ -540,7 +544,7 @@ header with a valid access token from the IdM.
 
 
 Accounting modules
-------------------
+##################
 
 By default, the Accounting Proxy includes three different modules for accounting. Nevertheless, it is possible to extend
 the proxy with new modules by creating them in the *acc_modules* directory, those modules have to have the following structure:
