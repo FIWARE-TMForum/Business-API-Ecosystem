@@ -6,15 +6,14 @@ Installation and Administration Guide
 Introduction
 ------------
 
-This installation and administration guide covers the Business API Ecosystem version 7.4.0, corresponding to FIWARE release 7.
-Any feedback on this document is highly welcomed, including bugs, typos or things you think should be included but aren't.
-Please send them to the "Contact Person" email that appears in the `Catalogue page for this GEi`_. Or create an issue at `GitHub Issues`_
+This guide covers the installation of the Business API Ecosystem v7.4.0 from the sources available in GitHub, installing manually
+the software dependencies and using the existing scripts for setting up the system.
 
-.. _Catalogue page for this GEi: https://catalogue.fiware.org/enablers/business-api-ecosystem-biz-ecosystem-ri
-.. _GitHub Issues: https://github.com/FIWARE-TMForum/Business-API-Ecosystem/issues/new
-
-The current version of the software has been tested under Ubuntu 14.04, Ubuntu 15.10, Ubuntu 16.04, Debian 7, Debian 8,
+The current version of the software has been tested under Ubuntu 15.10, Ubuntu 16.04, Ubuntu 18.04, Debian 7, Debian 8,
 and CentOS 7. THESE ARE THEREFORE CONSIDERED AS THE SUPPORTED OPERATING SYSTEMS.
+
+.. note::
+    The preferred mechanism for the deployment of the Buseiness API Ecosystem is Docker as described in `Docker deployment guide <doc:docker-guide>`__
 
 ------------
 Installation
@@ -35,7 +34,7 @@ TM Forum APIs and RSS requirements
 
 * Java 8
 * Glassfish 4.1
-* MySQL 5.5
+* MySQL 5.7
 
 Charging Backend requirements
 -----------------------------
@@ -47,7 +46,7 @@ Charging Backend requirements
 Logic Proxy requirements
 ------------------------
 
-* NodeJS 4.5.0+ (Including NPM)
+* NodeJS 6.9.1+ (Including NPM)
 
 
 Installing basic dependencies
@@ -340,7 +339,7 @@ The installation for all of them is similar. The first step is cloning the repos
 
     $ git clone https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2.git
     $ cd DSPRODUCTCATALOG2
-    $ git checkout v6.4.0
+    $ git checkout v7.4.0
 
 Once the software has been downloaded, it is needed to create the connection to the database. To do that, the first step
 is editing the *src/main/resources/META-INF/persistence.xml* to have something similar to the following: ::
@@ -403,7 +402,7 @@ The first step for installing the RSS component is downloading it and moving to 
 
     $ git clone https://github.com/FIWARE-TMForum/business-ecosystem-rss.git
     $ cd business-ecosystem-rss
-    $ git checkout v6.4.0
+    $ git checkout v7.4.0
 
 Then, the next step is coping, *database.properties* and *oauth.properties* files to its default location at */etc/default/rss* ::
 
@@ -450,7 +449,7 @@ The first step for installing the charging backend component is downloading it a
 
     $ git clone https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend.git
     $ cd business-ecosystem-charging-backend
-    $ git checkout v6.4.0
+    $ git checkout v7.4.0
 
 Once the code has been downloaded, it is recommended to create a virtualenv for installing python dependencies (This is not mandatory). ::
 
@@ -473,7 +472,7 @@ The first step for installing the logic proxy component is downloading it and mo
 
     $ git clone https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy.git
     $ cd business-ecosystem-logic-proxy
-    $ git checkout v6.4.0
+    $ git checkout v7.4.0
 
 Once the code has been downloaded, Node dependencies can be installed with the provided script as follows ::
 
@@ -482,7 +481,7 @@ Once the code has been downloaded, Node dependencies can be installed with the p
 Upgrading from 5.4.1
 ====================
 
-For upgrading Business API Ecosystem version 5.4.1 installations to version 6.4.0 a new command has been incorporated
+For upgrading Business API Ecosystem version 5.4.1 installations to version 7.4.0 a new command has been incorporated
 within the *install.py* script. This command downloads new components software, updates it, and  migrates the
 different databases, so it lets the software ready to be used.
 
@@ -494,8 +493,8 @@ update installation scripts. ::
 
     cd Business-API-Ecosystem
     git fetch
-    git checkout v6.4.0
-    git pull origin v6.4.0
+    git checkout v7.4.0
+    git pull origin v7.4.0
 
 The new version of *install.py* has a new dependency (PyMSQL) that has to be manually solved in order to execute
 the upgrading command. ::
@@ -514,7 +513,7 @@ upgrade. In particular:
 
 * **download**: Downloads the new software for the different components of the Business API Ecosystem
 * **dump**: Creates a dump of the different MySQL databases within */tmp*
-* **migrate**: Migrates database contents from v5.4.1 to v6.4.0
+* **migrate**: Migrates database contents from v5.4.1 to v7.4.0
 
 -----------
 Final steps

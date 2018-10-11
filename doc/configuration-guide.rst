@@ -2,10 +2,6 @@
 Configuration Guide
 ===================
 
-------------
-Introduction
-------------
-
 This guide covers the different configuration options that are available in order to setup a working Business API
 Ecosystem instance. The different Business API Ecosystem components can be configured using two different mecahnisms,
 settings files and environment variables.
@@ -493,3 +489,54 @@ Finally, there are two fields that allow to configure the behaviour of the syste
 allows to configure the default percentage that the Business API Ecosystem is going to retrieve in all the transactions.
 On the other hand, *config.usageChartURL* allows to configure the URL of the chart to be used to display product usage to
 customers in the web portal. They can be configured with environment variables with *BAE_LP_REVENUE_MODEL* and *BAE_LP_USAGE_CHART*
+
+------------------
+Configuring Themes
+------------------
+
+The Business API Ecosystem provides a basic mechanism for the creation of themes intended to customize the web portal
+of the system. Themes include a set of files which can override any of the default portal files located in the *public/resources*
+or *views* directories of the logic proxy. To do that, themes map the directory structure and include files with the same
+name of the default ones to be overridden.
+
+The Logic Proxy can include multiple themes which should be stored in the *themes* directory located at the root of the
+project.
+
+To enable themes, the *config.theme* setting is provided within the *config.js* file of the Logic Proxy. Themes are
+enabled by providing the name of the theme directory in this setting. ::
+
+    config.theme = 'dark-theme';
+
+.. note::
+    Setting *config.theme* to an empty string makes the Business API Ecosystem to use its default theme
+
+To start using a theme the following command has to be executed: ::
+
+    $ node collect_static.js
+
+This command merges the theme files and the default ones into a *static* directory used by the Logic Proxy to retrieve
+portal static files.
+
+-------------------
+Enabling Production
+-------------------
+
+The default installation of the Business API Ecosystem deploys its different components in *debug* mode. This is useful
+for development and testing but it is not adequate for production environments.
+
+Enabling the production mode makes the different components to start caching requests and views and minimizing JavaScript
+files.
+
+To enable the production mode, the first step is setting the environment variable *NODE_ENV* to *production* in the machine
+containing the Logic Proxy. ::
+
+    $ export NODE_ENV=production
+
+Then, it is needed to collect static files in order to compress JavaScript files. ::
+
+    $ node collect_static.js
+
+
+Finally, change the setting *DEBUG* of the Charging Backend to False. ::
+
+    DEBUG=False
