@@ -2,28 +2,6 @@
 Programmer Guide
 ================
 
-Introduction
-============
-
-This programmer guide covers the Business API Ecosystem version 6.4.0, corresponding to FIWARE release 6.
-Any feedback on this document is highly welcomed, including bugs, typos or things you think should be included but aren't.
-Please send them to the "Contact Person" email that appears in the `Catalogue page for this GEi`_. Or create an issue at `GitHub Issues`_
-
-.. _Catalogue page for this GEi: https://catalogue.fiware.org/enablers/business-api-ecosystem-biz-ecosystem-ri
-.. _GitHub Issues: https://github.com/FIWARE-TMForum/Business-API-Ecosystem/issues/new
-
-The Business API Ecosystem allows to offer any kind of digital asset. In this regard, some kind of digital assets may
-require to perform specific actions and validations that require to know the format of the asset. To deal with this
-issue the Business API Ecosystem allows to register types of assets by creating plugins. This section explains how these plugins are created.
-
-Additionally, the Business API Ecosystem exposes an API that can be used by developers in order to integrate the monetization
-features offered with their own solutions. The complete description of this API can be found in:
-
-
-* `Apiary <http://docs.fiwaretmfbizecosystem.apiary.io>`__
-* `GitHub Pages <https://fiware-tmforum.github.io/Business-API-Ecosystem/>`__
-
-
 Plugin Package
 ==============
 

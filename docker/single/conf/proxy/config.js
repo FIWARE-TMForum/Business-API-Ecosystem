@@ -2,7 +2,7 @@ var config = {};
 
 // Version of the software
 config.version = {
-    version: '6.4.0-rc',
+    version: '7.4.0-rc',
     releaseDate: '',
     gitHash: '',
     doc: 'https://fiware-tmforum.github.io/Business-API-Ecosystem/',

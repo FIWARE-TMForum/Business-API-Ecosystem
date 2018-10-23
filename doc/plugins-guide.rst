@@ -2,19 +2,55 @@
 Plugins Guide
 =============
 
-------------
-Introduction
-------------
-
-This plugins guide covers the available plugins (defining digital asset types) for the Business API Ecosystem v6.4.0
-Any feedback on this document is highly welcomed, including bugs, typos or things you think should be included but aren't.
-Please send them to the "Contact Person" email that appears in the `Catalogue page for this GEi`_. Or create an issue at `GitHub Issues`_
-
-.. _Catalogue page for this GEi: https://catalogue.fiware.org/enablers/business-api-ecosystem-biz-ecosystem-ri
-.. _GitHub Issues: https://github.com/FIWARE-TMForum/Business-API-Ecosystem/issues/new
-
+This plugins guide covers the available plugins (defining digital asset types) for the Business API Ecosystem v7.4.0
 
 ------------------------
+Installing Asset Plugins
+------------------------
+
+The Business API Ecosystem is intended to support the monetization of different kind of digital assets. The different
+kind of assets that may be wanted to be monetized will be heterogeneous and potentially very different between them.
+
+Additionally, for each type of asset different validations and activation mechanisms will be required. For example, if the
+asset is a CKAN dataset, it will be required to validate that the provider is the owner of the dataset. Moreover, when a customer
+acquires the dataset, it will be required to notify CKAN that a new user has access to it.
+
+The huge differences between the different types of assets that can be monetized in the Business API Ecosystem makes
+impossible to include its validations and characteristics as part of the core software. For this reason, it has been created
+a plugin based solution, where all the characteristics of an asset type are implemented in a plugin that can be loaded
+in the Business API Ecosystem.
+
+To include an asset plugin execute the following command in the Charging Backend: ::
+
+    $ ./manage.py loadplugin ckandataset.zip
+
+It is possible to list the existing plugins with the following command: ::
+
+    $ ./manage.py listplugins
+
+To remove an asset plugin, execute the following command providing the plugin id given by the *listplugins* command ::
+
+    $ ./manage.py removeplugin ckan-dataset
+
+
+.. note::
+    For specific details on how to create a plugin and its internal structure, have a look at the Business API Ecosystem Programmer Guide
+
+At the time of writing, the following plugins are available:
+
+* `Basic File <https://github.com/FIWARE-TMForum/biz-basic-plugins>`__: Allows the creation of products by providing files as digital assets. No validations or processing is done
+* `Basic URL <https://github.com/FIWARE-TMForum/biz-basic-plugins>`__: Allows the creation of products by providing URLs as digital assets. No validations or processing is done
+* `CKAN Dataset <https://github.com/FIWARE-TMForum/biz-ckan-plugin>`__ : Allows the monetization of CKAN datasets
+* `CKAN API Dataset <https://github.com/FIWARE-TMForum/biz-ckan-plugin/tree/umbrella-backend>`__ Allows the monetization of CKAN datasets whose resources are served by an external APIs (e.g NGSI Queries) secured with `API Umbrella <https://github.com/apinf/api-umbrella>`__.
+* `Umbrella Service <https://github.com/FIWARE-TMForum/biz-umbrella-service>`__ Allows the monetization of services secured by API Umbrella with FIWARE IDM users and roles.
+* `WireCloud Component <https://github.com/FIWARE-TMForum/wstore-wirecloud-plugin>`__: Allows the monetization of WireCloud components, including Widgets, operators, and mashups
+* `Accountable Service <https://github.com/FIWARE-TMForum/biz-accountable-service-plugin>`__ : Allows the monetization of services protected by the `Accounting Proxy <https://github.com/FIWARE-TMForum/Accounting-Proxy>`__, including Orion Context Broker queries
+
+
+-----------------
+Available Plugins
+-----------------
+
 Basic File and Basic URL
 ------------------------
 
@@ -26,34 +62,6 @@ Business API Ecosystem.
 
 These plugins do not implement any event handler.
 
--------------------
-WireCloud Component
--------------------
-
-The *WireCloud Component* plugin is available in `GitHub <https://github.com/FIWARE-TMForum/wstore-wirecloud-plugin>`__.
-This plugin defines an asset type intended to manage and monetize the different WireCloud components (Widgets, Operators,
-and Mashups) in  particular by enabling the creation of product specifications providing the WGT file of the specific
-component. (For more details on the WireCloud platform see its documentation in `ReadTheDocs <https://wirecloud.readthedocs.io>`__)
-
-The WireCloud component plugin allows to provide the WGT file in the two ways supported by the Business API Ecosystem,
-that is, uploading the WGT file when creating the product and providing a URL where the platform can download the file.
-
-In addition, the plugin only allows the media type *Mashable application component*. Nevertheless, the plugin code uses the WGT
-metainfo to determine the type of the WireCloud component (Widget, Operator, or Mashup) and overrides the media type with the
-proper one understood by the WireCloud platform (*wirecloud/widget*, *wirecloud/operator* or *wirecloud/mashup*).
-
-.. image:: ./images/plugin/wirecloud1.png
-   :align: center
-
-.. image:: ./images/plugin/wirecloud2.png
-   :align: center
-
-This plugin implements the following event handlers:
-
-* **on_post_product_spec_validation**: In this handler the plugin validates the WGT file to ensure that it is a valid WireCloud Component
-* **on_post_product_spec_attachment**: In this handler the plugin determines the media type of the WGT file and overrides the media type value in the specific product specification
-
----------------------------------
 CKAN Dataset and CKAN API Dataset
 ---------------------------------
 
@@ -125,16 +133,87 @@ This plugins implements the following event handlers:
 In addition, the *CKAN API Dataset* requires some settings to be configured before being deployed. This settings are available
 in the *setting.py* file, and are:
 
-* **AUTH_METHOD**: Authorization mechanism used by the backend service, *idm* or *umbrella*
+* **UMBRELLA_SERVER**: Administration endpoint of the API Umbrella instanceused to sercure backend services
 * **UMBRELLA_KEY**: API Key used for accessing to the API Umbrella instance used to secure the backend service
 * **UMBRELLA_ADMIN_TOKEN**: Admin token used for accessing to the API Umbrella instance used to secure the backend service
 * **KEYSTONE_USER**: Keystone user used for authenticate requests to the FIWARE IdM
 * **KEYSTONE_PASSWORD**: Keystone password used for authenticate requests to the FIWARE IdM
 * **KEYSTONE_HOST**: Host of the Keystone service of the FIWARE IdM used for authorizing customers
+* **IS_LEGACY_IDM**: False if the FIWARE Idm is at least v7.0.0
+* **CKAN_TOKEN_TYPE**: Whether CKAN has to be accessed using X-Auth-Token or Authorization headers
 
+In addition, these settings can be configured using environment variables:
+
+* BAE_ASSET_UMBRELLA_SERVER
+* BAE_ASSET_UMBRELLA_KEY
+* BAE_ASSET_UMBRELLA_TOKEN
+* BAE_ASSET_IDM_USER
+* BAE_ASSET_IDM_PASSWORD
+* BAE_ASSET_IDM_HOST
+* BAE_ASSET_LEGACY_IDM
+* BAE_ASSET_TOKEN_TYPE
+
+Umbrella Service
+----------------
+
+The *Umbrella Service* plugin is available in `GitHub <https://github.com/FIWARE-TMForum/biz-umbrella-service>`__.
+This plugin deines an asset type intended to manage and monetize any HTTP service secured with the combination of a
+FIWARE IDM for users and roles management and API Umbrella as PEP proxy.
+
+The Umbrella Service plugin allows to provide services in different ways using the options it defined in its metadata
+form, which can be selected by sellers when registering the product. In particular:
+
+* **Authorization Method**: Whether user access to backend service is controlled using FIWARE IDM roles or API Umbrella native roles
+* **Acquisition Role**: Role to be granted to customers
+* **Access to sub-paths allowed**: If true, customers will be able to access to any sub-path of the monetized service
+* **Additional query strings allowed**: If true, customers will be able to call the service with different query strings as the included in the asset URL
+* **Admin API Key**: API key to be used by the BAE to access to the API Umbrella admin API
+* **Admin Auth Token**: Admin token to be used by the BAE to access to the Umbrella admin API
+
+Moreover, this plugin support pay-per-use pricing supporting the *api call* unit. The accounting information is retrieved
+from the API Umbrella logging API using the service details provided as metadata when the product is created.
+
+This plugin implements the following event handlers:
+
+* **on_post_product_spec_validation**: In this event handler the plugin validates all the provided information, including URL, Umbrella credentials and role. 
+* **on_post_product_offering_validation**: In this event handler the plugin validates that the provided procing model is supported by the plugin (Usage model)
+* **on_product_acquisition**: In this event handler the plugin grants access to the customer using the provided role
+* **on_product_suspension**: In this event handler the plugin revokes access to the customer removing the provided role
+* **get_pending_accounting**: In this event handler the plugin accesses Umbrella API to retrieve the pending accounting information
+
+WireCloud Component
 -------------------
+
+The *WireCloud Component* plugin is available in `GitHub <https://github.com/FIWARE-TMForum/wstore-wirecloud-plugin>`__.
+This plugin defines an asset type intended to manage and monetize the different WireCloud components (Widgets, Operators,
+and Mashups) in  particular by enabling the creation of product specifications providing the WGT file of the specific
+component. (For more details on the WireCloud platform see its documentation in `ReadTheDocs <https://wirecloud.readthedocs.io>`__)
+
+The WireCloud component plugin allows to provide the WGT file in the two ways supported by the Business API Ecosystem,
+that is, uploading the WGT file when creating the product and providing a URL where the platform can download the file.
+
+In addition, the plugin only allows the media type *Mashable application component*. Nevertheless, the plugin code uses the WGT
+metainfo to determine the type of the WireCloud component (Widget, Operator, or Mashup) and overrides the media type with the
+proper one understood by the WireCloud platform (*wirecloud/widget*, *wirecloud/operator* or *wirecloud/mashup*).
+
+.. image:: ./images/plugin/wirecloud1.png
+   :align: center
+
+.. image:: ./images/plugin/wirecloud2.png
+   :align: center
+
+This plugin implements the following event handlers:
+
+* **on_post_product_spec_validation**: In this handler the plugin validates the WGT file to ensure that it is a valid WireCloud Component
+* **on_post_product_spec_attachment**: In this handler the plugin determines the media type of the WGT file and overrides the media type value in the specific product specification
+
+
 Accountable Service
 -------------------
+
+.. warning::
+    This plugin is deprecated, and will not evolve. This plugin has been replaced by Umbrella Service Plugin
+
 
 The *Accountable Service* plugin is available in `GitHub <hhttps://github.com/FIWARE-TMForum/biz-accountable-service-plugin>`__.
 This plugin defines a generic asset type which is used jointly with the `Accounting Proxy <https://github.com/FIWARE-TMForum/Accounting-Proxy>`__
@@ -177,7 +256,7 @@ Having this software deployed allows service owners to protect their services an
 without the need of making any modification in the specific service.
 
 Installation
-------------
+############
 
 This software is a pure NodeJS server, to install basic dependencies execute the following command: ::
 
@@ -285,7 +364,7 @@ the following configuration params are used:
     }
 
 Administration
---------------
+##############
 
 The Accounting Proxy is able to manage multiple services. In this regard, it has been provided a *cli* tool that can be
 used by admins in order to register, delete, and manage its services. The available commands are:
@@ -359,7 +438,7 @@ To display a brief description of the *cli* tool you can use : `./cli -h` or `./
 information for a specific command you can use: `./cli help [cmd]`.
 
 Authentication and Authorization
---------------------------------
+################################
 
 The Accounting Proxy relies on the FIWARE IdM for authenticating users. To do that, the proxy expects that all the requests
 include a header *Authorization: Bearer access_token* or *X-Auth-Token: access_token* with a valid access token given
@@ -382,7 +461,7 @@ it in a header *X-API-Key: api_key* when making requests, enables it to know wha
     around the request
 
 Proxy API
----------
+#########
 
 The Accounting Proxy runs by default in the port 9000; nevertheless, this port can be configured as described in *Configuration*
 section. In this regard, the different services configured though the administration *cli* tool can be accessed directly
@@ -489,7 +568,7 @@ header with a valid access token from the IdM.
 
 
 Accounting modules
-------------------
+##################
 
 By default, the Accounting Proxy includes three different modules for accounting. Nevertheless, it is possible to extend
 the proxy with new modules by creating them in the *acc_modules* directory, those modules have to have the following structure:

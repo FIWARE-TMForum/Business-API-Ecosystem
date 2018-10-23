@@ -2,10 +2,10 @@ FORMAT: 1A
 HOST: https://store.lab.fiware.org/
 TITLE: FIWARE Business API Ecosystem Open API Specification
 DATE: 23 January 2017
-VERSION: v6.4.0
-PREVIOUS_VERSION: v5.4.1
+VERSION: v7.4.0
+PREVIOUS_VERSION: vpdate 
 APIARY_PROJECT: fiwaretmfbizecosystem
-SPEC_URL: https://fiware-tmforum.github.io/Business-API-Ecosystem/
+SPEC_URL: https://fiwareckanextensions.docs.apiary.io/#
 GITHUB_SOURCE: https://github.com/FIWARE-TMForum
 
 # FIWARE TMF Business API Ecosystem
@@ -25,16 +25,16 @@ inventory management, usage management, billing, customer, and party APIs.
 ## Status
 
 This is a work in progress and is changing on a daily basis. You can check the latest
-available version on [GitHub](https://github.com/FIWARE-TMForum).
+available version on [GitHub](https://github.com/FIWARE-TMForum/Business-API-Ecosystem).
 
-Please send your comments to <wstore@conwet.com>.
+The current specification includes the latest API specification. For the API specification
+of particular releases, please refer to [GitHub Pages](https://fiware-tmforum.github.io/Business-API-Ecosystem/)
 
 This specification is licensed under the [FIWARE Open Specification License](https://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/FI-WARE_Open_Specification_Legal_Notice_%28implicit_patents_license%29)
 
 ## Acknowledgements
 
-The editors would like to express their gratitude to the following people who actively contributed to this specification:
-Pierre Gauthier, Aitor Magán, and Álvaro Arranz García 
+The editors would like to express their gratitude to Aitor Magán and Álvaro Arranz who actively contributed to this specification.
 
 ## Copyright
 
@@ -44,8 +44,7 @@ Pierre Gauthier, Aitor Magán, and Álvaro Arranz García
 ## License
 
 This specification is licensed under the
-[FIWARE Open Specification License (implicit patent license)]
-(https://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/Implicit_Patents_License).
+[FIWARE Open Specification License (implicit patent license)](https://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/Implicit_Patents_License).
 
 ## Specification
 
@@ -108,12 +107,12 @@ API for retrieving information about the running instance. It manages the follow
 + Response 200 (application/json)
 
         {
-            "version": "v6.4.0",
-            "release_date": "2017-12-20",
+            "version": "v7.4.0",
+            "release_date": "2018-10-12",
             "uptime": "2 d, 3 h, 15 m, 50 s",
             "git_hash": "808f4bf995bddf0f6a05576956987f2568522062",
             "doc": "http://business-api-ecosystem.readthedocs.io/",
-            "user_doc": "http://business-api-ecosystem.readthedocs.io/en/v6.4.0/user-guide.html"
+            "user_doc": "http://business-api-ecosystem.readthedocs.io/en/v7.4.0/user-guide.html"
         }
 
 
@@ -2343,59 +2342,6 @@ For the different individuals of the system the following information is used:
                 }]
             }
         ]
-
-### Create Individual [POST]
-
-+ Request (application/json)
-
-    + Headers
-
-            Authorization: Bearer YOUR_OAUTH2_TOKEN
-
-    + Body
-
-            {
-                "id": "francisco-de-la-vega",
-                "birthDate": "1970-01-04T01:00:00+01:00",
-                "countryOfBirth": "DZ",
-                "familyName": "de la Vega",
-                "gender": "Male",
-                "givenName": "Francisco",
-                "maritalStatus": "Married",
-                "nationality": "spanish",
-                "placeOfBirth": "Madrid",
-                "title": "Mr",
-                "contactMedium": [{
-                    "type": "Email",
-                    "preferred": "false",
-                    "medium": {
-                         "emailAddress": "fdelavega@conwet.com"
-                    }
-                }]
-            }
-
-+ Response 201 (application/json)
-
-        {
-            "id": "francisco-de-la-vega",
-            "href": "http://store.lab.fiware.org/DSPartyManagement/api/partyManagement/v2/individual/francisco-de-la-vega",
-            "birthDate": "1970-01-04T01:00:00+01:00",
-            "countryOfBirth": "DZ",
-            "familyName": "de la Vega",
-            "gender": "Male",
-            "givenName": "Francisco",
-            "maritalStatus": "Married",
-            "nationality": "spanish",
-            "placeOfBirth": "Madrid",
-            "title": "Mr",
-            "contactMedium": [{
-                "type": "Email",
-                "preferred": "false",
-                "medium": {
-                    "emailAddress": "fdelavega@conwet.com"
-                }
-            }]
-        }
             
 ## Individual Entry [/DSPartyManagement/api/partyManagement/v2/individual/{id}]
 
@@ -3212,7 +3158,7 @@ This API uses the following fields:
 * **href** - URL pointing to the Usage Specification
 * **name** - Name of the usage specification
 * **description** - Textual description of the Usage Specification
-* ** usageSpecCharacteristic** - List of characteristics which define the specific attributes of the described usage documents. Each characteristic is defined with the same format as the *productSpecCharacteristic* field of the Product Specification object, defined in the *Product Specification Management API* section
+* **usageSpecCharacteristic** - List of characteristics which define the specific attributes of the described usage documents. Each characteristic is defined with the same format as the *productSpecCharacteristic* field of the Product Specification object, defined in the *Product Specification Management API* section
 
 Note, that for a usage document to be processed and understood by the system, it is required to include some fields which must also be defined as characteristics of the Usage Specification. This fields are:
 
@@ -3222,7 +3168,8 @@ Note, that for a usage document to be processed and understood by the system, it
 * **unit** - Unit being monitored while accounting the service (e.g second, call, megabyte, etc)
 * **value** - Usage made of the service of the given unit
 
-## Usage Specification Collection [DSUsageManagement/api/usageManagement/v2/usageSpecification]
+
+## Usage Specification Collection [/DSUsageManagement/api/usageManagement/v2/usageSpecification]
 
 ### List Usage Specifications [GET]
 
@@ -3300,6 +3247,17 @@ Note, that for a usage document to be processed and understood by the system, it
         ]
 
 ### Create Usage Specification [POST]
+
+As can be seen, the *Create Usage Specification* request includes a header *X-API-Key*. This header
+has been included in order to enable the authentication of accounting applications which generate
+the usage information.
+
+It is important to note, that the API key which must be used to create usage records cannot be
+requested directly by users of the platform, since they are only issued to approved accounting applications.
+In this regard, there are two mechanisms to get an API Key:
+
+* **manually** - The API key can be requested to an admin of the system who can manually create and deliver it.
+* **automatically** - The API key can be generated automatically from the code of an asset plugin and then sent to the accounting application using the plugin event handlers. See the [programmer guide](http://business-api-ecosystem.readthedocs.io/en/latest/programmer-guide.html) for details on this topic.
 
 + Request (application/json)
 
@@ -3436,7 +3394,7 @@ Note, that for a usage document to be processed and understood by the system, it
                 }]
             }
             
-## Usage Specification Entry [DSUsageManagement/api/usageManagement/v2/usageSpecification/{id}]
+## Usage Specification Entry [/DSUsageManagement/api/usageManagement/v2/usageSpecification/{id}]
 
 ### Get Usage Specification [GET]
 
@@ -3550,7 +3508,7 @@ Note, that for a usage document to be processed and understood by the system, it
 * **unit** - Unit being monitored while accounting the service (e.g second, call, megabyte, etc)
 * **value** - Usage made of the service of the given unit
 
-## Usage Collection [DSUsageManagement/api/usageManagement/v2/usage]
+## Usage Collection [/DSUsageManagement/api/usageManagement/v2/usage]
 
 ### List Usages [GET]
 
@@ -3615,6 +3573,18 @@ Note, that for a usage document to be processed and understood by the system, it
         ]
 
 ### Create Usage [POST]
+
+
+As can be seen, the *Create Usage* request includes a header *X-API-Key*. This header
+has been included in order to enable the authentication of accounting applications which generate
+the usage information.
+
+It is important to note, that the API key which must be used to create usage records cannot be
+requested directly by users of the platform, since they are only issued to approved accounting applications.
+In this regard, there are two mechanisms to get an API Key:
+
+* **manually** - The API key can be requested to an admin of the system who can manually create and deliver it.
+* **automatically** - The API key can be generated automatically from the code of an asset plugin and then sent to the accounting application using the plugin event handlers. See the [programmer guide](http://business-api-ecosystem.readthedocs.io/en/latest/programmer-guide.html) for details on this topic.
 
 + Request (application/json)
 
@@ -3725,7 +3695,7 @@ Note, that for a usage document to be processed and understood by the system, it
                 ]
             }
 
-## Usage Entry [DSUsageManagement/api/usageManagement/v2/usage/{id}]
+## Usage Entry [/DSUsageManagement/api/usageManagement/v2/usage/{id}]
 
 ### Get Usage [GET]
 

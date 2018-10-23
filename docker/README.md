@@ -3,8 +3,9 @@
 The [Business API Ecosystem](https://github.com/FIWARE-TMForum/Business-API-Ecosystem) can be deployed with Docker using
 two different approaches. On the one hand, for all the components that made up the Business API Ecosystem it has been 
 provided a Docker image that can be used jointly with `docker-compose` in order to deploy and configure the ecosystem.
+
 On the other hand, this repo includes a single Docker image which already includes all the different Business API Ecosystem
-modules.
+modules. NOTE: THIS OPTION HAS BEEN DEPRECATED, BEING THE LAST VERSION THE 6.4.0
 
 The Business API Ecosystem requires instances of MySQL and MongoDB running. In this regard, you have three possibilities:
 * You can have your own instances deployed in your machine
@@ -27,10 +28,10 @@ There you have to use the following info for registering the app:
 As stated, it is possible to deploy the Business API Ecosystem using the Docker images available for each of the BAE
 modules with `docker-compose`. In particular, the following images have to be deployed:
 
-* [biz-ecosystem-apis](https://hub.docker.com/r/conwetlab/biz-ecosystem-apis/): Image including the TMForum APIs
-* [biz-ecosystem-rss](https://hub.docker.com/r/conwetlab/biz-ecosystem-rss/): Image Including the RSS module
-* [biz-ecosystem-charging-backend](https://hub.docker.com/r/conwetlab/biz-ecosystem-charging-backend/): Image including the charging backend module
-* [biz-ecosystem-logic-proxy](https://hub.docker.com/r/conwetlab/biz-ecosystem-logic-proxy/): Image including the logic proxy module
+* [biz-ecosystem-apis](https://hub.docker.com/r/fiware/biz-ecosystem-apis/): Image including the TMForum APIs
+* [biz-ecosystem-rss](https://hub.docker.com/r/fiware/biz-ecosystem-rss/): Image Including the RSS module
+* [biz-ecosystem-charging-backend](https://hub.docker.com/r/fiware/biz-ecosystem-charging-backend/): Image including the charging backend module
+* [biz-ecosystem-logic-proxy](https://hub.docker.com/r/fiware/biz-ecosystem-logic-proxy/): Image including the logic proxy module
 
 For deploying the BAE using this method the first step is creating a `docker-compose.yml` file with the following contents:
 
@@ -40,18 +41,14 @@ services:
     mongo:
         image: mongo:3.2
         restart: always
-        ports:
-            - 27019:27017
         networks:
             main:
         volumes:
             - ./mongo-data:/data/db
 
     mysql:
-        image: mysql:latest
+        image: mysql:5.7
         restart: always
-        ports:
-            - 3333:3306
         volumes:
             - ./mysql-data:/var/lib/mysql
         networks:
@@ -61,54 +58,126 @@ services:
             - MYSQL_DATABASE=RSS
 
     charging:
-        image: conwetlab/biz-ecosystem-charging-backend:develop
-        restart: always
+        image: fiware/biz-ecosystem-charging-backend:develop
         links:
             - mongo
         depends_on:
             - mongo
-            - apis
-            - rss
-        ports:
-            - 8006:8006
         networks:
             main:
                 aliases:
                     - charging.docker
+        ports:
+            - 8006:8006
         volumes:
+            # - ./charging-settings:/business-ecosystem-charging-backend/src/user_settings  # Used if the settings files are provided through the volume 
             - ./charging-bills:/business-ecosystem-charging-backend/src/media/bills
             - ./charging-assets:/business-ecosystem-charging-backend/src/media/assets
             - ./charging-plugins:/business-ecosystem-charging-backend/src/plugins
-            - ./charging-settings:/business-ecosystem-charging-backend/src/user_settings
             - ./charging-inst-plugins:/business-ecosystem-charging-backend/src/wstore/asset_manager/resource_plugins/plugins
         environment:
-          - PAYPAL_CLIENT_ID=client_id
-          - PAYPAL_CLIENT_SECRET=client_secret
+          - BAE_CB_PAYMENT_METHOD=None  # Paypal or None (testing mode payment disconected)
+          # - BAE_CB_PAYPAL_CLIENT_ID=client_id
+          # - BAE_CB_PAYPAL_CLIENT_SECRET=client_secret
+
+          # ----- Database configuration ------
+          - BAE_CB_MONGO_SERVER=mongo
+          - BAE_CB_MONGO_PORT=27017
+          - BAE_CB_MONGO_DB=charging_db
+          # - BAE_CB_MONGO_USER=user
+          # - BAE_CB_MONGO_PASS=passwd
+
+          # ----- Roles Configuration -----
+          - BAE_LP_OAUTH2_ADMIN_ROLE=admin
+          - BAE_LP_OAUTH2_SELLER_ROLE=seller
+          - BAE_LP_OAUTH2_CUSTOMER_ROLE=customer
+
+          # ----- Email configuration ------
+          - BAE_CB_EMAIL=charging@email.com
+          # - BAE_CB_EMAIL_USER=user
+          # - BAE_CB_EMAIL_PASS=pass
+          # - BAE_CB_EMAIL_SMTP_SERVER=smtp.server.com
+          # - BAE_CB_EMAIL_SMTP_PORT=587
+
+          - BAE_CB_VERIFY_REQUESTS=True  # Whether or not the BAE validates SSL certificates on requests to external components 
+
+          # ----- Site configuration -----
+          - BAE_SERVICE_HOST=http://proxy.docker:8004/  # External URL used to access the BAE
+          - BAE_CB_LOCAL_SITE=http://charging.docker:8006/  # Local URL of the charging backend
+
+          # ----- APIs Conection config -----
+          - BAE_CB_CATALOG=http://apis.docker:8080/DSProductCatalog
+          - BAE_CB_INVENTORY=http://apis.docker:8080/DSProductInventory
+          - BAE_CB_ORDERING=http://apis.docker:8080/DSProductOrdering
+          - BAE_CB_BILLING=http://apis.docker:8080/DSBillingManagement
+          - BAE_CB_RSS=http://rss.docker:8080/DSRevenueSharing
+          - BAE_CB_USAGE=http://apis.docker:8080/DSUsageManagement
+          - BAE_CB_AUTHORIZE_SERVICE=http://proxy.docker:8004/authorizeService/apiKeys
 
     proxy:
-        image: conwetlab/biz-ecosystem-logic-proxy:develop
-        restart: always
+        image: fiware/biz-ecosystem-logic-proxy:develop
         links:
             - mongo
         depends_on:
             - mongo
-            - apis
-        ports:
-            - 8004:8000
         networks:
             main:
                 aliases:
                     - proxy.docker
+        ports:
+            - 8004:8000
         volumes:
-            - ./proxy-conf:/business-ecosystem-logic-proxy/etc
+            # - ./proxy-conf:/business-ecosystem-logic-proxy/etc  # To be used when congiguring the system with a config file provided in the volume
             - ./proxy-indexes:/business-ecosystem-logic-proxy/indexes
             - ./proxy-themes:/business-ecosystem-logic-proxy/themes
             - ./proxy-static:/business-ecosystem-logic-proxy/static
+            - ./proxy-locales:/business-ecosystem-logic-proxy/locales
         environment:
-            - NODE_ENV=production
+            - NODE_ENV=development  # Deployment in development or in production
+            - COLLECT=True  # Execute the collect static command on startup
+
+            - BAE_LP_PORT=8000  # Port where the node service is going to run in the container
+            - BAE_LP_HOST=proxy.docker  # Host where the node service if going to run in the container
+            # - BAE_SERVICE_HOST=https://store.lab.fiware.org/  # If provided, this URL specifies the actual URL that is used to access the BAE, when the component is proxied (e.g Apache)
+            # - BAE_LP_HTTPS_ENABLED=true  # If provided specifies whether the service is running in HTTPS, default: false
+            # - BAE_LP_HTTPS_CERT=cert/cert.crt  # Certificate for the SSL configuration (when HTTPS enabled is true)
+            # - BAE_LP_HTTPS_CA=cert/ca.crt  # CA certificate for the SSL configuration (when HTTPS enabled is true)
+            # - BAE_LP_HTTPS_KEY=cert/key.key  # Key sfile for the SSL configuration (when HTTPS enabled is true)
+            # - BAE_LP_HTTPS_PORT=443  # Port where the service runs when SSL is enabled (when HTTPS enabled is true)
+
+            # ------ OAUTH2 Config ------
+            - BAE_LP_OAUTH2_SERVER=http://idm.docker:3000  # URL of the FIWARE IDM used for user authentication
+            - BAE_LP_OAUTH2_CLIENT_ID=e3d43e88-7049-434f-9824-2f0387d9860d  # OAuth2 Client ID of the BAE applicaiton
+            - BAE_LP_OAUTH2_CLIENT_SECRET=06c888d5-a17a-4386-9e26-8ee4f7f77135  # OAuth Client Secret of the BAE application
+            - BAE_LP_OAUTH2_CALLBACK=http://proxy.docker:8004/auth/fiware/callback  # Callback URL for receiving the access tokens
+            - BAE_LP_OAUTH2_ADMIN_ROLE=admin  # Role defined in the IDM client app for admins of the BAE 
+            - BAE_LP_OAUTH2_SELLER_ROLE=seller  # Role defined in the IDM client app for sellers of the BAE 
+            - BAE_LP_OAUTH2_CUSTOMER_ROLE=customer  # Role defined in the IDM client app for customers of the BAE 
+            - BAE_LP_OAUTH2_ORG_ADMIN_ROLE=orgAdmin  # Role defined in the IDM client app for organization admins of the BAE 
+            - BAE_LP_OAUTH2_IS_LEGACY=false  # Whether the used FIWARE IDM is version 6 or lower
+
+            # - BAE_LP_THEME=theme  # If provided custom theme to be used by the web site, it must be included in themes volume
+
+            # ----- Mongo Config ------
+            # - BAE_LP_MONGO_USER=user
+            # - BAE_LP_MONGO_PASS=pass
+            - BAE_LP_MONGO_SERVER=mongo
+            - BAE_LP_MONGO_PORT=27017
+            - BAE_LP_MONGO_DB=belp
+
+            - BAE_LP_REVENUE_MODEL=30  # Default market owner precentage for Revenue Sharing models
+
+            # ----- APIs Configuration -----
+            # If provided, it supports configuring the contection to the different APIs managed by the logic proxy, by default
+            # apis.docker, charging.docker and rss.docker domains are configured
+            # - BAE_LP_ENDPOINT_CATALOG_PATH=DSProductCatalog
+            # - BAE_LP_ENDPOINT_CATALOG_PORT=8080
+            # - BAE_LP_ENDPOINT_CATALOG_HOST=apis.docker
+            # - BAE_LP_ENDPOINT_CATALOG_SECURED=false
+            # ...
 
     apis:
-        image: conwetlab/biz-ecosystem-apis:develop
+        image: fiware/biz-ecosystem-apis:develop
         restart: always
         ports:
             - 4848:4848
@@ -121,12 +190,15 @@ services:
             main:
                 aliases:
                     - apis.docker
+        # volumes:
+        #    - ./apis-conf:/etc/default/tmf/  # Used if not configured by environment
         environment:
+            - BAE_SERVICE_HOST=http://proxy.docker:8004/
             - MYSQL_ROOT_PASSWORD=my-secret-pw
             - MYSQL_HOST=mysql
 
     rss:
-        image: conwetlab/biz-ecosystem-rss:develop
+        image: fiware/biz-ecosystem-rss:develop
         restart: always
         ports:
             - 9999:8080
@@ -140,46 +212,49 @@ services:
             main:
                 aliases:
                     - rss.docker
-        volumes:
-            - ./rss-conf:/etc/default/rss
+        # volumes:
+        #    - ./rss-conf:/etc/default/rss  # Used if not configured by environment
+        environment:
+            - BAE_RSS_DATABASE_URL=jdbc:mysql://mysql:3306/RSS
+            - BAE_RSS_DATABASE_USERNAME=root
+            - BAE_RSS_DATABASE_PASSWORD=my-secret-pw
+            - BAE_RSS_DATABASE_DRIVERCLASSNAME=com.mysql.jdbc.Driver
+            - BAE_RSS_OAUTH_CONFIG_GRANTEDROLE=admin
+            - BAE_RSS_OAUTH_CONFIG_SELLERROLE=seller
+            - BAE_RSS_OAUTH_CONFIG_AGGREGATORROLE=Aggregator
 
 networks:
     main:
         external: true
 
+
 ```
 
-The next step is providing all the configuration files required by the different components using the configured volumes.
-It is possible to find valid configuration files (as well as the `docker-compose.yml`) in the [GitHub repo of the BAE](https://github.com/FIWARE-TMForum/Business-API-Ecosystem)
+The next step is providing all the configuration files or environment variables required by the different components. For details
+on how to configure the different components please refer to the [BAE Configuration Guide](https://business-api-ecosystem.readthedocs.io/en/develop/configuration-guide.html)
 
-As you can see, the different modules include environment variables and volumes. In particular:
+It can be seen that the different images used as part of the Business API Ecosystem provide several volumes. Following 
+it is descrived the diffent options provided by each image.
 
-**Charging**
+The **biz-ecosystem-logic-proxy** image defines 4 volumes. In particular:
 
-The biz-ecosystem-charging-backend needs the following environment variables:
-* **PAYPAL_CLIENT_ID**: the client id of your application PayPal credentials used for charging users (a Sandbox account can be used for testing).
-* **PAYPAL_CLIENT_SECRET**: the client secret of your application PayPal credentials used for charging users (a Sandbox account can be used for testing).
+* */business-ecosystem-logic-proxy/etc*: When file configuration is used, this volume must include the `config.js` file with the software configuration
+* */business-ecosystem-logic-proxy/indexes*: This volume contains the indexes used by the Business API Ecosystem for searching
+* */business-ecosystem-logic-proxy/themes*: In this volume, it can be provided the themes that can be used to customize the web portal
+* */business-ecosystem-logic-proxy/static*: This volume includes the static files ready to be rendered including the selected theme and js files
 
-Additionally, the biz-ecosystem-charging-backend image contains 5 volumes. In particular:
+Additionally, the **biz-ecosystem-logic-proxy** image defines two environment variables intended to optimize the production deployment of the BAE Logic proxy:
+
+* *NODE_ENV*: Specifies whether the system is in *development* or in *production* (default: development)
+* *COLLECT*: Specifies if the container should execute the collect static command to generate static files or use the existing on start up (default: True)
+
+On the other hand, the **biz-ecosystem-charging-backend** image defines 4 volumes. In particular:
+
+* */business-ecosystem-charging-backend/src/user_settings*: This directory must include the *settings.py* and *services_settings.py* files with the software configuration, when the volume configuration is used.
 * */business-ecosystem-charging-backend/src/media/bills*: This directory contains the PDF invoices generated by the Business Ecosystem Charging Backend
 * */business-ecosystem-charging-backend/src/media/assets*: This directory contains the different digital assets uploaded by sellers to the Business Ecosystem Charging Backend
 * */business-ecosystem-charging-backend/src/plugins*: This directory is used for providing asset plugins (see section *Installing Asset Plugins*)
-* */business-ecosystem-charging-backend/src/user_settings*: This directory must include the *settings.py* and *services_settings.py* files with the software configuration.
 * */business-ecosystem-charging-backend/src/wstore/asset_manager/resource_plugins/plugins*: This directory includes the code of the plugins already installed
-
-**Proxy**
-
-The biz-ecosystem-logic-proxy image contains 4 volumes. In particular:
-* */business-ecosystem-logic-proxy/etc*: This directory must include the `config.js` file with the software configuration
-* */business-ecosystem-logic-proxy/indexes*: This directory contains the indexes used by the Business API Ecosystem for searching
-* */business-ecosystem-logic-proxy/themes*: This directory contains the themes that can be used to customize the web portal
-* */business-ecosystem-logic-proxy/static*: This directory includes the static files ready to be rendered including the selected theme and js files
-
-Finally, the biz-ecosystem-logic-proxy uses the environment variable *NODE_ENV* to determine if the software is being used
-in *development* or in *production* mode. 
-
-> **Note**
-> The *config.js* file must include an extra setting not provided by default called *config.extPort* that must include the port where the proxy is going to run in the host machine
 
 Once you have created the files, run the following command:
 
@@ -209,7 +284,9 @@ docker-compose down
 
 ### Stand alone Image
 
-In addition, it has been provided a stand alone BAE image which already includes all the modules installed.
+THIS OPTION HAS BEEN DEPRECATED, BEING THE LAST VERSION THE 6.4.0
+
+It has been provided a stand alone BAE image which already includes all the modules installed.
 
 This image can be deployed with `docker-compose` using the following `docker-compose.yml` file:
 
@@ -235,7 +312,7 @@ services:
             - ./mongo-data:/data/db
 
     biz_ecosystem:
-        image: conwetlab/business-api-ecosystem:develop
+        image: fiware/business-api-ecosystem:6.4.0
         ports:
             - "8004:8000"
         links:

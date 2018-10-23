@@ -2,19 +2,14 @@
 Installation and Administration Guide
 =====================================
 
-------------
-Introduction
-------------
+This guide covers the installation of the Business API Ecosystem v7.4.0 from the sources available in GitHub, installing manually
+the software dependencies and using the existing scripts for setting up the system.
 
-This installation and administration guide covers the Business API Ecosystem version 6.4.0, corresponding to FIWARE release 6.
-Any feedback on this document is highly welcomed, including bugs, typos or things you think should be included but aren't.
-Please send them to the "Contact Person" email that appears in the `Catalogue page for this GEi`_. Or create an issue at `GitHub Issues`_
-
-.. _Catalogue page for this GEi: https://catalogue.fiware.org/enablers/business-api-ecosystem-biz-ecosystem-ri
-.. _GitHub Issues: https://github.com/FIWARE-TMForum/Business-API-Ecosystem/issues/new
-
-The current version of the software has been tested under Ubuntu 14.04, Ubuntu 15.10, Ubuntu 16.04, Debian 7, Debian 8,
+The current version of the software has been tested under Ubuntu 15.10, Ubuntu 16.04, Ubuntu 18.04, Debian 7, Debian 8,
 and CentOS 7. THESE ARE THEREFORE CONSIDERED AS THE SUPPORTED OPERATING SYSTEMS.
+
+.. note::
+    The preferred mechanism for the deployment of the Business API Ecosystem is Docker as described in `Docker deployment guide <doc:docker-guide>`__
 
 ------------
 Installation
@@ -24,7 +19,7 @@ Requirements
 ============
 
 As described in the GEri overview, the Business API Ecosystem is not a single software, but a set of projects that
-work together for proving business capabilities. In this regard, this section contains the basic dependencies of
+work together for providing business capabilities. In this regard, this section contains the basic dependencies of
 the different components that made up the Business API Ecosystem.
 
 .. note::
@@ -35,7 +30,7 @@ TM Forum APIs and RSS requirements
 
 * Java 8
 * Glassfish 4.1
-* MySQL 5.5
+* MySQL 5.7
 
 Charging Backend requirements
 -----------------------------
@@ -47,7 +42,7 @@ Charging Backend requirements
 Logic Proxy requirements
 ------------------------
 
-* NodeJS 4.5.0+ (Including NPM)
+* NodeJS 6.9.1+ (Including NPM)
 
 
 Installing basic dependencies
@@ -56,7 +51,7 @@ Installing basic dependencies
 Basic dependencies such as Java 8, Glassfish, MySQL, Python, etc. Can be installed using the package management tools
 provided by your operating system. However, in order to easy the installation process some scripts have been provided.
 
-.. note::
+.. warning::
     The installation script may override some of the packages already installed in the system. so if you have software with common dependencies you may want to manually resolve them.
 
 Installing basic dependencies using the script
@@ -340,7 +335,7 @@ The installation for all of them is similar. The first step is cloning the repos
 
     $ git clone https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2.git
     $ cd DSPRODUCTCATALOG2
-    $ git checkout v6.4.0
+    $ git checkout v7.4.0
 
 Once the software has been downloaded, it is needed to create the connection to the database. To do that, the first step
 is editing the *src/main/resources/META-INF/persistence.xml* to have something similar to the following: ::
@@ -403,7 +398,7 @@ The first step for installing the RSS component is downloading it and moving to 
 
     $ git clone https://github.com/FIWARE-TMForum/business-ecosystem-rss.git
     $ cd business-ecosystem-rss
-    $ git checkout v6.4.0
+    $ git checkout v7.4.0
 
 Then, the next step is coping, *database.properties* and *oauth.properties* files to its default location at */etc/default/rss* ::
 
@@ -450,7 +445,7 @@ The first step for installing the charging backend component is downloading it a
 
     $ git clone https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend.git
     $ cd business-ecosystem-charging-backend
-    $ git checkout v6.4.0
+    $ git checkout v7.4.0
 
 Once the code has been downloaded, it is recommended to create a virtualenv for installing python dependencies (This is not mandatory). ::
 
@@ -464,232 +459,8 @@ To install python libs, execute the *python-dep-install.sh* script ::
 .. note::
     If you have not created and activated a virtualenv you will need to execute the script using sudo
 
-Installing the Logic Proxy
-++++++++++++++++++++++++++
-
-The Logic Proxy sources can be found in`GitHub <https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy>`__
-
-The first step for installing the logic proxy component is downloading it and moving to the correct release ::
-
-    $ git clone https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy.git
-    $ cd business-ecosystem-logic-proxy
-    $ git checkout v6.4.0
-
-Once the code has been downloaded, Node dependencies can be installed with the provided script as follows ::
-
-    $ ./install.sh
-
-Upgrading from 5.4.1
-====================
-
-For upgrading Business API Ecosystem version 5.4.1 installations to version 6.4.0 a new command has been incorporated
-within the *install.py* script. This command downloads new components software, updates it, and  migrates the
-different databases, so it lets the software ready to be used.
-
-.. note::
-    It is highly recommended to make a backup of the different databases before upgrading the software
-
-The first step for upgrading the Business API Ecosystem is downloading new version of the main repository in order to
-update installation scripts. ::
-
-    cd Business-API-Ecosystem
-    git fetch
-    git checkout v6.4.0
-    git pull origin v6.4.0
-
-The new version of *install.py* has a new dependency (PyMSQL) that has to be manually solved in order to execute
-the upgrading command. ::
-
-    $ pip3 install pymysql
-
-Once the main repository is upgraded, the next step is using the provided script for upgrading the software. ::
-
-    $ ./install.py upgrade
-
-This command do not change your configuration parameters. Nevertheless, you should review the *Configuration* section
-as new settings has been included.
-
-The *upgrade* command uses a set of new commands that have been incorporated within *install.py* in order to manage the
-upgrade. In particular:
-
-* **download**: Downloads the new software for the different components of the Business API Ecosystem
-* **dump**: Creates a dump of the different MySQL databases within */tmp*
-* **migrate**: Migrates database contents from v5.4.1 to v6.4.0
-
--------------
-Configuration
--------------
-
-At this step, the different components of the Business API Ecosystem are installed. In the case of the TMForum APIs and
-the RSS, this installation process has already required to configure their database connection before their deployment,
-so they are already configured. Nevertheless, this section contains an explanation of the function of the different
-settings of the RSS properties files.
-
-Configuring the RSS
-===================
-
-The RSS has its settings included in two files located at */etc/default/rss*. The file *database.properties*  contains
-by default the following fields: ::
-
-    database.url=jdbc:mysql://localhost:3306/RSS
-    database.username=root
-    database.password=root
-    database.driverClassName=com.mysql.jdbc.Driver
-
-This file contains the configuration required in order to connect to the database.
-
-* database.url: URL used to connect to the database, this URL includes the host and port of the database as well as the concrete database to be used
-* database.username: User to be used to connect to the database
-* database.password: Password of the database user
-* database.driverClassName: Driver class of the database. By default MySQL
-
-The file *oauth.properties* contains by default the following fields (It is recommended not to modify them) ::
-
-    config.grantedRole=Provider
-    config.sellerRole=Seller
-    config.aggregatorRole=aggregator
-
-This file contains the name of the roles (registered in the idm) that are going to be used by the RSS.
-
-* config.grantedRole: Role in the IDM of the users with admin privileges
-* config.sellerRole: Role in the IDM of the users with seller privileges
-* config.aggregatorRole: Role of the users who are admins of an store instance. In the context of the Business API Ecosystem there is only a single store instance, so you can safely ignore this flag
-
-Configuring the Charging Backend
-================================
-
-The Charging Backend creates some objects and connections in the different APIs while working, so the first step is
-configuring the different URLs of the Business API Ecosystem components by modifying the file *services_settings.py*,
-which by default contains the following content: ::
-
-    SITE = 'http://localhost:8004/'
-    LOCAL_SITE = 'http://localhost:8006/'
-
-    CATALOG = 'http://localhost:8080/DSProductCatalog'
-    INVENTORY = 'http://localhost:8080/DSProductInventory'
-    ORDERING = 'http://localhost:8080/DSProductOrdering'
-    BILLING = 'http://localhost:8080/DSBillingManagement'
-    RSS = 'http://localhost:8080/DSRevenueSharing'
-    USAGE = 'http://localhost:8080/DSUsageManagement'
-    AUTHORIZE_SERVICE = 'http://localhost:8004/authorizeService/apiKeys'
-
-This settings points to the different APIs accessed by the charging backend. In particular:
-
-* SITE: External URL of the complete Business API Ecosystem using for Href creation
-* LOCAL_SITE: URL where the Charging Backend is going to run
-* CATALOG: URL of the catalog API including its path
-* INVENTORY: URL of the inventory API including its path
-* ORDERING: URL of the ordering API including its path
-* BILLING: URL of the billing API including its path
-* RSS: URL of the RSS including its path
-* USAGE: URL of the Usage API including its path
-* AUTHORIZE_SERVICE: Complete URL of the usage authorization service. This service is provided by the logic proxy, and is used to generate API Keys to be used by accounting systems when providing usage information.
-
-Once the services have been configured, the next step is configuring the database. In this case, the charging backend uses
-MongoDB, and its connection can be configured modifying the *DATABASES* setting of the *settings.py* file. ::
-
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django_mongodb_engine',
-            'NAME': 'wstore_db',
-            'USER': '',
-            'PASSWORD': '',
-            'HOST': '',
-            'PORT': '',
-            'TEST_NAME': 'test_database',
-        }
-    }
-
-This setting contains the following fields:
-
-* ENGINE: Database engine, must be fixed to django_mongodb_engine
-* NAME: Name of the database to be used
-* USER: User of the database. If empty the software creates a non authenticated connection
-* PASSWORD: Database user password. If empty the software creates a non authenticated connection
-* HOST: Host of the database. If empty it uses the default *localhost* host
-* PORT: Port of the database. If empty it uses the default *27017* port
-* TEST_NAME: Name of the database to be used when running the tests
-
-Once the database connection has been configured, the next step is configuring the name of the IdM roles to be used by
-updating *settings.py* ::
-
-    ADMIN_ROLE = 'provider'
-    PROVIDER_ROLE = 'seller'
-    CUSTOMER_ROLE = 'customer'
-
-This settings contain the following values:
-
-* ADMIN_ROLE: IDM role of the system admin
-* PROVIDER_ROLE: IDM role of the users with seller privileges
-* CUSTOMER_ROLE: IDM role of the users with customer privileges
-
-The Charging Backend component is able to send email notifications to the users when they are charged or receive a payment.
-In this way, it is possible to provide email configuration in the *settings.py* file by modifying the following fields: ::
-
-    WSTOREMAILUSER = 'email_user'
-    WSTOREMAIL = 'wstore_email'
-    WSTOREMAILPASS = 'wstore_email_passwd'
-    SMTPSERVER = 'wstore_smtp_server'
-    SMTPPORT = 587
-
-This settings contain the following values:
-* WSTOREMAILUSER: Username used for authenticating in the email server
-* WSTOREMAIL: Email to be used as the sender of the notifications
-* WSTOREMAILPASS: Password of the user for authenticating in the email server
-* SMTPSERVER: Email server host
-* SMTPPORT: Email server port
-
-.. note::
-    The email configuration in optional. However, the field WSTOREMAIL must be provided since it is used internally for RSS configuration
-
-Additionally, the Charging Backend is the component that charges customers and pays providers. For this purpose it uses
-PayPal. For configuring paypal, the first step is setting *PAYMENT_METHOD* to *paypal* in the *settings.py* file ::
-
-    PAYMENT_METHOD = 'paypal'
-
-Then, it is required to provide PayPal application credentials by updating the file *src/wstore/charging_engine/payment_client/paypal_client.py* ::
-
-    PAYPAL_CLIENT_ID = ''
-    PAYPAL_CLIENT_SECRET = ''
-    MODE = 'sandbox'  # sandbox or live
-
-This settings contain the following values:
-
-* PAYPAL_CLIENT_ID: Id of the application provided by PayPal
-* PAYPAL_CLIENT_SECRET: Secret of the application provided by PayPal
-* MODE: Mode of the connection. It can be *sandbox* if using the PayPal sandbox for testing the system. Or *live* if using the real PayPal APIs
-
-Moreover, the Charging Backend is the component that activates the purchased services. In this regard, the Charging Backend
-has the possibility of signing its acquisition notifications with a certificate, so the external system being offered can
-validate that is the Charging Backend the one making the request. To use this functionality it is needed to configure the
-certificate and the private Key to be used by providing its path in the following settings of the *settings.py* file ::
-
-    NOTIF_CERT_FILE = None
-    NOTIF_CERT_KEY_FILE = None
-
-The Charging Backend uses a Cron task to check the status of recurring and usage subscriptions, and for paying sellers.
-The periodicity of this tasks can be configured using the CRONJOBS setting of settings.py using the standard Cron format ::
-
-    CRONJOBS = [
-        ('0 5 * * *', 'django.core.management.call_command', ['pending_charges_daemon']),
-        ('0 6 * * *', 'django.core.management.call_command', ['resend_cdrs']),
-        ('0 4 * * *', 'django.core.management.call_command', ['resend_upgrade']
-    ]
-
-Once the Cron task has been configured, it is necessary to include it in the Cron tasks using the command:
-::
-
-    $ ./manage.py crontab add
-
-It is also possible to show current jobs or remove jobs using the commands:
-::
-
-    $ ./manage.py crontab show
-
-    $ ./manage.py crontab remove
-
 Configure Apache for running the Charging Backend
--------------------------------------------------
+#################################################
 
 The Charging Backend is a Django App that can be deployed in different ways. In this case, this installation guide covers
 two different mechanisms: using the Django *runserver* command (as seen in *Running the Charging Backend* section) or
@@ -797,117 +568,57 @@ Or in CentOS ::
     Ensure that the directory where the Changing Backend is installed can be accessed by the Apache user (www-data in
     Ubuntu/Debian, and apache in CentOS)
 
-Configuring the Logic Proxy
-===========================
+Installing the Logic Proxy
+++++++++++++++++++++++++++
 
-The first step for configuring the proxy is creating the configuration file by coping *config.js.template* to *config.js* ::
+The Logic Proxy sources can be found in `GitHub <https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy>`__
 
-    $ cp config.js.template config.js
+The first step for installing the logic proxy component is downloading it and moving to the correct release ::
 
-The first setting to be configured is the port and host where the proxy is going to run, this settings are located in *config.js* ::
+    $ git clone https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy.git
+    $ cd business-ecosystem-logic-proxy
+    $ git checkout v7.4.0
 
-    config.port = 80;
-    config.host = 'localhost';
+Once the code has been downloaded, Node dependencies can be installed with the provided script as follows ::
 
-If you want to run the proxy in HTTPS you can update *config.https* setting ::
+    $ ./install.sh
 
-    config.https = {
-        enabled: false,
-        certFile: 'cert/cert.crt',
-        keyFile: 'cert/key.key',
-        caFile: 'cert/ca.crt',
-        port: 443
-    };
+Upgrading from 5.4.1
+====================
 
-In this case you have to set *enabled* to true, and provide the paths to the certificate (*certFile*), to the private key (*keyFile*),
-and to the CA certificate (*caFile*).
-
-Then, it is possible to modify some of the URLs of the system. Concretely, it is possible to provide a prefix for the API,
-a prefix for the portal, and modifying the login and logout URLS ::
-
-    config.proxyPrefix = '';
-    config.portalPrefix = '';
-    config.logInPath = '/login';
-    config.logOutPath = '/logOut';
-
-In addition, it is possible to configure the theme to be used by providing its name. Details about the configuration of
-Themes are provided in the *Configuring Themes* section::
-
-    config.theme = '';
-
-Additionally, the proxy is the component that acts as the front end of the Business API Ecosystem, both providing a web portal,
-and providing the endpoint for accessing to the different APIs. In this regard, the Proxy has to have the OAUth2 configuration
-of the FIWARE IDM.
-
-To provide OAUth2 configuration, an application has to be created in an instance of the FIWARE IdM (e.g `https://account.lab.fiware.org`),
-providing the following information:
-
-* URL: http|https://<proxy_host>:<proxy_port>
-* Callback URL: http|https://<PROXY_HOST>:<PROXY_PORT>/auth/fiware/callback
-* Create a role *Seller*
-
-Once the application has been created in the IdM, it is possible to provide OAuth2 configuration by modifying the following settings ::
-
-    config.oauth2 = {
-        'server': 'https://account.lab.fiware.org',
-        'clientID': '<client_id>',
-        'clientSecret': '<client_secret>',
-        'callbackURL': 'http://<proxy_host>:<proxy_port>/auth/fiware/callback',
-        'roles': {
-            'admin': 'provider',
-            'customer': 'customer',
-            'seller': 'seller'
-        }
-    };
-
-In this settings, it is needed to include the IDM instance being used (*server*), the client id given by the IdM (*clientID*),
-the client secret given by the IdM (*clientSecret*), and the callback URL configured in the IdM (*callbackURL*)
-
-Moreover, the Proxy uses MongoDB for maintaining some info, such as the current shopping cart of a user. you can configure
-the connection to MongoDB by updating the following setting: ::
-
-    config.mongoDb = {
-        server: 'localhost',
-        port: 27017,
-        user: '',
-        password: '',
-        db: 'belp'
-    };
-
-In this setting you can configure the host (*server*), the port (*port*), the database user (*user*), the database user password
-(*password*), and the database name (*db*).
-
-As already stated, the Proxy is the component that acts as the endpoint for accessing the different APIs. In this way,
-the proxy needs to know the URLs of them in order to redirect the different requests. This endpoints can be configured using the
-following settings ::
-
-    config.endpoints = {
-        'catalog': {
-            'path': 'DSProductCatalog',
-            'host': 'localhost'
-            'port': '8080',
-            'appSsl': false
-        },
-        'ordering': {
-            'path': 'DSProductOrdering',
-            'host': 'localhost'
-            'port': '8080',
-            'appSsl': false
-        },
-
-        ...
-
-The setting *config.endpoints* contains the specific configuration of each of the APIs, including its *path*, its *host*,
-its *port*, and whether the API is using SSL or not.
+For upgrading Business API Ecosystem version 5.4.1 installations to version 7.4.0 a new command has been incorporated
+within the *install.py* script. This command downloads new components software, updates it, and  migrates the
+different databases, so it lets the software ready to be used.
 
 .. note::
-    The default configuration included in the config file is the one used by the installation script, so if you have used the script for
-    installing the Business API Ecosystem you do not need to modify these fields
+    It is highly recommended to make a backup of the different databases before upgrading the software
 
-Finally, there are two fields that allow to configure the behaviour of the system while running. On the one hand, *config.revenueModel*
-allows to configure the default percentage that the Business API Ecosystem is going to retrieve in all the transactions.
-On the other hand, *config.usageChartURL* allows to configure the URL of the chart to be used to display product usage to
-customers in the web portal.
+The first step for upgrading the Business API Ecosystem is downloading new version of the main repository in order to
+update installation scripts. ::
+
+    cd Business-API-Ecosystem
+    git fetch
+    git checkout v7.4.0
+    git pull origin v7.4.0
+
+The new version of *install.py* has a new dependency (PyMSQL) that has to be manually solved in order to execute
+the upgrading command. ::
+
+    $ pip3 install pymysql
+
+Once the main repository is upgraded, the next step is using the provided script for upgrading the software. ::
+
+    $ ./install.py upgrade
+
+This command do not change your configuration parameters. Nevertheless, you should review the *Configuration* section
+as new settings has been included.
+
+The *upgrade* command uses a set of new commands that have been incorporated within *install.py* in order to manage the
+upgrade. In particular:
+
+* **download**: Downloads the new software for the different components of the Business API Ecosystem
+* **dump**: Creates a dump of the different MySQL databases within */tmp*
+* **migrate**: Migrates database contents from v5.4.1 to v7.4.0
 
 -----------
 Final steps
@@ -937,54 +648,6 @@ You can populate at any time the indexes directory using the *fill_indexes.js* s
 
     $ node fill_indexes.js
 
-Configuring Themes
-==================
-
-The Business API Ecosystem provides a basic mechanism for the creation of themes intended to customize the web portal
-of the system. Themes include a set of files which can override any of the default portal files located in the *public/resources*
-or *views* directories of the logic proxy. To do that, themes map the directory structure and include files with the same
-name of the default ones to be overridden.
-
-The Logic Proxy can include multiple themes which should be stored in the *themes* directory located at the root of the
-project.
-
-To enable themes, the *config.theme* setting is provided within the *config.js* file of the Logic Proxy. Themes are
-enabled by providing the name of the theme directory in this setting. ::
-
-    config.theme = 'dark-theme';
-
-.. note::
-    Setting *config.theme* to an empty string makes the Business API Ecosystem to use its default theme
-
-To start using a theme the following command has to be executed: ::
-
-    $ node collect_static.js
-
-This command merges the theme files and the default ones into a *static* directory used by the Logic Proxy to retrieve
-portal static files.
-
-Enabling Production
-===================
-
-The default installation of the Business API Ecosystem deploys its different components in *debug* mode. This is useful
-for development and testing but it is not adequate for production environments.
-
-Enabling the production mode makes the different components to start caching requests and views and minimizing JavaScript
-files.
-
-To enable the production mode, the first step is setting the environment variable *NODE_ENV* to *production* in the machine
-containing the Logic Proxy. ::
-
-    $ export NODE_ENV=production
-
-Then, it is needed to collect static files in order to compress JavaScript files. ::
-
-    $ node collect_static.js
-
-
-Finally, change the setting *DEBUG* of the Charging Backend to False. ::
-
-    DEBUG=False
 
 ----------------------------------
 Running the Business API Ecosystem
@@ -1038,46 +701,6 @@ The Logic Proxy can be started using Node as follows ::
 Or if you want to start it in background: ::
 
     $ nohup node server.js &
-
-------------------------
-Installing Asset Plugins
-------------------------
-
-The Business API Ecosystem is intended to support the monetization of different kind of digital assets. The different
-kind of assets that may be wanted to be monetized will be heterogeneous and potentially very different between them.
-
-Additionally, for each type of asset different validations and activation mechanisms will be required. For example, if the
-asset is a CKAN dataset, it will be required to validate that the provider is the owner of the dataset. Moreover, when a customer
-acquires the dataset, it will be required to notify CKAN that a new user has access to it.
-
-The huge differences between the different types of assets that can be monetized in the Business API Ecosystem makes
-impossible to include its validations and characteristics as part of the core software. For this reason, it has been created
-a plugin based solution, where all the characteristics of an asset type are implemented in a plugin that can be loaded
-in the Business API Ecosystem.
-
-To include an asset plugin execute the following command in the Charging Backend: ::
-
-    $ ./manage.py loadplugin ckandataset.zip
-
-It is possible to list the existing plugins with the following command: ::
-
-    $ ./manage.py listplugins
-
-To remove an asset plugin, execute the following command providing the plugin id given by the *listplugins* command ::
-
-    $ ./manage.py removeplugin ckan-dataset
-
-
-.. note::
-    For specific details on how to create a plugin and its internal structure, have a look at the Business API Ecosystem Programmer Guide
-
-At the time of writing, the following plugins are available:
-
-* `Basic File <https://github.com/FIWARE-TMForum/biz-basic-plugins>`__: Allows the creation of products by providing files as digital assets. No validations or processing is done
-* `Basic URL <https://github.com/FIWARE-TMForum/biz-basic-plugins>`__: Allows the creation of products by providing URLs as digital assets. No validations or processing is done
-* `WireCloud Component <https://github.com/FIWARE-TMForum/wstore-wirecloud-plugin>`__: Allows the monetization of WireCloud components, including Widgets, operators, and mashups
-* `Accountable Service <https://github.com/FIWARE-TMForum/biz-accountable-service-plugin>`__ : Allows the monetization of services protected by the `Accounting Proxy <https://github.com/FIWARE-TMForum/Accounting-Proxy>`__, including Orion Context Broker queries
-* `CKAN Dataset <https://github.com/FIWARE-TMForum/biz-ckan-plugin>`__ : Allows the monetization of CKAN datasets
 
 
 -----------------------
