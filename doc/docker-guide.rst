@@ -184,25 +184,27 @@ file deploys the whole system and databases (A running version of this file can 
             image: fiware/biz-ecosystem-rss:v7.4.0
             restart: always
             ports:
-               - 9999:8080
-               - 4444:4848
-               - 1111:8181
+                - 9999:8080
+                - 4444:4848
+                - 1111:8181
             links:
                 - mysql
             depends_on:
-               - mysql
+                - mysql
             networks:
                 main:
                     aliases:
-                       - rss.docker
+                        - rss.docker
             # volumes:
             #    - ./rss-conf:/etc/default/rss  # Used if not configured by environment
             environment:
-                - BAE_SERVICE_HOST=http://proxy.docker:8004/
-                - BAE_LP_OAUTH2_ADMIN_ROLE=admin  # Role defined in the IDM client app for admins of the BAE 
-                - BAE_LP_OAUTH2_SELLER_ROLE=seller  # Role defined in the IDM client app for sellers of the BAE 
-                - BAE_RSS_MYSQL_ROOT_PASSWORD=my-secret-pw
-                - BAE_RSS_MYSQL_ROOT_HOST=mysql
+                - BAE_RSS_DATABASE_URL=jdbc:mysql://mysql:3306/RSS
+                - BAE_RSS_DATABASE_USERNAME=root
+                - BAE_RSS_DATABASE_PASSWORD=my-secret-pw
+                - BAE_RSS_DATABASE_DRIVERCLASSNAME=com.mysql.jdbc.Driver
+                - BAE_RSS_OAUTH_CONFIG_GRANTEDROLE=admin
+                - BAE_RSS_OAUTH_CONFIG_SELLERROLE=seller
+                - BAE_RSS_OAUTH_CONFIG_AGGREGATORROLE=Aggregator
     networks:
         main:
             external: true
