@@ -133,29 +133,53 @@ This plugins implements the following event handlers:
 In addition, the *CKAN API Dataset* requires some settings to be configured before being deployed. This settings are available
 in the *setting.py* file, and are:
 
-* **AUTH_METHOD**: Authorization mechanism used by the backend service, *idm* or *umbrella*
+* **UMBRELLA_SERVER**: Administration endpoint of the API Umbrella instanceused to sercure backend services
 * **UMBRELLA_KEY**: API Key used for accessing to the API Umbrella instance used to secure the backend service
 * **UMBRELLA_ADMIN_TOKEN**: Admin token used for accessing to the API Umbrella instance used to secure the backend service
 * **KEYSTONE_USER**: Keystone user used for authenticate requests to the FIWARE IdM
 * **KEYSTONE_PASSWORD**: Keystone password used for authenticate requests to the FIWARE IdM
 * **KEYSTONE_HOST**: Host of the Keystone service of the FIWARE IdM used for authorizing customers
+* **IS_LEGACY_IDM**: False if the FIWARE Idm is at least v7.0.0
+* **CKAN_TOKEN_TYPE**: Whether CKAN has to be accessed using X-Auth-Token or Authorization headers
 
+In addition, these settings can be configured using environment variables:
+
+* BAE_ASSET_UMBRELLA_SERVER
+* BAE_ASSET_UMBRELLA_KEY
+* BAE_ASSET_UMBRELLA_TOKEN
+* BAE_ASSET_IDM_USER
+* BAE_ASSET_IDM_PASSWORD
+* BAE_ASSET_IDM_HOST
+* BAE_ASSET_LEGACY_IDM
+* BAE_ASSET_TOKEN_TYPE
 
 Umbrella Service
 ----------------
 
 The *Umbrella Service* plugin is available in `GitHub <https://github.com/FIWARE-TMForum/biz-umbrella-service>`__.
-This plugin deines an asset type intended to managa and monetize any HTTP service secured with the combination of a
+This plugin deines an asset type intended to manage and monetize any HTTP service secured with the combination of a
 FIWARE IDM for users and roles management and API Umbrella as PEP proxy.
 
 The Umbrella Service plugin allows to provide services in different ways using the options it defined in its metadata
-form. In particular, ...
+form, which can be selected by sellers when registering the product. In particular:
+
+* **Authorization Method**: Whether user access to backend service is controlled using FIWARE IDM roles or API Umbrella native roles
+* **Acquisition Role**: Role to be granted to customers
+* **Access to sub-paths allowed**: If true, customers will be able to access to any sub-path of the monetized service
+* **Additional query strings allowed**: If true, customers will be able to call the service with different query strings as the included in the asset URL
+* **Admin API Key**: API key to be used by the BAE to access to the API Umbrella admin API
+* **Admin Auth Token**: Admin token to be used by the BAE to access to the Umbrella admin API
 
 Moreover, this plugin support pay-per-use pricing supporting the *api call* unit. The accounting information is retrieved
 from the API Umbrella logging API using the service details provided as metadata when the product is created.
 
+This plugin implements the following event handlers:
 
-
+* **on_post_product_spec_validation**: In this event handler the plugin validates all the provided information, including URL, Umbrella credentials and role. 
+* **on_post_product_offering_validation**: In this event handler the plugin validates that the provided procing model is supported by the plugin (Usage model)
+* **on_product_acquisition**: In this event handler the plugin grants access to the customer using the provided role
+* **on_product_suspension**: In this event handler the plugin revokes access to the customer removing the provided role
+* **get_pending_accounting**: In this event handler the plugin accesses Umbrella API to retrieve the pending accounting information
 
 WireCloud Component
 -------------------
