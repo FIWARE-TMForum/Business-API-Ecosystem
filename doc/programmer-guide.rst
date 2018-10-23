@@ -2,20 +2,6 @@
 Programmer Guide
 ================
 
-This programmer guide covers the Business API Ecosystem version 7.4.0, corresponding to FIWARE release 7.
-
-The Business API Ecosystem allows to offer any kind of digital asset. In this regard, some kind of digital assets may
-require to perform specific actions and validations that require to know the format of the asset. To deal with this
-issue the Business API Ecosystem allows to register types of assets by creating plugins. This section explains how these plugins are created.
-
-Additionally, the Business API Ecosystem exposes an API that can be used by developers in order to integrate the monetization
-features offered with their own solutions. The complete description of this API can be found in:
-
-
-* `Apiary <http://docs.fiwaretmfbizecosystem.apiary.io>`__
-* `GitHub Pages <https://fiware-tmforum.github.io/Business-API-Ecosystem/>`__
-
-
 Plugin Package
 ==============
 
