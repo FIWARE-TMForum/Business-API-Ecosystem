@@ -7,10 +7,10 @@ This guide covers the deployment of the Business API Ecosystem version 7.4.0 usi
 As stated, the Business API Ecosystem in made up of a set of different components which work jointly in order to provide
 the functionality. In this regard the following images has been defined:
 
-* fiware/biz-ecosystem-apis: This image includes all the TMForum APIs and can be found in `Docker Hub <>`__
-* fiware/biz-ecosystem-charging-backend: This image includes the Charging Backend component and can be found in `Docker Hub <>`__
+* fiware/biz-ecosystem-apis: This image includes all the TMForum APIs and can be found in `Docker Hub <https://hub.docker.com/r/fiware/biz-ecosystem-apis/>`__
+* fiware/biz-ecosystem-charging-backend: This image includes the Charging Backend component and can be found in `Docker Hub <https://hub.docker.com/r/fiware/biz-ecosystem-charging-backend/>`__
 * fiware/biz-ecosystem-logic-proxy: This image includes the Logic Proxy component and can be found in `Docker Hub <https://hub.docker.com/r/fiware/biz-ecosystem-logic-proxy/>`__
-* fiware/biz-ecosystem-rss: This Image include the Revenue Sharing Component and can be found in `Docker Hub <>`__
+* fiware/biz-ecosystem-rss: This Image include the Revenue Sharing Component and can be found in `Docker Hub <https://hub.docker.com/r/fiware/biz-ecosystem-rss/>`__
 
 The easiest way to deploy the Business API Ecosystem with Docker is using *docker-compose*. The following *docker-compose.yml*
 file deploys the whole system and databases (A running version of this file can be found in GitHub): ::
@@ -208,10 +208,10 @@ file deploys the whole system and databases (A running version of this file can 
             external: true
 
 .. note::
-    The previous example use an external network called main, which need to exist. If you do not want to use such network just remove the network tags
+    The previous example uses an external network called *main*, which need to exist. If you do not want to use such network just remove the network tags
 
 The different images provided can be configured in two different ways as it is done with the software. On the one hand,
 configuration parameters can be included as environment variables (as shown in the example). On the other hand, the different
 images can be configured by providing configuration files throught volumes.
 
-For details on the different configuration options, please refer to the *Configuration Guide*
+For details on the different configuration options, please refer to the `*Configuration Guide* <configuration-guide>`__
