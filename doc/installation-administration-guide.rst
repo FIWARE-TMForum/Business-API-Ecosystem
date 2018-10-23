@@ -9,7 +9,7 @@ The current version of the software has been tested under Ubuntu 15.10, Ubuntu 1
 and CentOS 7. THESE ARE THEREFORE CONSIDERED AS THE SUPPORTED OPERATING SYSTEMS.
 
 .. note::
-    The preferred mechanism for the deployment of the Buseiness API Ecosystem is Docker as described in `Docker deployment guide <doc:docker-guide>`__
+    The preferred mechanism for the deployment of the Business API Ecosystem is Docker as described in `Docker deployment guide <doc:docker-guide>`__
 
 ------------
 Installation
@@ -19,7 +19,7 @@ Requirements
 ============
 
 As described in the GEri overview, the Business API Ecosystem is not a single software, but a set of projects that
-work together for proving business capabilities. In this regard, this section contains the basic dependencies of
+work together for providing business capabilities. In this regard, this section contains the basic dependencies of
 the different components that made up the Business API Ecosystem.
 
 .. note::
@@ -51,7 +51,7 @@ Installing basic dependencies
 Basic dependencies such as Java 8, Glassfish, MySQL, Python, etc. Can be installed using the package management tools
 provided by your operating system. However, in order to easy the installation process some scripts have been provided.
 
-.. note::
+.. warning::
     The installation script may override some of the packages already installed in the system. so if you have software with common dependencies you may want to manually resolve them.
 
 Installing basic dependencies using the script
@@ -571,7 +571,7 @@ Or in CentOS ::
 Installing the Logic Proxy
 ++++++++++++++++++++++++++
 
-The Logic Proxy sources can be found in`GitHub <https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy>`__
+The Logic Proxy sources can be found in `GitHub <https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy>`__
 
 The first step for installing the logic proxy component is downloading it and moving to the correct release ::
 
