@@ -18,7 +18,7 @@ Configuring the TMF APIs
 When the TMF APIs are deployed from sources, the connection to the MySQL database is configured during the installation process
 setting up the jdbc connection as described in the *Installation and Administration* guide.
 
-On the other hand, the Docker image biz-ecosystem-apis which is used to the deploy TMF APIs using Docker uses two environment
+On the other hand, the Docker image biz-ecosystem-apis, which is used to the deploy TMF APIs using Docker, uses two environment
 variables for configuring such connection. ::
 
     MYSQL_ROOT_PASSWORD=my-secret-pw
@@ -26,7 +26,7 @@ variables for configuring such connection. ::
 
 Finally, the TMF APIs can optinally use a configuration file called *settings.properties* which is located by default at */etc/default/apis*.
 This file include a setting *server* which allows to provide the URL used to access to the Business API Ecosystem and, in particular, by the APIs
-in order to generate *hrefs* with the proper reference.
+in order to generate *hrefs* with the proper reference. ::
 
     server=https://store.lab.fiware.org/
 
@@ -54,9 +54,16 @@ This file contains the configuration required in order to connect to the databas
 * database.password: Password of the database user
 * database.driverClassName: Driver class of the database. By default MySQL
 
+In addition, database settings can be configured using the environment. In particular, using the following variables: ::
+
+    export BAE_RSS_DATABASE_URL=jdbc:mysql://mysql:3306/RSS
+    export BAE_RSS_DATABASE_USERNAME=root
+    export BAE_RSS_DATABASE_PASSWORD=my-secret-pw
+    export BAE_RSS_DATABASE_DRIVERCLASSNAME=com.mysql.jdbc.Driver
+
 The file *oauth.properties* contains by default the following fields (It is recommended not to modify them) ::
 
-    config.grantedRole=Provider
+    config.grantedRole=admin
     config.sellerRole=Seller
     config.aggregatorRole=aggregator
 
@@ -65,6 +72,12 @@ This file contains the name of the roles (registered in the idm) that are going 
 * config.grantedRole: Role in the IDM of the users with admin privileges
 * config.sellerRole: Role in the IDM of the users with seller privileges
 * config.aggregatorRole: Role of the users who are admins of an store instance. In the context of the Business API Ecosystem there is only a single store instance, so you can safely ignore this flag
+
+Those settings can also be configured using the environment as ::
+
+    export BAE_RSS_OAUTH_CONFIG_GRANTEDROLE=admin
+    export BAE_RSS_OAUTH_CONFIG_SELLERROLE=Seller
+    export BAE_RSS_OAUTH_CONFIG_AGGREGATORROLE=Aggregator
 
 --------------------------------
 Configuring the Charging Backend
