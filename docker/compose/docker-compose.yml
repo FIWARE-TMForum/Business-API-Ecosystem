@@ -3,8 +3,6 @@ services:
     mongo:
         image: mongo:3.2
         restart: always
-        ports:
-            - 27017:27017
         networks:
             main:
         volumes:
@@ -13,8 +11,6 @@ services:
     mysql:
         image: mysql:5.7
         restart: always
-        ports:
-            - 3333:3306
         volumes:
             - ./mysql-data:/var/lib/mysql
         networks:
@@ -24,7 +20,7 @@ services:
             - MYSQL_DATABASE=RSS
 
     charging:
-        image: conwetlab/biz-ecosystem-charging-backend:develop
+        image: fiware/biz-ecosystem-charging-backend:develop
         links:
             - mongo
         depends_on:
@@ -81,7 +77,7 @@ services:
           - BAE_CB_AUTHORIZE_SERVICE=http://proxy.docker:8004/authorizeService/apiKeys
 
     proxy:
-        image: conwetlab/biz-ecosystem-logic-proxy:develop
+        image: fiware/biz-ecosystem-logic-proxy:develop
         links:
             - mongo
         depends_on:
@@ -112,9 +108,9 @@ services:
             # - BAE_LP_HTTPS_PORT=443  # Port where the service runs when SSL is enabled (when HTTPS enabled is true)
 
             # ------ OAUTH2 Config ------
-            - BAE_LP_OAUTH2_SERVER=http://idm.docker:8000  # URL of the FIWARE IDM used for user authentication
-            - BAE_LP_OAUTH2_CLIENT_ID=id  # OAuth2 Client ID of the BAE applicaiton
-            - BAE_LP_OAUTH2_CLIENT_SECRET=secret  # OAuth Client Secret of the BAE application
+            - BAE_LP_OAUTH2_SERVER=http://idm.docker:3000  # URL of the FIWARE IDM used for user authentication
+            - BAE_LP_OAUTH2_CLIENT_ID=e3d43e88-7049-434f-9824-2f0387d9860d  # OAuth2 Client ID of the BAE applicaiton
+            - BAE_LP_OAUTH2_CLIENT_SECRET=06c888d5-a17a-4386-9e26-8ee4f7f77135  # OAuth Client Secret of the BAE application
             - BAE_LP_OAUTH2_CALLBACK=http://proxy.docker:8004/auth/fiware/callback  # Callback URL for receiving the access tokens
             - BAE_LP_OAUTH2_ADMIN_ROLE=admin  # Role defined in the IDM client app for admins of the BAE 
             - BAE_LP_OAUTH2_SELLER_ROLE=seller  # Role defined in the IDM client app for sellers of the BAE 
@@ -143,7 +139,7 @@ services:
             # ...
 
     apis:
-        image: conwetlab/biz-ecosystem-apis:develop
+        image: fiware/biz-ecosystem-apis:develop
         restart: always
         ports:
             - 4848:4848
@@ -164,7 +160,7 @@ services:
             - MYSQL_HOST=mysql
 
     rss:
-        image: conwetlab/biz-ecosystem-rss:develop
+        image: fiware/biz-ecosystem-rss:develop
         restart: always
         ports:
             - 9999:8080
@@ -181,11 +177,13 @@ services:
         # volumes:
         #    - ./rss-conf:/etc/default/rss  # Used if not configured by environment
         environment:
-            - BAE_SERVICE_HOST=http://proxy.docker:8004/
-            - BAE_LP_OAUTH2_ADMIN_ROLE=admin  # Role defined in the IDM client app for admins of the BAE 
-            - BAE_LP_OAUTH2_SELLER_ROLE=seller  # Role defined in the IDM client app for sellers of the BAE 
-            - BAE_RSS_MYSQL_ROOT_PASSWORD=my-secret-pw
-            - BAE_RSS_MYSQL_ROOT_HOST=mysql
+            - BAE_RSS_DATABASE_URL=jdbc:mysql://mysql:3306/RSS
+            - BAE_RSS_DATABASE_USERNAME=root
+            - BAE_RSS_DATABASE_PASSWORD=my-secret-pw
+            - BAE_RSS_DATABASE_DRIVERCLASSNAME=com.mysql.jdbc.Driver
+            - BAE_RSS_OAUTH_CONFIG_GRANTEDROLE=admin
+            - BAE_RSS_OAUTH_CONFIG_SELLERROLE=seller
+            - BAE_RSS_OAUTH_CONFIG_AGGREGATORROLE=Aggregator
 
 networks:
     main:
