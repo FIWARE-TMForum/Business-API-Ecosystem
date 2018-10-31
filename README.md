@@ -1,142 +1,218 @@
-# Business-API-Ecosystem
+# Business API Ecosystem
 
-[![](https://img.shields.io/badge/FIWARE-Data_Monetization-51b6a3.svg?label=FIWARE&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAVCAYAAAC33pUlAAAABHNCSVQICAgIfAhkiAAAA8NJREFUSEuVlUtIFlEUx+eO+j3Uz8wSLLJ3pBiBUljRu1WLCAKXbXpQEUFERSQF0aKVFAUVrSJalNXGgmphFEhQiZEIPQwKLbEUK7VvZrRvbr8zzjfNl4/swplz7rn/8z/33HtmRhn/MWzbXmloHVeG0a+VSmAXorXS+oehVD9+0zDN9mgk8n0sWtYnHo5tT9daH4BsM+THQC8naK02jCZ83/HlKaVSzBey1sm8BP9nnUpdjOfl/Qyzj5ust6cnO5FItJLoJqB6yJ4QuNcjVOohegpihshS4F6S7DTVVlNtFFxzNBa7kcaEwUGcbVnH8xOJD67WG9n1NILuKtOsQG9FngOc+lciic1iQ8uQGhJ1kVAKKXUs60RoQ5km93IfaREvuoFj7PZsy9rGXE9G/NhBsDOJ63Acp1J82eFU7OIVO1OxWGwpSU5hb0GqfMydMHYSdiMVnncNY5Vy3VbwRUEydvEaRxmAOSSqJMlJISTxS9YWTYLcg3B253xsPkc5lXk3XLlwrPLuDPKDqDIutzYaj3eweMkPeCCahO3+fEIF8SfLtg/5oI3Mh0ylKM4YRBaYzuBgPuRnBYD3mmhA1X5Aka8NKl4nNz7BaKTzSgsLCzWbvyo4eK9r15WwLKRAmmCXXDoA1kaG2F4jWFbgkxUnlcrB/xj5iHxFPiBN4JekY4nZ6ccOiQ87hgwhe+TOdogT1nfpgEDTvYAucIwHxBfNyhpGrR+F8x00WD33VCNTOr/Wd+9C51Ben7S0ZJUq3qZJ2OkZz+cL87ZfWuePlwRcHZjeUMxFwTrJZAJfSvyWZc1VgORTY8rBcubetdiOk+CO+jPOcCRTF+oZ0okUIyuQeSNL/lPrulg8flhmJHmE2gBpE9xrJNkwpN4rQIIyujGoELCQz8ggG38iGzjKkXufJ2Klun1iu65bnJub2yut3xbEK3UvsDEInCmvA6YjMeE1bCn8F9JBe1eAnS2JksmkIlEDfi8R46kkEkMWdqOv+AvS9rcp2bvk8OAESvgox7h4aWNMLd32jSMLvuwDAwORSE7Oe3ZRKrFwvYGrPOBJ2nZ20Op/mqKNzgraOTPt6Bnx5citUINIczX/jUw3xGL2+ia8KAvsvp0ePoL5hXkXO5YvQYSFAiqcJX8E/gyX8QUvv8eh9XUq3h7mE9tLJoNKqnhHXmCO+dtJ4ybSkH1jc9XRaHTMz1tATBe2UEkeAdKu/zWIkUbZxD+veLxEQhhUFmbnvOezsJrk+zmqMo6vIL2OXzPvQ8v7dgtpoQnkF/LP8Ruu9zXdJHg4igAAAABJRU5ErkJgggA=)](https://www.fiware.org/developers/catalogue/)
-[![License badge](https://img.shields.io/github/license/FIWARE-TMForum/Business-API-Ecosystem.svg)](https://opensource.org/licenses/AGPL-3.0) 
-[![Documentation badge](https://img.shields.io/readthedocs/business-api-ecosystem.svg)](https://business-api-ecosystem.rtfd.io) 
-[![Docker](https://img.shields.io/docker/pulls/fiware/business-api-ecosystem.svg)](https://hub.docker.com/r/fiware/business-api-ecosystem)  [![](https://img.shields.io/badge/tag-fiware-orange.svg?logo=stackoverflow)](http://stackoverflow.com/questions/tagged/fiware) [![Support](https://img.shields.io/badge/support-askbot-yellowgreen.svg)](https://ask.fiware.org)
+[![](https://nexus.lab.fiware.org/repository/raw/public/badges/chapters/data-monetization.svg)](https://www.fiware.org/developers/catalogue/)
+[![License badge](https://img.shields.io/github/license/FIWARE-TMForum/Business-API-Ecosystem.svg)](https://opensource.org/licenses/AGPL-3.0)
+[![Docker](https://img.shields.io/docker/pulls/fiware/business-api-ecosystem.svg)](https://hub.docker.com/r/fiware/business-api-ecosystem)
+[![](https://img.shields.io/badge/tag-fiware-orange.svg?logo=stackoverflow)](http://stackoverflow.com/questions/tagged/fiware)
+[![Support](https://img.shields.io/badge/support-askbot-yellowgreen.svg)](https://ask.fiware.org)
+<br>
+[![Documentation badge](https://img.shields.io/readthedocs/business-api-ecosystem.svg)](https://business-api-ecosystem.rtfd.io)
+![Status](https://nexus.lab.fiware.org/static/badges/statuses/business-api.svg)
 
- * [Introduction](#introduction)
- * [GEi Overall Description](#gei-overall-description)
- * [Installation](#build-and-install)
- * [API Overview](#api-overview)
- * [API Reference](#api-reference)
- * [Testing](#testing)
- * [Advanced Topics](#advanced-topics)
+The Business API Ecosystem provides sellers the means for managing, publishing,
+and generating revenue of their products, apps, data, and services. The Business
+API Ecosystem enables the monetization of different kind of assets (both digital
+and physical) across the whole service life cycle, from offer creation through
+to charging, accounting and revenue settlement and sharing.
 
-# Introducction
+## Contents
 
-This is the main repository of the Business API Ecosystem. This project is part of [FIWARE](https://www.fiware.org), and has been developed in 
-collaboration with the [TM Forum](https://www.tmforum.org/). Check also the [FIWARE Catalogue entry for the Business API Ecosystem](https://catalogue.fiware.org/enablers/business-api-ecosystem-biz-ecosystem-ri)!
+-   [Background](#background)
+    -   [Description](#description)
+-   [Install](#install)
+-   [Usage](#usage)
+-   [API](#api)
+-   [Testing](#testing)
+-   [Advanced Topics](#advanced-topics)
+-   [Quality Assurance](#quality-assurance)
+-   [License](#license)
 
-The Business API Ecosystem is not a single software repository, but it is composed of different projects which work coordinatelly to provide the complete functionality.
+## Background
+
+This is the main repository of the Business API Ecosystem. This project is part
+of [FIWARE](https://www.fiware.org), and has been developed in collaboration
+with the [TM Forum](https://www.tmforum.org/). Check also the
+[FIWARE Catalogue entry for the Business API Ecosystem](https://catalogue.fiware.org/enablers/business-api-ecosystem-biz-ecosystem-ri)!
+
+The Business API Ecosystem is not a single software repository, but it is
+composed of different projects which work coordinate to provide the complete
+functionality.
 
 Concretely, the Business API Ecosystem is made of the following components:
 
-* Reference implementations of TM Forum APIs.
-    * [Catalog Management API](https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2)
-    * [Product Ordering Management API](https://github.com/FIWARE-TMForum/DSPRODUCTORDERING)
-    * [Product Inventory Management API](https://github.com/FIWARE-TMForum/DSPRODUCTINVENTORY)
-    * [Party Management API](https://github.com/FIWARE-TMForum/DSPARTYMANAGEMENT)
-    * [Customer Management API](https://github.com/FIWARE-TMForum/DSCUSTOMER)
-    * [Billing Management API](https://github.com/FIWARE-TMForum/DSBILLINGMANAGEMENT)
-    * [Usage Management API](https://github.com/FIWARE-TMForum/DSUSAGEMANAGEMENT)
+-   Reference implementations of TM Forum APIs.
 
-* Rating, Charging, and Billing backend.
-    * [Charging Backend](https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend)
+    -   [Catalog Management API](https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2)
+    -   [Product Ordering Management API](https://github.com/FIWARE-TMForum/DSPRODUCTORDERING)
+    -   [Product Inventory Management API](https://github.com/FIWARE-TMForum/DSPRODUCTINVENTORY)
+    -   [Party Management API](https://github.com/FIWARE-TMForum/DSPARTYMANAGEMENT)
+    -   [Customer Management API](https://github.com/FIWARE-TMForum/DSCUSTOMER)
+    -   [Billing Management API](https://github.com/FIWARE-TMForum/DSBILLINGMANAGEMENT)
+    -   [Usage Management API](https://github.com/FIWARE-TMForum/DSUSAGEMANAGEMENT)
 
-* Revenue Settlement and Sharing System.
-    * [RSS](https://github.com/FIWARE-TMForum/business-ecosystem-rss)
+-   Rating, Charging, and Billing backend.
 
-* Authentication, API Orchestrator, and Web portal.
-    * [Logic Proxy](https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy)
+    -   [Charging Backend](https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend)
 
-Any feedback is highly welcome, including bugs, typos or things you think should be included but aren't. To provide feedback you can use the 
-general [GitHub issues](https://github.com/FIWARE-TMForum/Business-API-Ecosystem/issues/new), or provide it directly to the components using the [Charging Backend Issues](https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend/issues/new), [RSS Issues](https://github.com/FIWARE-TMForum/business-ecosystem-rss/issues/new), or [Logic Proxy Issues](https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy/issues/new).
+-   Revenue Settlement and Sharing System.
 
-# GEi Overall Description
+    -   [RSS](https://github.com/FIWARE-TMForum/business-ecosystem-rss)
 
-The Business API Ecosystem is a joint component made up of the FIWARE Business Framework and a set of APIs (and its reference implementations) provided by the TMForum. This component allows the monetization of different kind of assets (both digital and physical) during the whole service life cycle, from offering creation to its charging, accounting and revenue settlement and sharing. The Business API Ecosystem exposes its complete functionality through TMForum standard APIs; concretely, it includes the catalog management, ordering management, inventory management, usage management, billing, customer, and party APIs.
+-   Authentication, API Orchestrator, and Web portal.
+    -   [Logic Proxy](https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy)
 
-# Installation
+Any feedback is highly welcome, including bugs, typos or things you think should
+be included but aren't. To provide feedback you can use the general
+[GitHub issues](https://github.com/FIWARE-TMForum/Business-API-Ecosystem/issues/new),
+or provide it directly to the components using the
+[Charging Backend Issues](https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend/issues/new),
+[RSS Issues](https://github.com/FIWARE-TMForum/business-ecosystem-rss/issues/new),
+or
+[Logic Proxy Issues](https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy/issues/new).
 
-The instructions to install the Business API Ecosystem can be found at the [Installation Guide](http://business-api-ecosystem.readthedocs.io/en/latest/installation-administration-guide.html). You can install the software in three different ways:
+### Description
 
-* Using the provided scripts
-* Using a [Docker Container](https://hub.docker.com/r/fiware/business-api-ecosystem)
-* Manually
+The Business API Ecosystem is a joint component made up of the FIWARE Business
+Framework and a set of APIs (and its reference implementations) provided by the
+TMForum. This component allows the monetization of different kind of assets
+(both digital and physical) during the whole service life cycle, from offering
+creation to its charging, accounting and revenue settlement and sharing. The
+Business API Ecosystem exposes its complete functionality through TMForum
+standard APIs; concretely, it includes the catalog management, ordering
+management, inventory management, usage management, billing, customer, and party
+APIs.
 
-# API Overview
+## Install
 
-The Business API Ecosystem API is build up using the APIs of the different components each exposing its own resources.
+The instructions to install the Business API Ecosystem can be found at the
+[Installation Guide](http://business-api-ecosystem.readthedocs.io/en/latest/installation-administration-guide.html).
+You can install the software in three different ways:
 
-## Catalog API
+-   Using the provided scripts
+-   Using a
+    [Docker Container](https://hub.docker.com/r/fiware/business-api-ecosystem)
+-   Manually
 
-The Catalog API is available under /DSProductCatalog/api/ and its main resources are:
+## Usage
 
-* Categories
-* Catalogs
-* Product Specifications
-* Product Offerings
+The Business API Ecosystem API is build up using the APIs of the different
+components each exposing its own resources.
 
-## Ordering API
+### Catalog API
 
-The Ordering API is available under /DSProductOrdering/api/ and its main resources are:
+The Catalog API is available under /DSProductCatalog/api/ and its main resources
+are:
 
-* Product Order
+-   Categories
+-   Catalogs
+-   Product Specifications
+-   Product Offerings
 
-## Inventory API
+### Ordering API
 
-The Inventory API is available under /DSProductInventory/api/ and its main resources are:
+The Ordering API is available under /DSProductOrdering/api/ and its main
+resources are:
 
-* Product
+-   Product Order
 
-## Party API
+### Inventory API
 
-The Party API is available under /DSPartyManagement/api/ and its main resources are:
+The Inventory API is available under /DSProductInventory/api/ and its main
+resources are:
 
-* Individual
-* Organization
+-   Product
 
-## Customer API
+### Party API
 
-The Customer API is available under /DSCustomerManagement/api/ and its main resources are:
+The Party API is available under /DSPartyManagement/api/ and its main resources
+are:
 
-* Customer
-* Customer Account
+-   Individual
+-   Organization
 
-## Billing API
+### Customer API
 
-The Billing API is available under /DSBillingManagement/api/ and its main resources are:
+The Customer API is available under /DSCustomerManagement/api/ and its main
+resources are:
 
-* Billing Account
-* Applied Billing Charge
+-   Customer
+-   Customer Account
 
-## Usage API
+### Billing API
 
-The Usage API is available under /DSUsageManagement/api/ and its main resources are:
+The Billing API is available under /DSBillingManagement/api/ and its main
+resources are:
 
-* Usage
-* Usage Specification
+-   Billing Account
+-   Applied Billing Charge
 
-## RSS API
+### Usage API
 
-The RSS API is available under /DSRevenueSharing/rss/ and its main resources are:
+The Usage API is available under /DSUsageManagement/api/ and its main resources
+are:
 
-* Revenue Sharing Model
-* Transaction
-* Revenue Sharing Report
+-   Usage
+-   Usage Specification
 
-# API Reference
+### RSS API
+
+The RSS API is available under /DSRevenueSharing/rss/ and its main resources
+are:
+
+-   Revenue Sharing Model
+-   Transaction
+-   Revenue Sharing Report
+
+## API
 
 For further documentation, you can check the API Reference available at:
 
-* [Apiary](http://docs.fiwaretmfbizecosystem.apiary.io) 
-* [Github Pages](https://fiware-tmforum.github.io/Business-API-Ecosystem/)
+-   [Apiary](http://docs.fiwaretmfbizecosystem.apiary.io)
+-   [Github Pages](https://fiware-tmforum.github.io/Business-API-Ecosystem/)
 
-# Testing
+## Testing
 
-## End-to-End tests
+### End-to-End tests
 
-End-to-End tests are described in the [Installation Guide](http://business-api-ecosystem.readthedocs.io/en/latest/installation-administration-guide.html#end-to-end-testing)
+End-to-End tests are described in the
+[Installation Guide](http://business-api-ecosystem.readthedocs.io/en/latest/installation-administration-guide.html#end-to-end-testing)
 
-## Unit tests
+### Unit tests
 
-The way of executing the unit tests is described in each of the components repositories
+The way of executing the unit tests is described in each of the components
+repositories
 
-# Advanced Topics
+## Advanced Topics
 
-* [User Guide](doc/user-guide.rst)
-* [Programmer Guide](doc/programmer-guide.rst)
-* [Installation & Administration Guide](doc/installation-administration-guide.rst)
+-   [User Guide](doc/user-guide.rst)
+-   [Programmer Guide](doc/programmer-guide.rst)
+-   [Installation & Administration Guide](doc/installation-administration-guide.rst)
 
-You can also find this documentation on [ReadTheDocs](http://business-api-ecosystem.readthedocs.io)
+You can also find this documentation on
+[ReadTheDocs](http://business-api-ecosystem.readthedocs.io)
+
+## Quality Assurance
+
+This project is part of [FIWARE](https://fiware.org/) and has been rated as
+follows:
+
+-   **Version Tested:**
+    ![ ](https://img.shields.io/badge/dynamic/json.svg?label=Version&url=https://fiware.github.io/catalogue/json/biz_framework.json&query=$.version&colorB=blue)
+-   **Documentation:**
+    ![ ](https://img.shields.io/badge/dynamic/json.svg?label=Completeness&url=https://fiware.github.io/catalogue/json/biz_framework.json&query=$.docCompleteness&colorB=blue)
+    ![ ](https://img.shields.io/badge/dynamic/json.svg?label=Usability&url=https://fiware.github.io/catalogue/json/biz_framework.json&query=$.docSoundness&colorB=blue)
+-   **Responsiveness:**
+    ![ ](https://img.shields.io/badge/dynamic/json.svg?label=Time%20to%20Respond&url=https://fiware.github.io/catalogue/json/biz_framework.json&query=$.timeToCharge&colorB=blue)
+    ![ ](https://img.shields.io/badge/dynamic/json.svg?label=Time%20to%20Fix&url=https://fiware.github.io/catalogue/json/biz_framework.json&query=$.timeToFix&colorB=blue)
+-   **FIWARE Testing:**
+    ![ ](https://img.shields.io/badge/dynamic/json.svg?label=Tests%20Passed&url=https://fiware.github.io/catalogue/json/biz_framework.json&query=$.failureRate&colorB=blue)
+    ![ ](https://img.shields.io/badge/dynamic/json.svg?label=Scalability&url=https://fiware.github.io/catalogue/json/biz_framework.json&query=$.scalability&colorB=blue)
+    ![ ](https://img.shields.io/badge/dynamic/json.svg?label=Performance&url=https://fiware.github.io/catalogue/json/biz_framework.json&query=$.performance&colorB=blue)
+    ![ ](https://img.shields.io/badge/dynamic/json.svg?label=Stability&url=https://fiware.github.io/catalogue/json/biz_framework.json&query=$.stability&colorB=blue)
+
+---
+
+## License
+
+Business-API-Ecosystem is licensed under Affero General Public License (GPL)
+version 3.
