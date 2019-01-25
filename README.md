@@ -15,6 +15,8 @@ API Ecosystem enables the monetization of different kind of assets (both digital
 and physical) across the whole service life cycle, from offer creation through
 to charging, accounting and revenue settlement and sharing.
 
+The roadmap of this FIWARE GE is described [here](https://github.com/FIWARE-TMForum/Business-API-Ecosystem/blob/master/roadmap.md)
+
 This project is part of [FIWARE](https://www.fiware.org/). For more information
 check the FIWARE Catalogue entry for
 [Data Publication and Monetization](https://github.com/Fiware/catalogue/tree/master/data-publication).
