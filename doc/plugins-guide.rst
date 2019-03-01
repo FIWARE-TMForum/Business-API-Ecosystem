@@ -2,7 +2,7 @@
 Plugins Guide
 =============
 
-This plugins guide covers the available plugins (defining digital asset types) for the Business API Ecosystem v7.4.0
+This plugins guide covers the available plugins (defining digital asset types) for the Business API Ecosystem v7.6.0
 
 ------------------------
 Installing Asset Plugins
