@@ -2,7 +2,7 @@
 Docker Deployment Guide
 =======================
 
-This guide covers the deployment of the Business API Ecosystem version 7.4.0 using the Docker images provided in docker hub.
+This guide covers the deployment of the Business API Ecosystem version 7.6.0 using the Docker images provided in docker hub.
 
 As stated, the Business API Ecosystem in made up of a set of different components which work jointly in order to provide
 the functionality. In this regard the following images has been defined:
@@ -41,7 +41,7 @@ file deploys the whole system and databases (A running version of this file can 
                 - MYSQL_DATABASE=RSS
 
         charging:
-            image: fiware/biz-ecosystem-charging-backend:v7.4.0
+            image: fiware/biz-ecosystem-charging-backend:v7.6.0
             links:
                 - mongo
             depends_on:
@@ -98,7 +98,7 @@ file deploys the whole system and databases (A running version of this file can 
               - BAE_CB_AUTHORIZE_SERVICE=http://proxy.docker:8004/authorizeService/apiKeys
 
         proxy:
-            image: fiware/biz-ecosystem-logic-proxy:v7.4.0
+            image: fiware/biz-ecosystem-logic-proxy:v7.6.0
             links:
                 - mongo
             depends_on:
@@ -160,7 +160,7 @@ file deploys the whole system and databases (A running version of this file can 
                 # ...
 
         apis:
-            image: fiware/biz-ecosystem-apis:v7.4.0
+            image: fiware/biz-ecosystem-apis:v7.6.0
             restart: always
             ports:
                 - 4848:4848
@@ -181,7 +181,7 @@ file deploys the whole system and databases (A running version of this file can 
                 - MYSQL_HOST=mysql
 
         rss:
-            image: fiware/biz-ecosystem-rss:v7.4.0
+            image: fiware/biz-ecosystem-rss:v7.6.0
             restart: always
             ports:
                 - 9999:8080

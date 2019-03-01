@@ -13,49 +13,49 @@ DBHOST = "localhost"
 DBPORT = 3306
 
 APIS = [{"url": "https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2.git",
-         "branch": "v7.4.0",
+         "branch": "v7.6.0",
          "bbdd": "DSPRODUCTCATALOG2",
          "war": "target/DSProductCatalog.war",
          "root": "DSProductCatalog",
          "name": "catalog",
          "resourcename": "jdbc/pcatv2"},
         {"url": "https://github.com/FIWARE-TMForum/DSPRODUCTORDERING.git",
-         "branch": "v7.4.0",
+         "branch": "v7.6.0",
          "bbdd": "DSPRODUCTORDERING",
          "war": "target/DSProductOrdering.war",
          "root": "DSProductOrdering",
          "name": "ordering",
          "resourcename": "jdbc/podbv2"},
         {"url": "https://github.com/FIWARE-TMForum/DSPRODUCTINVENTORY.git",
-         "branch": "v7.4.0",
+         "branch": "v7.6.0",
          "bbdd": "DSPRODUCTINVENTORY",
          "war": "target/DSProductInventory.war",
          "root": "DSProductInventory",
          "name": "inventory",
          "resourcename": "jdbc/pidbv2"},
         {"url": "https://github.com/FIWARE-TMForum/DSPARTYMANAGEMENT.git",
-         "branch": "v7.4.0",
+         "branch": "v7.6.0",
          "bbdd": "DSPARTYMANAGEMENT",
          "war": "target/DSPartyManagement.war",
          "root": "DSPartyManagement",
          "name": "party",
          "resourcename": "jdbc/partydb"},
         {"url": "https://github.com/FIWARE-TMForum/DSBILLINGMANAGEMENT.git",
-         "branch": "v7.4.0",
+         "branch": "v7.6.0",
          "bbdd": "DSBILLINGMANAGEMENT",
          "war": "target/DSBillingManagement.war",
          "root": "DSBillingManagement",
          "name": "billing",
          "resourcename": "jdbc/bmdbv2"},
         {"url": "https://github.com/FIWARE-TMForum/DSCUSTOMER.git",
-         "branch": "v7.4.0",
+         "branch": "v7.6.0",
          "bbdd": "DSCUSTOMER",
          "war": "target/DSCustomerManagement.war",
          "root": "DSCustomerManagement",
          "name": "customer",
          "resourcename": "jdbc/customerdbv2"},
         {"url": "https://github.com/FIWARE-TMForum/DSUSAGEMANAGEMENT.git",
-         "branch": "v7.4.0",
+         "branch": "v7.6.0",
          "bbdd": "DSUSAGEMANAGEMENT",
          "war": "target/DSUsageManagement.war",
          "root": "DSUsageManagement",
@@ -63,18 +63,18 @@ APIS = [{"url": "https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2.git",
          "resourcename": "jdbc/usagedbv2"}]
 
 rss = {"url": "https://github.com/FIWARE-TMForum/business-ecosystem-rss.git",
-       "branch": "v7.4.0",
+       "branch": "v7.6.0",
        "bbdd": "RSS",
        "war": "fiware-rss/target/DSRevenueSharing.war",
        "name": "rss",
        "root": "DSRevenueSharing"}
 
 charg = {"url": "https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend.git",
-         "branch": "v7.4.0",
+         "branch": "v7.6.0",
          "name": "charging"}
 
 proxy = {"url": "https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy.git",
-         "branch": "v7.4.0"}
+         "branch": "v7.6.0"}
 
 
 @click.group(chain=True)
@@ -462,7 +462,7 @@ def migrate():
 @cli.command("upgrade")
 @click.pass_context
 def upgrade(ctx):
-    print("Upgrading from version 5.4.1 to 7.4.0")
+    print("Upgrading from version 5.4.1 to 7.6.0")
     ctx.invoke(download)
     ctx.invoke(maveninstall)
 

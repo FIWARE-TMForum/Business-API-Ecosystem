@@ -1,5 +1,19 @@
 version: '3'
 services:
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
+        environment:
+            - discovery.type=single-node
+            # - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+            # ulimits:
+            #   memlock:
+            #       soft: -1
+            #       hard: -1
+        ports:
+            - "127.0.0.1:9200:9200"
+        networks:
+            main:
+
     mongo:
         image: mongo:3.2
         restart: always
@@ -38,7 +52,7 @@ services:
             - ./charging-plugins:/business-ecosystem-charging-backend/src/plugins
             - ./charging-inst-plugins:/business-ecosystem-charging-backend/src/wstore/asset_manager/resource_plugins/plugins
         environment:
-          - BAE_CB_PAYMENT_METHOD=None  # Paypal or None (testing mode payment disconected)
+          - BAE_CB_PAYMENT_METHOD=None  # paypal or None (testing mode payment disconected)
           # - BAE_CB_PAYPAL_CLIENT_ID=client_id
           # - BAE_CB_PAYPAL_CLIENT_SECRET=client_secret
 
@@ -80,8 +94,10 @@ services:
         image: fiware/biz-ecosystem-logic-proxy:develop
         links:
             - mongo
+            - elasticsearch
         depends_on:
             - mongo
+            - elasticsearch
         networks:
             main:
                 aliases:
