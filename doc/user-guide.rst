@@ -290,7 +290,8 @@ Once you have included all the required characteristics click on *Next*
    :align: center
 
 In the next step you can include a picture for your product spec. You have two options, providing an URL pointing to the
-picture or directly uploading it. Once provided click *Next*
+picture or directly uploading it. In addition, it is possible to include multiple file attachments
+to the product spec, such as images, PDF documentation, etc. Once provided click *Next*
 
 .. image:: ./images/user/product16.png
    :align: center
@@ -298,16 +299,9 @@ picture or directly uploading it. Once provided click *Next*
 .. image:: ./images/user/product17.png
    :align: center
 
-Then, you can specify relationships of the product you are creating with other of your product specs.
+In the last step, you can specify relationships of the product you are creating with other of your product specs.
 
 .. image:: ./images/user/product18.png
-   :align: center
-
-In the last step, you can specify the terms and conditions that apply to your product and that must be accepted by those
-customers who want to acquire it. To do that, include a title and a text for your terms and click on *Next*. Note that
-the terms and conditions are not mandatory.
-
-.. image:: ./images/user/product19.png
    :align: center
 
 Once done click on *Next* and then on *Create*
