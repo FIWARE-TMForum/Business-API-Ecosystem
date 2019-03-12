@@ -17,6 +17,20 @@ file deploys the whole system and databases (A running version of this file can 
 
     version: '3'
     services:
+        elasticsearch:
+            image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
+            environment:
+                - discovery.type=single-node
+                # - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+                # ulimits:
+                #   memlock:
+                #       soft: -1
+                #       hard: -1
+            ports:
+                - "127.0.0.1:9200:9200"
+            networks:
+                main:
+
         mongo:
             image: mongo:3.2
             restart: always

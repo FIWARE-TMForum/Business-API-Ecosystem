@@ -409,6 +409,18 @@ Each of the different APIs can be configured with environment variables with the
     export BAE_LP_ENDPOINT_CATALOG_HOST=localhost
     export BAE_LP_ENDPOINT_CATALOG_SECURED=false
 
+The Business API Ecosystem uses an indexes system managed by the Logic Proxy in order to perform queries,
+searches, and paging the results. Starting in version 7.6.0 it is possible to use elasticsearch for the
+indexing rather than using the local file system. The indexing system is configured with the following settings. ::
+
+    config.indexes = {
+        'engine': 'local', // local or elasticsearch
+        'elasticHost': 'elastic.docker:9200'
+    };
+
+The *engine* setting can be used to chose between *local* indexes and *elasticsearch* indexes.
+If the later is chosen the URL of elasticsearch is provided with *elasticHost*. 
+
 Finally, there are two fields that allow to configure the behaviour of the system while running. On the one hand, *config.revenueModel*
 allows to configure the default percentage that the Business API Ecosystem is going to retrieve in all the transactions.
 On the other hand, *config.usageChartURL* allows to configure the URL of the chart to be used to display product usage to
