@@ -1672,6 +1672,83 @@ The Product Offering Management API uses the following fields:
             ]
         }
 
+# Group SLA Metrics API
+
+Support API used for the management of SLA metrics which apply to a particular Offering.
+
+This API manages the following fields:
+
+* **offerId** - ID of the offering metrics apply to.
+* **description** - Description of the SLA metrics
+* **services** - List of metrics. Each metric uses the following fields:
+    * **unitMeasure** - unit of the metric
+    * **type** - Type of the metric
+    * **description** - Description of the metric
+    * **threshold** - Threshold of the metric 
+
+## SLA Collection [/SLAManagement/sla]
+
+### Create SLA [POST]
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
+    + Body
+
+            {
+                "offerId":"62",
+                "description": "",
+                "services":[{
+                    "type":"Updates rate",
+                    "threshold":10000,
+                    "unitMeasure":"week",
+                    "description":"Expected number of updates in the given period."
+                }]
+            }
+
++ Response 200 (application/json)
+
+        {
+            "offerId":"62",
+            "description": "",
+            "services":[{
+                "type":"Updates rate",
+                "threshold":10000,
+                "unitMeasure":"week",
+                "description":"Expected number of updates in the given period."
+            }]
+        }
+
+## SLA Entry [/SLAManagement/sla/{offId}]
+
+### Get SLA [GET]
+Update API + Parameters
+
+    + offId: 1 - Id of the offering the SLA is attached to
+    
++ Request
+
+    + Headers
+
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 200 (application/json)
+
+        {
+            "offerId":"62",
+            "description": "",
+            "services":[{
+                "type":"Updates rate",
+                "threshold":10000,
+                "unitMeasure":"week",
+                "description":"Expected number of updates in the given period."
+            }]
+        }
+
+
 # Group Order Management API
 
 API for the management of Product Orders. Product orders are made by customers, and include a set of order items each specifiying an offering to be acquired. When creating an order, customers can select the value of the different 
