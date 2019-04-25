@@ -290,7 +290,8 @@ Once you have included all the required characteristics click on *Next*
    :align: center
 
 In the next step you can include a picture for your product spec. You have two options, providing an URL pointing to the
-picture or directly uploading it. Once provided click *Next*
+picture or directly uploading it. In addition, it is possible to include multiple file attachments
+to the product spec, such as images, PDF documentation, etc. Once provided click *Next*
 
 .. image:: ./images/user/product16.png
    :align: center
@@ -298,21 +299,14 @@ picture or directly uploading it. Once provided click *Next*
 .. image:: ./images/user/product17.png
    :align: center
 
-Then, you can specify relationships of the product you are creating with other of your product specs.
+In the last step, you can specify relationships of the product you are creating with other of your product specs.
 
 .. image:: ./images/user/product18.png
    :align: center
 
-In the last step, you can specify the terms and conditions that apply to your product and that must be accepted by those
-customers who want to acquire it. To do that, include a title and a text for your terms and click on *Next*. Note that
-the terms and conditions are not mandatory.
-
-.. image:: ./images/user/product19.png
-   :align: center
-
 Once done click on *Next* and then on *Create*
 
-.. image:: ./images/user/product19b.png
+.. image:: ./images/user/product19.png
    :align: center
 
 Sellers can update their products. To do that click on the product specification to be updated.
@@ -435,9 +429,34 @@ In the next step, you can optionally choose categories for you offering. Once do
 .. image:: ./images/user/offering12.png
    :align: center
 
-The next step is the more important for the offering. In the displayed form you can create different price plans for
+Next, it is possible to include the License or terms and conditions to be applied to the offering being created.
+There are three different options for prividing such information: (1) For data, there is a set of standard open data
+licenses that can be chosen, (2) providing custom terms and conditions using a wizzard, and (3) providing terms and 
+conditions providing free text.
+
+.. image:: ./images/user/offering12b.png
+   :align: center
+
+.. image:: ./images/user/offering12c.png
+   :align: center
+
+.. image:: ./images/user/offering12d.png
+   :align: center
+
+It is possible to include some SLA information attached to the offering in the step of the form. To do that, click
+on *Define new metric* button. In the displayed form. choose a metric, provide its value and click on *Add metric*.
+
+.. image:: ./images/user/offering12e.png
+   :align: center
+
+Once all the metrics have been provided click on *Next*
+
+.. image:: ./images/user/offering12f.png
+   :align: center
+
+The next step is the most important for the offering. In the displayed form you can create different price plans for
 you offering, which will be selectable by customers when acquiring the offering. If you do not include any price plan
-the offering in considered free.
+the offering it is considered free.
 
 To include a new price plan the first step is clicking on *New Price Plan*
 
@@ -464,6 +483,17 @@ If you choose *recurring*, you have to provide the price, the currency, and the 
 If you choose usage, you have to provide the unit to be accounted, the currency, and the price per unit
 
 .. image:: ./images/user/offering16.png
+   :align: center
+
+In addition to the basic pricing models it is possible to include price alterations using the *Price Alteration*
+section. In this regard, it is possible to provide two types of alterations: (1) Price components, enable to extend
+the model with a complementary pricing (e.g an initial or recurring fixed payment in a usage model). (2) fees and discounts,
+which are applied to the original model when some condition is satisfied (e.g a 2% discount when more that 10k calls has been made)
+
+.. image:: ./images/user/offering16b.png
+   :align: center
+
+.. image:: ./images/user/offering16c.png
    :align: center
 
 You can update or remove plans by clicking on the corresponding action button.
