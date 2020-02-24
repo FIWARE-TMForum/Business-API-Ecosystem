@@ -17,12 +17,13 @@ any time.
 ## Short term
 
 The following list of features are planned to be addressed in the short term,
-and incorporated in the next release of the product planned for February 2019:
+and incorporated in the next release of the product planned for February 2020:
 
-* Acquired offerings rating: Support for rating acquired offerings by adding a star (0 - 5) rate
-* Improved license support: Support for providing advanced license information of published offerings
-* SLA specification: Support for including SLA metrics in offerings
-* GE requirements: Include MUST and SHOULD requirements for active GEs as specified by the FIWARE TSC
+* Open Offerings: Support for publishing open offerings which do not require to be acquired
+in order to be accessed or downloaded
+* Non-profit deployments: Support to configure 0 as default Revenue Sharing Model for platform owner
+* Python 3: Support to Python3 in the Charging Backend component.
+* Node 10: Support to Node 10 in Logic Proxy component 
 
 ## Medium term
 
@@ -30,8 +31,7 @@ The following list of features are planned to be addressed in the medium term,
 typically within the subsequent release(s) generated in the next **9 months**
 after next planned release:
 
-* Characteristic pricing: Support for binding offering pricing models to particular product characteristics
-* Dynamic pricing: Support for making price calculation dependant on customer chosen characteristics and restrictions 
+* TM Forum APIs v19: Migration of current TMForum APIs in version 14.5 to new 19.0 version support JSON-LD 
 
 ## Long term
 
@@ -40,4 +40,4 @@ of the product even though development of these features has not yet been
 scheduled for a release in the near future. Please feel free to contact us if
 you wish to get involved in the implementation or influence the roadmap
 
-* TM Forum On Boarding: Incorporation of TM Forum On Boarding APIs for the management of parties and organizations and their relationship with published offerings.
+* TM Forum new APIS: Incorporation of TM Forum APIs not currently supported in BAE.
