@@ -17,11 +17,11 @@ any time.
 ## Short term
 
 The following list of features are planned to be addressed in the short term,
-and incorporated in the next release of the product planned for February 2020:
+and incorporated in the next release of the product planned for March 2021:
 
-* Open Offerings: Support for publishing open offerings which do not require to be acquired
-in order to be accessed or downloaded
-* Non-profit deployments: Support to configure 0 as default Revenue Sharing Model for platform owner
+* Multiple IPDs: Support for multiple Identity Providers
+* OpenID Connect: Support for OpenID  Connect authentication
+* Manual Activation: Support customers to activate their products manually
 * Python 3: Support to Python3 in the Charging Backend component.
 * Node 10: Support to Node 10 in Logic Proxy component 
 
