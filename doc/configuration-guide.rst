@@ -24,7 +24,7 @@ variables for configuring such connection. ::
     MYSQL_ROOT_PASSWORD=my-secret-pw
     MYSQL_HOST=mysql
 
-Finally, the TMF APIs can optinally use a configuration file called *settings.properties* which is located by default at */etc/default/apis*.
+Finally, the TMF APIs can optionally use a configuration file called *settings.properties* which is located by default at */etc/default/apis*.
 This file include a setting *server* which allows to provide the URL used to access to the Business API Ecosystem and, in particular, by the APIs
 in order to generate *hrefs* with the proper reference. ::
 
@@ -110,6 +110,19 @@ This settings points to the different APIs accessed by the charging backend. In 
 * USAGE: URL of the Usage API including its path
 * AUTHORIZE_SERVICE: Complete URL of the usage authorization service. This service is provided by the logic proxy, and is used to generate API Keys to be used by accounting systems when providing usage information.
 
+These settings can be configured using the following environment variables: ::
+
+    BAE_SERVICE_HOST=http://proxy.docker:8004/
+    BAE_CB_LOCAL_SITE=http://charging.docker:8006/
+    BAE_CB_CATALOG=http://apis.docker:8080/DSProductCatalog
+    BAE_CB_INVENTORY=http://apis.docker:8080/DSProductInventory
+    BAE_CB_ORDERING=http://apis.docker:8080/DSProductOrdering
+    BAE_CB_BILLING=http://apis.docker:8080/DSBillingManagement
+    BAE_CB_RSS=http://rss.docker:8080/DSRevenueSharing
+    BAE_CB_USAGE=http://apis.docker:8080/DSUsageManagement
+    BAE_CB_AUTHORIZE_SERVICE=http://proxy.docker:8004/authorizeService/apiKeys
+
+
 Once the services have been configured, the next step is configuring the database. In this case, the charging backend uses
 MongoDB, and its connection can be configured modifying the *DATABASES* setting of the *settings.py* file. ::
 
@@ -135,6 +148,14 @@ This setting contains the following fields:
 * PORT: Port of the database. If empty it uses the default *27017* port
 * TEST_NAME: Name of the database to be used when running the tests
 
+These settings can be configured using the environment with the following variables: ::
+
+    BAE_CB_MONGO_SERVER=mongo
+    BAE_CB_MONGO_PORT=27017
+    BAE_CB_MONGO_DB=charging_db
+    BAE_CB_MONGO_USER=user
+    BAE_CB_MONGO_PASS=passwd
+
 Once the database connection has been configured, the next step is configuring the name of the IdM roles to be used by
 updating *settings.py* ::
 
@@ -147,6 +168,12 @@ This settings contain the following values:
 * ADMIN_ROLE: IDM role of the system admin
 * PROVIDER_ROLE: IDM role of the users with seller privileges
 * CUSTOMER_ROLE: IDM role of the users with customer privileges
+
+These parameters can be configured with the environment using: ::
+
+    BAE_LP_OAUTH2_ADMIN_ROLE=admin
+    BAE_LP_OAUTH2_SELLER_ROLE=seller
+    BAE_LP_OAUTH2_CUSTOMER_ROLE=customer
 
 The charging backend is the component in charge of maintaining the supported currencies and the timeframe of the different
 periods using in recurring pricing models. To configure both, the following settings are used: ::
@@ -182,6 +209,14 @@ This settings contain the following values:
 * SMTPSERVER: Email server host
 * SMTPPORT: Email server port
 
+These settings can be configured with the environment using: ::
+
+    BAE_CB_EMAIL=charging@email.com
+    BAE_CB_EMAIL_USER=user
+    BAE_CB_EMAIL_PASS=pass
+    BAE_CB_EMAIL_SMTP_SERVER=smtp.server.com
+    BAE_CB_EMAIL_SMTP_PORT=587
+
 .. note::
     The email configuration in optional. However, the field WSTOREMAIL must be provided since it is used internally for RSS configuration
 
@@ -196,11 +231,17 @@ Then, it is required to provide PayPal application credentials by updating the f
     PAYPAL_CLIENT_SECRET = ''
     MODE = 'sandbox'  # sandbox or live
 
-This settings contain the following values:
+These settings contain the following values:
 
 * PAYPAL_CLIENT_ID: Id of the application provided by PayPal
 * PAYPAL_CLIENT_SECRET: Secret of the application provided by PayPal
 * MODE: Mode of the connection. It can be *sandbox* if using the PayPal sandbox for testing the system. Or *live* if using the real PayPal APIs
+
+In addition, these settings can be configured using the following environment variables: ::
+
+    BAE_CB_PAYMENT_METHOD=paypal
+    BAE_CB_PAYPAL_CLIENT_ID=client_id
+    BAE_CB_PAYPAL_CLIENT_SECRET=client_secret
 
 Moreover, the Charging Backend is the component that activates the purchased services. In this regard, the Charging Backend
 has the possibility of signing its acquisition notifications with a certificate, so the external system being offered can
@@ -284,7 +325,7 @@ Which can be also configured using the *BAE_SERVICE_HOST* environment variable. 
 
     export BAE_SERVICE_HOST=https://store.lab.fiware.org/
 
-Then, it is possible to modify some of the URLs of the system. Concretely, it is possible to provide a prefix for the API,
+Then, it is possible to modify some of the URLs of the system. In particular, it is possible to provide a prefix for the API,
 a prefix for the portal, and modifying the login and logout URLS ::
 
     config.proxyPrefix = '';
@@ -414,12 +455,19 @@ searches, and paging the results. Starting in version 7.6.0 it is possible to us
 indexing rather than using the local file system. The indexing system is configured with the following settings. ::
 
     config.indexes = {
-        'engine': 'local', // local or elasticsearch
+        'engine': 'elasticsearch', // local or elasticsearch
         'elasticHost': 'elastic.docker:9200'
+        'apiVersion': '7.5'
     };
 
 The *engine* setting can be used to chose between *local* indexes and *elasticsearch* indexes.
 If the later is chosen the URL of elasticsearch is provided with *elasticHost*. 
+
+These settings can be configured using the environment as follows: ::
+
+    export BAE_LP_INDEX_ENGINE=elasticsearch
+    export BAE_LP_INDEX_URL=elasticsearch:9200
+    export BAE_LP_INDEX_API_VERSION=7
 
 Finally, there are two fields that allow to configure the behaviour of the system while running. On the one hand, *config.revenueModel*
 allows to configure the default percentage that the Business API Ecosystem is going to retrieve in all the transactions.
