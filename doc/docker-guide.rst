@@ -2,7 +2,7 @@
 Docker Deployment Guide
 =======================
 
-This guide covers the deployment of the Business API Ecosystem version 7.6.0 using the Docker images provided in docker hub.
+This guide covers the deployment of the Business API Ecosystem version 7.8.0 using the Docker images provided in docker hub.
 
 As stated, the Business API Ecosystem in made up of a set of different components which work jointly in order to provide
 the functionality. In this regard the following images has been defined:
@@ -18,14 +18,9 @@ file deploys the whole system and databases (A running version of this file can 
     version: '3'
     services:
         elasticsearch:
-            image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
+            image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
             environment:
                 - discovery.type=single-node
-                # - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-                # ulimits:
-                #   memlock:
-                #       soft: -1
-                #       hard: -1
             ports:
                 - "127.0.0.1:9200:9200"
             networks:
@@ -34,8 +29,6 @@ file deploys the whole system and databases (A running version of this file can 
         mongo:
             image: mongo:3.2
             restart: always
-            ports:
-                - 27017:27017
             networks:
                 main:
             volumes:
@@ -44,8 +37,6 @@ file deploys the whole system and databases (A running version of this file can 
         mysql:
             image: mysql:5.7
             restart: always
-            ports:
-                - 3333:3306
             volumes:
                 - ./mysql-data:/var/lib/mysql
             networks:
@@ -55,7 +46,7 @@ file deploys the whole system and databases (A running version of this file can 
                 - MYSQL_DATABASE=RSS
 
         charging:
-            image: fiware/biz-ecosystem-charging-backend:v7.6.0
+            image: fiware/biz-ecosystem-charging-backend:v7.8.0
             links:
                 - mongo
             depends_on:
@@ -67,65 +58,64 @@ file deploys the whole system and databases (A running version of this file can 
             ports:
                 - 8006:8006
             volumes:
-                # - ./charging-settings:/business-ecosystem-charging-backend/src/user_settings  # Used if the settings files are provided through the volume 
                 - ./charging-bills:/business-ecosystem-charging-backend/src/media/bills
                 - ./charging-assets:/business-ecosystem-charging-backend/src/media/assets
                 - ./charging-plugins:/business-ecosystem-charging-backend/src/plugins
                 - ./charging-inst-plugins:/business-ecosystem-charging-backend/src/wstore/asset_manager/resource_plugins/plugins
             environment:
-               - BAE_CB_PAYMENT_METHOD=None  # Paypal or None (testing mode payment disconected)
+            - BAE_CB_PAYMENT_METHOD=None  # paypal or None (testing mode payment disconected)
               # - BAE_CB_PAYPAL_CLIENT_ID=client_id
               # - BAE_CB_PAYPAL_CLIENT_SECRET=client_secret
 
               # ----- Database configuration ------
-              - BAE_CB_MONGO_SERVER=mongo
-              - BAE_CB_MONGO_PORT=27017
-              - BAE_CB_MONGO_DB=charging_db
+            - BAE_CB_MONGO_SERVER=mongo
+            - BAE_CB_MONGO_PORT=27017
+            - BAE_CB_MONGO_DB=charging_db
               # - BAE_CB_MONGO_USER=user
               # - BAE_CB_MONGO_PASS=passwd
 
               # ----- Roles Configuration -----
-              - BAE_LP_OAUTH2_ADMIN_ROLE=admin
-              - BAE_LP_OAUTH2_SELLER_ROLE=seller
-              - BAE_LP_OAUTH2_CUSTOMER_ROLE=customer
+            - BAE_LP_OAUTH2_ADMIN_ROLE=admin
+            - BAE_LP_OAUTH2_SELLER_ROLE=seller
+            - BAE_LP_OAUTH2_CUSTOMER_ROLE=customer
 
               # ----- Email configuration ------
-              - BAE_CB_EMAIL=charging@email.com
+            - BAE_CB_EMAIL=charging@email.com
               # - BAE_CB_EMAIL_USER=user
               # - BAE_CB_EMAIL_PASS=pass
               # - BAE_CB_EMAIL_SMTP_SERVER=smtp.server.com
               # - BAE_CB_EMAIL_SMTP_PORT=587
 
-              - BAE_CB_VERIFY_REQUESTS=True  # Whether or not the BAE validates SSL certificates on requests to external components 
+            - BAE_CB_VERIFY_REQUESTS=True  # Whether or not the BAE validates SSL certificates on requests to external components 
 
               # ----- Site configuration -----
-              - BAE_SERVICE_HOST=http://proxy.docker:8004/  # External URL used to access the BAE
-              - BAE_CB_LOCAL_SITE=http://charging.docker:8006/  # Local URL of the charging backend
+            - BAE_SERVICE_HOST=http://proxy.docker:8004/  # External URL used to access the BAE
+            - BAE_CB_LOCAL_SITE=http://charging.docker:8006/  # Local URL of the charging backend
 
               # ----- APIs Conection config -----
-              - BAE_CB_CATALOG=http://apis.docker:8080/DSProductCatalog
-              - BAE_CB_INVENTORY=http://apis.docker:8080/DSProductInventory
-              - BAE_CB_ORDERING=http://apis.docker:8080/DSProductOrdering
-              - BAE_CB_BILLING=http://apis.docker:8080/DSBillingManagement
-              - BAE_CB_RSS=http://rss.docker:8080/DSRevenueSharing
-              - BAE_CB_USAGE=http://apis.docker:8080/DSUsageManagement
-              - BAE_CB_AUTHORIZE_SERVICE=http://proxy.docker:8004/authorizeService/apiKeys
+            - BAE_CB_CATALOG=http://apis.docker:8080/DSProductCatalog
+            - BAE_CB_INVENTORY=http://apis.docker:8080/DSProductInventory
+            - BAE_CB_ORDERING=http://apis.docker:8080/DSProductOrdering
+            - BAE_CB_BILLING=http://apis.docker:8080/DSBillingManagement
+            - BAE_CB_RSS=http://rss.docker:8080/DSRevenueSharing
+            - BAE_CB_USAGE=http://apis.docker:8080/DSUsageManagement
+            - BAE_CB_AUTHORIZE_SERVICE=http://proxy.docker:8004/authorizeService/apiKeys
 
         proxy:
-            image: fiware/biz-ecosystem-logic-proxy:v7.6.0
+            image: fiware/biz-ecosystem-logic-proxy:v7.8.0
             links:
                 - mongo
+                - elasticsearch
             depends_on:
                 - mongo
+                - elasticsearch
             networks:
                 main:
                     aliases:
                         - proxy.docker
             ports:
-                - 8004:8000
+                - 8004:8004
             volumes:
-                # - ./proxy-conf:/business-ecosystem-logic-proxy/etc  # To be used when congiguring the system with a config file provided in the volume
-                - ./proxy-indexes:/business-ecosystem-logic-proxy/indexes
                 - ./proxy-themes:/business-ecosystem-logic-proxy/themes
                 - ./proxy-static:/business-ecosystem-logic-proxy/static
                 - ./proxy-locales:/business-ecosystem-logic-proxy/locales
@@ -133,7 +123,7 @@ file deploys the whole system and databases (A running version of this file can 
                 - NODE_ENV=development  # Deployment in development or in production
                 - COLLECT=True  # Execute the collect static command on startup
 
-                - BAE_LP_PORT=8000  # Port where the node service is going to run in the container
+                - BAE_LP_PORT=8004  # Port where the node service is going to run in the container
                 - BAE_LP_HOST=proxy.docker  # Host where the node service if going to run in the container
                 # - BAE_SERVICE_HOST=https://store.lab.fiware.org/  # If provided, this URL specifies the actual URL that is used to access the BAE, when the component is proxied (e.g Apache)
                 # - BAE_LP_HTTPS_ENABLED=true  # If provided specifies whether the service is running in HTTPS, default: false
@@ -143,9 +133,9 @@ file deploys the whole system and databases (A running version of this file can 
                 # - BAE_LP_HTTPS_PORT=443  # Port where the service runs when SSL is enabled (when HTTPS enabled is true)
 
                 # ------ OAUTH2 Config ------
-                - BAE_LP_OAUTH2_SERVER=http://idm.docker:8000  # URL of the FIWARE IDM used for user authentication
-                - BAE_LP_OAUTH2_CLIENT_ID=id  # OAuth2 Client ID of the BAE applicaiton
-                - BAE_LP_OAUTH2_CLIENT_SECRET=secret  # OAuth Client Secret of the BAE application
+                - BAE_LP_OAUTH2_SERVER=http://idm.docker:3000  # URL of the FIWARE IDM used for user authentication
+                - BAE_LP_OAUTH2_CLIENT_ID=f0ab257d-7456-41e8-bb0a-002148ac0217  # OAuth2 Client ID of the BAE applicaiton
+                - BAE_LP_OAUTH2_CLIENT_SECRET=d5ea8cce-08ea-4cb2-8379-66bb35020cee  # OAuth Client Secret of the BAE application
                 - BAE_LP_OAUTH2_CALLBACK=http://proxy.docker:8004/auth/fiware/callback  # Callback URL for receiving the access tokens
                 - BAE_LP_OAUTH2_ADMIN_ROLE=admin  # Role defined in the IDM client app for admins of the BAE 
                 - BAE_LP_OAUTH2_SELLER_ROLE=seller  # Role defined in the IDM client app for sellers of the BAE 
@@ -163,6 +153,12 @@ file deploys the whole system and databases (A running version of this file can 
                 - BAE_LP_MONGO_DB=belp
 
                 - BAE_LP_REVENUE_MODEL=30  # Default market owner precentage for Revenue Sharing models
+                - BAE_LP_TAX_RATE=20  # Tax rate applied to offers in the marketplace
+
+                # ----- Indexing engine  -------
+                - BAE_LP_INDEX_ENGINE=elasticsearch   # Indexig engine: elasticsearch or local
+                - BAE_LP_INDEX_URL=elasticsearch:9200  # URL of elasticsearch
+                - BAE_LP_INDEX_API_VERSION=7  # API version of elasticsearch
 
                 # ----- APIs Configuration -----
                 # If provided, it supports configuring the contection to the different APIs managed by the logic proxy, by default
@@ -186,7 +182,7 @@ file deploys the whole system and databases (A running version of this file can 
             networks:
                 main:
                     aliases:
-                      - apis.docker
+                        - apis.docker
             # volumes:
             #    - ./apis-conf:/etc/default/tmf/  # Used if not configured by environment
             environment:
@@ -195,7 +191,7 @@ file deploys the whole system and databases (A running version of this file can 
                 - MYSQL_HOST=mysql
 
         rss:
-            image: fiware/biz-ecosystem-rss:v7.6.0
+            image: fiware/biz-ecosystem-rss:v7.8.0
             restart: always
             ports:
                 - 9999:8080
@@ -219,26 +215,24 @@ file deploys the whole system and databases (A running version of this file can 
                 - BAE_RSS_OAUTH_CONFIG_GRANTEDROLE=admin
                 - BAE_RSS_OAUTH_CONFIG_SELLERROLE=seller
                 - BAE_RSS_OAUTH_CONFIG_AGGREGATORROLE=Aggregator
+
     networks:
         main:
             external: true
+
 
 .. note::
     The previous example uses an external network called *main*, which need to exist. If you do not want to use such network just remove the network tags
 
 
-The different images provided can be configured in two different ways as it is done with the software. On the one hand,
-configuration parameters can be included as environment variables (as shown in the example). On the other hand, the different
-images can be configured by providing configuration files throught volumes.
-
+It can be seen that the different images can be configured using different environment variables.
 For details on the different configuration options, please refer to the `*Configuration Guide* <doc:configuration-guide>`__
 
 It can be seen that the different images used as part of the Business API Ecosystem provide several volumes. Following 
-it is descrived the diffent options provided by each image.
+it is described the diffent options provided by each image.
 
 The **biz-ecosystem-logic-proxy** image defines 4 volumes. In particular:
 
-* */business-ecosystem-logic-proxy/etc*: When file configuration is used, this volume must include the `config.js` file with the software configuration
 * */business-ecosystem-logic-proxy/indexes*: This volume contains the indexes used by the Business API Ecosystem for searching
 * */business-ecosystem-logic-proxy/themes*: In this volume, it can be provided the themes that can be used to customize the web portal
 * */business-ecosystem-logic-proxy/static*: This volume includes the static files ready to be rendered including the selected theme and js files
@@ -250,7 +244,6 @@ Additionally, the **biz-ecosystem-logic-proxy** image defines two environment va
 
 On the other hand, the **biz-ecosystem-charging-backend** image defines 4 volumes. In particular:
 
-* */business-ecosystem-charging-backend/src/user_settings*: This directory must include the *settings.py* and *services_settings.py* files with the software configuration, when the volume configuration is used.
 * */business-ecosystem-charging-backend/src/media/bills*: This directory contains the PDF invoices generated by the Business Ecosystem Charging Backend
 * */business-ecosystem-charging-backend/src/media/assets*: This directory contains the different digital assets uploaded by sellers to the Business Ecosystem Charging Backend
 * */business-ecosystem-charging-backend/src/plugins*: This directory is used for providing asset plugins (see section *Installing Asset Plugins*)
