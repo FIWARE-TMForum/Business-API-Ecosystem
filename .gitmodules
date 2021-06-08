@@ -4,3 +4,6 @@
 [submodule "src/business-ecosystem-charging-backend"]
 	path = src/business-ecosystem-charging-backend
 	url = https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend.git
+[submodule "src/business-ecosystem-rss"]
+	path = src/business-ecosystem-rss
+	url = https://github.com/FIWARE-TMForum/business-ecosystem-rss.git
