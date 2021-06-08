@@ -7,7 +7,7 @@
 [![Support](https://img.shields.io/badge/support-askbot-yellowgreen.svg)](https://ask.fiware.org)
 <br>
 [![Documentation badge](https://img.shields.io/readthedocs/business-api-ecosystem.svg)](https://business-api-ecosystem.rtfd.io)
-![Status](https://nexus.lab.fiware.org/static/badges/statuses/business-api.svg)
+![Status](https://nexus.lab.fiware.org/static/badges/statuses/business-api.svg) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/4964/badge)](https://bestpractices.coreinfrastructure.org/projects/4964)
 
 The Business API Ecosystem provides sellers the means for managing, publishing,
 and generating revenue of their products, apps, data, and services. The Business
