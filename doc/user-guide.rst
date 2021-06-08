@@ -97,6 +97,13 @@ You can *Edit* or *Remove* the contact medium by clicking on the corresponding b
 Admin
 =====
 
+If the external IDPs feature is enabled, admins should login in the system with the local IDPs by directly accessing
+to the login URL in the browser: ::
+
+   https://[marketurl]/login
+
+If the external IDP is disabled, the login button will use the local IDP.
+
 If the user of the Business API Ecosystem is an admin, he will be able to access the *Administration* section of the
 web portal. This section is located in the user menu.
 
@@ -135,6 +142,26 @@ Existing categories can be updated. To edit a category click on the category nam
 Then edit the corresponding fields and click on *Update*.
 
 .. image:: ./images/user/cat7.png
+   :align: center
+
+Manage IDPs
+-----------
+
+If the external IDPs option is enabled, *admins* are authorized to register them using the *Administration* section.
+
+To list existing IDPs access to *IDPs*:
+
+.. image:: ./images/admin/idps1.png
+   :align: center
+
+.. image:: ./images/admin/idps2.png
+   :align: center
+
+To register a new IDP click in *New*. In the displayed form, fill the *IDP EORI* with the EORI given to the IDP
+by the trust provider (i.e iShare). Provide a name and an optional description and fill *Server* with the URL
+of the IDP.
+
+.. image:: ./images/admin/idps3.png
    :align: center
 
 Seller

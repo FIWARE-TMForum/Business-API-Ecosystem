@@ -2,7 +2,7 @@
 Installation and Administration Guide
 =====================================
 
-This guide covers the installation of the Business API Ecosystem v7.8.0 from the sources available in GitHub, installing manually
+This guide covers the installation of the Business API Ecosystem v8.0.0 from the sources available in GitHub, installing manually
 the software dependencies and using the existing scripts for setting up the system.
 
 The current version of the software has been tested under Ubuntu 15.10, Ubuntu 16.04, Ubuntu 18.04, Debian 7, Debian 8,
@@ -398,7 +398,7 @@ The first step for installing the RSS component is downloading it and moving to 
 
     $ git clone https://github.com/FIWARE-TMForum/business-ecosystem-rss.git
     $ cd business-ecosystem-rss
-    $ git checkout v7.8.0
+    $ git checkout v8.0.0
 
 Then, the next step is coping, *database.properties* and *oauth.properties* files to its default location at */etc/default/rss* ::
 
@@ -445,7 +445,7 @@ The first step for installing the charging backend component is downloading it a
 
     $ git clone https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend.git
     $ cd business-ecosystem-charging-backend
-    $ git checkout v7.8.0
+    $ git checkout v8.0.0
 
 Once the code has been downloaded, it is recommended to create a virtualenv for installing python dependencies (This is not mandatory). ::
 
@@ -577,7 +577,7 @@ The first step for installing the logic proxy component is downloading it and mo
 
     $ git clone https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy.git
     $ cd business-ecosystem-logic-proxy
-    $ git checkout v7.8.0
+    $ git checkout v8.0.0
 
 Once the code has been downloaded, Node dependencies can be installed with the provided script as follows ::
 
