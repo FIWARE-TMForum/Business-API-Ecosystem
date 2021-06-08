@@ -243,6 +243,16 @@ In addition, these settings can be configured using the following environment va
     BAE_CB_PAYPAL_CLIENT_ID=client_id
     BAE_CB_PAYPAL_CLIENT_SECRET=client_secret
 
+The charging backend component can be configured to expect or not the user access token to be propagated
+from the business logic proxy component, depending on the use case and the expected plugins to be installed.
+This can be configured with the following setting: ::
+
+    PROPAGATE_TOKEN = True
+
+This setting can be also configured using the environment as follows: ::
+
+    export BAE_CB_PROPAGATE_TOKEN=true
+
 Moreover, the Charging Backend is the component that activates the purchased services. In this regard, the Charging Backend
 has the possibility of signing its acquisition notifications with a certificate, so the external system being offered can
 validate that is the Charging Backend the one making the request. To use this functionality it is needed to configure the
@@ -382,7 +392,7 @@ role has to be granted to users within IdM organizations.
 
 The *isLegacy* flag is used to specify whether the configured IDM is version 6 or lower, by default this setting is false. 
 
-The OAuth2 settings cane be configured using the environment as follows: ::
+The OAuth2 settings can be configured using the environment as follows: ::
 
     export BAE_LP_OAUTH2_SERVER=https://account.lab.fiware.org
     export BAE_LP_OAUTH2_CLIENT_ID=client_id
@@ -393,6 +403,26 @@ The OAuth2 settings cane be configured using the environment as follows: ::
     export BAE_LP_OAUTH2_ORG_ADMIN_ROLE=orgAdmin
 
     export BAE_LP_OAUTH2_IS_LEGACY=false
+
+Starting from version 8.0.0 the BAE supports multiple external IDPs to be configured in order to allow organizations
+to login using their own IDP, when registered in a trust provider like iShare. To enable such feature the following setting
+needs to be configured: ::
+
+    config.extLogin = true;
+
+This setting can be also configured using the environment as follows: ::
+
+    export BAE_LP_EXT_LOGIN=true
+
+In addition, it is possible to configure whether the proxy component should propagate user access token
+to the backend components (charging backend, RSS and APIs), depending on the use case and the plugins
+installed. To configure such setting, the following is used: ::
+
+    config.propagateToken = true;
+
+That can be configured using the environment as follows: ::
+
+    export BAE_LP_PROPAGATE_TOKEN=true
 
 Moreover, the Proxy uses MongoDB for maintaining some info, such as the current shopping cart of a user. you can configure
 the connection to MongoDB by updating the following setting: ::

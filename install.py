@@ -63,18 +63,18 @@ APIS = [{"url": "https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2.git",
          "resourcename": "jdbc/usagedbv2"}]
 
 rss = {"url": "https://github.com/FIWARE-TMForum/business-ecosystem-rss.git",
-       "branch": "v7.8.0",
+       "branch": "v8.0.0",
        "bbdd": "RSS",
        "war": "fiware-rss/target/DSRevenueSharing.war",
        "name": "rss",
        "root": "DSRevenueSharing"}
 
 charg = {"url": "https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend.git",
-         "branch": "v7.8.0",
+         "branch": "v8.0.0",
          "name": "charging"}
 
 proxy = {"url": "https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy.git",
-         "branch": "v7.8.0"}
+         "branch": "v8.0.0"}
 
 
 @click.group(chain=True)

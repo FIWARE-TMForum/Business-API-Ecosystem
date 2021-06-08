@@ -17,13 +17,11 @@ any time.
 ## Short term
 
 The following list of features are planned to be addressed in the short term,
-and incorporated in the next release of the product planned for March 2021:
+and incorporated in the next release of the product planned for September 2021:
 
-* Multiple IPDs: Support for multiple Identity Providers
-* OpenID Connect: Support for OpenID  Connect authentication
-* Manual Activation: Support customers to activate their products manually
+* Manual Activation: Support customers to activate their products manually.
 * Python 3: Support to Python3 in the Charging Backend component.
-* Node 10: Support to Node 10 in Logic Proxy component 
+* Multiple Payment Gateways: Support other payment gateways than PayPal
 
 ## Medium term
 
