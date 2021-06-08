@@ -7,3 +7,24 @@
 [submodule "src/business-ecosystem-rss"]
 	path = src/business-ecosystem-rss
 	url = https://github.com/FIWARE-TMForum/business-ecosystem-rss.git
+[submodule "src/apis/DSPRODUCTCATALOG2"]
+	path = src/apis/DSPRODUCTCATALOG2
+	url = https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2.git
+[submodule "src/apis/DSPRODUCTORDERING"]
+	path = src/apis/DSPRODUCTORDERING
+	url = https://github.com/FIWARE-TMForum/DSPRODUCTORDERING.git
+[submodule "src/apis/DSPRODUCTINVENTORY"]
+	path = src/apis/DSPRODUCTINVENTORY
+	url = https://github.com/FIWARE-TMForum/DSPRODUCTINVENTORY.git
+[submodule "src/apis/DSPARTYMANAGEMENT"]
+	path = src/apis/DSPARTYMANAGEMENT
+	url = https://github.com/FIWARE-TMForum/DSPARTYMANAGEMENT.git
+[submodule "src/apis/DSCUSTOMER"]
+	path = src/apis/DSCUSTOMER
+	url = https://github.com/FIWARE-TMForum/DSCUSTOMER.git
+[submodule "src/apis/DSBILLINGMANAGEMENT"]
+	path = src/apis/DSBILLINGMANAGEMENT
+	url = https://github.com/FIWARE-TMForum/DSBILLINGMANAGEMENT.git
+[submodule "src/apis/DSUSAGEMANAGEMENT"]
+	path = src/apis/DSUSAGEMANAGEMENT
+	url = https://github.com/FIWARE-TMForum/DSUSAGEMANAGEMENT.git
