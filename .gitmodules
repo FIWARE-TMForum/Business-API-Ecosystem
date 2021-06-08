@@ -1,0 +1,3 @@
+[submodule "src/business-ecosystem-logic-proxy"]
+	path = src/business-ecosystem-logic-proxy
+	url = https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy.git
