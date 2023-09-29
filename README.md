@@ -2,9 +2,11 @@
 
 [![](https://nexus.lab.fiware.org/repository/raw/public/badges/chapters/data-monetization.svg)](https://www.fiware.org/developers/catalogue/)
 [![License badge](https://img.shields.io/github/license/FIWARE-TMForum/Business-API-Ecosystem.svg)](https://opensource.org/licenses/AGPL-3.0)
-[![Docker](https://img.shields.io/docker/pulls/fiware/business-api-ecosystem.svg)](https://hub.docker.com/r/fiware/business-api-ecosystem)
 [![](https://img.shields.io/badge/tag-fiware-orange.svg?logo=stackoverflow)](http://stackoverflow.com/questions/tagged/fiware)
 [![Support](https://img.shields.io/badge/support-askbot-yellowgreen.svg)](https://ask.fiware.org)
+<br>
+[![Quay badge](https://img.shields.io/badge/quay.io-fiware%2Fbiz--ecosystem--apis-grey?logo=red%20hat&labelColor=EE0000)](https://quay.io/repository/fiware/biz-ecosystem-apis)
+[![Docker badge](https://img.shields.io/badge/docker-fiware%2Fbiz--ecosystem--apis-blue?logo=docker)](https://registry.hub.docker.com/r/fiware/biz-ecosystem-apis)
 <br>
 [![Documentation badge](https://img.shields.io/readthedocs/business-api-ecosystem.svg)](https://business-api-ecosystem.rtfd.io)
 ![Status](https://nexus.lab.fiware.org/static/badges/statuses/business-api.svg) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/4964/badge)](https://bestpractices.coreinfrastructure.org/projects/4964)
@@ -19,8 +21,8 @@ This project is part of [FIWARE](https://www.fiware.org/). For more information
 check the FIWARE Catalogue entry for
 [Data Publication and Monetization](https://github.com/Fiware/catalogue/tree/master/data-publication).
 
- | :books: [Documentation](https://business-api-ecosystem.rtfd.io/)  | :mortar_board: [Academy](https://fiware-academy.readthedocs.io/en/latest/data-publication/business-api) | :whale: [Docker Hub](https://hub.docker.com/r/fiware/business-api-ecosystem) |  :dart: [Roadmap](https://github.com/FIWARE-TMForum/Business-API-Ecosystem/blob/master/roadmap.md)|
-|---|---|---|---|
+ | :books: [Documentation](https://business-api-ecosystem.rtfd.io/)  | :mortar_board: [Academy](https://fiware-academy.readthedocs.io/en/latest/data-publication/business-api) | :whale: [Docker Hub](https://hub.docker.com/r/fiware/biz-ecosystem-apis) | <img style="height:1em" src="https://quay.io/static/img/quay_favicon.png"/> [quay.io](https://quay.io/repository/fiware/biz-ecosystem-apis) |  :dart: [Roadmap](https://github.com/FIWARE-TMForum/Business-API-Ecosystem/blob/master/roadmap.md)|
+|---|---|---|---|---|
 
 ## Contents
 
@@ -224,6 +226,9 @@ follows:
 Business-API-Ecosystem is licensed under [Affero General Public License (GPL)
 version 3](./LICENSE).
 
+<details>
+<summary><strong>Further information on the use of the AGPL open source license</strong></summary>
+
 ### Are there any legal issues with AGPL 3.0? Is it safe for me to use?
 
 There is absolutely no problem in using a product licensed under AGPL 3.0. Issues with GPL 
@@ -240,3 +245,5 @@ wish to make a clarifying public statement as follows:
 > work of the product. Software that merely uses or aggregates (i.e. links to) an otherwise 
 > unmodified version of existing software is not considered a derivative work, and therefore
 > it does not need to be released as under the same license, or even released as open source.
+
+</details>
