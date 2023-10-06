@@ -22,18 +22,11 @@ latex_documents = [
    u'', 'manual'),
 ]
 
-# Only import and set the theme if we're building docs locally
-if not on_rtd:
-    import sphinx_rtd_theme
-    html_theme = 'sphinx_rtd_theme'
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-    html_style = 'https://www.fiware.org/style/fiware_readthedocs.css'
-else:
-    html_context = { 
-        'css_files': [
-            'https://media.readthedocs.org/css/sphinx_rtd_theme.css',
-            'https://media.readthedocs.org/css/readthedocs-doc-embed.css',
-            'https://www.fiware.org/style/fiware_readthedocs.css',
-            'https://www.fiware.org/style/fiware_readthedocs_publication.css',
-        ],  
-    }
+html_context = { 
+    'css_files': [
+        'https://media.readthedocs.org/css/sphinx_rtd_theme.css',
+        'https://media.readthedocs.org/css/readthedocs-doc-embed.css',
+        'https://www.fiware.org/style/fiware_readthedocs.css',
+        'https://www.fiware.org/style/fiware_readthedocs_publication.css',
+    ],  
+}
