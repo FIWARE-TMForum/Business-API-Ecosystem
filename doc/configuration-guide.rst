@@ -11,74 +11,6 @@ the RSS, this installation process has already required to configure their datab
 so they are already configured. Nevertheless, this section contains an explanation of the function of the different
 settings of the RSS properties files.
 
-------------------------
-Configuring the TMF APIs
-------------------------
-
-When the TMF APIs are deployed from sources, the connection to the MySQL database is configured during the installation process
-setting up the jdbc connection as described in the *Installation and Administration* guide.
-
-On the other hand, the Docker image biz-ecosystem-apis, which is used to the deploy TMF APIs using Docker, uses two environment
-variables for configuring such connection. ::
-
-    MYSQL_ROOT_PASSWORD=my-secret-pw
-    MYSQL_HOST=mysql
-
-Finally, the TMF APIs can optionally use a configuration file called *settings.properties* which is located by default at */etc/default/apis*.
-This file include a setting *server* which allows to provide the URL used to access to the Business API Ecosystem and, in particular, by the APIs
-in order to generate *hrefs* with the proper reference. ::
-
-    server=https://store.lab.fiware.org/
-
-This setting can also be configured using the environment variable *BAE_SERVICE_HOST* ::
-
-    export BAE_SERVICE_HOST=https://store.lab.fiware.org/
-
-
--------------------
-Configuring the RSS
--------------------
-
-The RSS has its settings included in two files located at */etc/default/rss*. The file *database.properties*  contains
-by default the following fields: ::
-
-    database.url=jdbc:mysql://localhost:3306/RSS
-    database.username=root
-    database.password=root
-    database.driverClassName=com.mysql.jdbc.Driver
-
-This file contains the configuration required in order to connect to the database.
-
-* database.url: URL used to connect to the database, this URL includes the host and port of the database as well as the concrete database to be used
-* database.username: User to be used to connect to the database
-* database.password: Password of the database user
-* database.driverClassName: Driver class of the database. By default MySQL
-
-In addition, database settings can be configured using the environment. In particular, using the following variables: ::
-
-    export BAE_RSS_DATABASE_URL=jdbc:mysql://mysql:3306/RSS
-    export BAE_RSS_DATABASE_USERNAME=root
-    export BAE_RSS_DATABASE_PASSWORD=my-secret-pw
-    export BAE_RSS_DATABASE_DRIVERCLASSNAME=com.mysql.jdbc.Driver
-
-The file *oauth.properties* contains by default the following fields (It is recommended not to modify them) ::
-
-    config.grantedRole=admin
-    config.sellerRole=Seller
-    config.aggregatorRole=aggregator
-
-This file contains the name of the roles (registered in the idm) that are going to be used by the RSS.
-
-* config.grantedRole: Role in the IDM of the users with admin privileges
-* config.sellerRole: Role in the IDM of the users with seller privileges
-* config.aggregatorRole: Role of the users who are admins of an store instance. In the context of the Business API Ecosystem there is only a single store instance, so you can safely ignore this flag
-
-Those settings can also be configured using the environment as ::
-
-    export BAE_RSS_OAUTH_CONFIG_GRANTEDROLE=admin
-    export BAE_RSS_OAUTH_CONFIG_SELLERROLE=Seller
-    export BAE_RSS_OAUTH_CONFIG_AGGREGATORROLE=Aggregator
-
 --------------------------------
 Configuring the Charging Backend
 --------------------------------
@@ -98,7 +30,7 @@ which by default contains the following content: ::
     USAGE = 'http://localhost:8080/DSUsageManagement'
     AUTHORIZE_SERVICE = 'http://localhost:8004/authorizeService/apiKeys'
 
-This settings points to the different APIs accessed by the charging backend. In particular:
+These settings point to the different APIs accessed by the charging backend. In particular:
 
 * SITE: External URL of the complete Business API Ecosystem using for Href creation
 * LOCAL_SITE: URL where the Charging Backend is going to run
@@ -127,26 +59,28 @@ Once the services have been configured, the next step is configuring the databas
 MongoDB, and its connection can be configured modifying the *DATABASES* setting of the *settings.py* file. ::
 
     DATABASES = {
-        'default': {
-            'ENGINE': 'django_mongodb_engine',
-            'NAME': 'wstore_db',
-            'USER': '',
-            'PASSWORD': '',
-            'HOST': '',
-            'PORT': '',
-            'TEST_NAME': 'test_database',
+        "default": {
+            "ENGINE": "djongo",
+            "NAME": "wstore_db",
+            "ENFORCE_SCHEMA": False,
+            "CLIENT": {
+                "host": "localhost",
+                "port": 27017
+                "username': "mongoadmin",
+                "password': "mongopass"
+            },
         }
     }
 
 This setting contains the following fields:
 
-* ENGINE: Database engine, must be fixed to django_mongodb_engine
+* ENGINE: Database engine, must be fixed to djongo
 * NAME: Name of the database to be used
-* USER: User of the database. If empty the software creates a non authenticated connection
-* PASSWORD: Database user password. If empty the software creates a non authenticated connection
-* HOST: Host of the database. If empty it uses the default *localhost* host
-* PORT: Port of the database. If empty it uses the default *27017* port
-* TEST_NAME: Name of the database to be used when running the tests
+* CLIENT: Configuration for connecting to MongoDB
+    * host: Host of the database. If empty it uses the default *localhost* host
+    * port: Port of the database. If empty it uses the default *27017* port
+    * username: User of the database. If empty the software creates a non authenticated connection
+    * password: Database user password. If empty the software creates a non authenticated connection
 
 These settings can be configured using the environment with the following variables: ::
 
@@ -273,14 +207,14 @@ The periodicity of this tasks can be configured using the CRONJOBS setting of se
 Once the Cron task has been configured, it is necessary to include it in the Cron tasks using the command:
 ::
 
-    $ ./manage.py crontab add
+    $ python3 manage.py crontab add
 
 It is also possible to show current jobs or remove jobs using the commands:
 ::
 
-    $ ./manage.py crontab show
+    $ python3 manage.py crontab show
 
-    $ ./manage.py crontab remove
+    $ python3 manage.py crontab remove
 
 ---------------------------
 Configuring the Logic Proxy
@@ -289,7 +223,7 @@ Configuring the Logic Proxy
 Configuration of the Logic Proxy is located at *config.js* and can be provided in two different ways: providing the values
 in the file or using the defined environment variables. Note that the environment variables override the values in *config.js*.
 
-The first setting to be configured is the port and host where the proxy is going to run, this settings are located in *config.js* ::
+The first setting to be configured is the port and host where the proxy is going to run, these settings are located in *config.js* ::
 
     config.port = 80;
     config.host = 'localhost';
@@ -352,59 +286,7 @@ The theme can be configured using the *BAE_LP_THEME* variable. ::
 
     export BAE_LP_THEME=fiwaretheme
 
-Additionally, the proxy is the component that acts as the front end of the Business API Ecosystem, both providing a web portal,
-and providing the endpoint for accessing to the different APIs. In this regard, the Proxy has to have the OAuth2 configuration
-of the FIWARE IDM.
-
-To provide OAUth2 configuration, an application has to be created in an instance of the FIWARE IdM (e.g `https://account.lab.fiware.org`),
-providing the following information:
-
-* URL: http|https://<proxy_host>:<proxy_port>
-* Callback URL: http|https://<PROXY_HOST>:<PROXY_PORT>/auth/fiware/callback
-* Create a role *Seller*, a role *Admin*, and a role *orgAdmin*
-
-Once the application has been created in the IdM, it is possible to provide OAuth2 configuration by modifying the following settings ::
-
-    config.oauth2 = {
-        'server': 'https://account.lab.fiware.org',
-        'clientID': '<client_id>',
-        'clientSecret': '<client_secret>',
-        'callbackURL': 'http://<proxy_host>:<proxy_port>/auth/fiware/callback',
-        'isLegacy': false,
-        'roles': {
-            'admin': 'admin',
-            'customer': 'customer',
-            'seller': 'seller',
-            'orgAdmin': 'orgAdmin'
-        }
-    };
-
-In this settings, it is needed to include the IDM instance being used (*server*), the client id given by the IdM (*clientID*),
-the client secret given by the IdM (*clientSecret*), and the callback URL configured in the IdM (*callbackURL*).
-
-In addition, the different roles allow to specify what users are admins of the system (*Admin*), what users can create products
-and offerings (*Seller*), and what users are admins of a particular organization, enabling to manage its information (*orgAdmin*).
-Note that while *admin* and *seller* roles are granted directly to the users in the Business API Ecosystem application, the *orgAdmin*
-role has to be granted to users within IdM organizations.
-
-.. note::
-    Admin, Seller, and orgAdmin roles are configured in the Proxy settings, so any name can be chosen for them in the IDM
-
-The *isLegacy* flag is used to specify whether the configured IDM is version 6 or lower, by default this setting is false. 
-
-The OAuth2 settings can be configured using the environment as follows: ::
-
-    export BAE_LP_OAUTH2_SERVER=https://account.lab.fiware.org
-    export BAE_LP_OAUTH2_CLIENT_ID=client_id
-    export BAE_LP_OAUTH2_CLIENT_SECRET=client_secret
-    export BAE_LP_OAUTH2_CALLBACK=http://<proxy_host>:<proxy_port>/auth/fiware/callback
-    export BAE_LP_OAUTH2_ADMIN_ROLE=admin
-    export BAE_LP_OAUTH2_SELLER_ROLE=seller
-    export BAE_LP_OAUTH2_ORG_ADMIN_ROLE=orgAdmin
-
-    export BAE_LP_OAUTH2_IS_LEGACY=false
-
-Starting from version 8.0.0 the BAE supports multiple external IDPs to be configured in order to allow organizations
+The BAE supports multiple external IDPs to be configured in order to allow organizations
 to login using their own IDP, when registered in a trust provider like iShare. To enable such feature the following setting
 needs to be configured: ::
 
@@ -503,6 +385,168 @@ Finally, there are two fields that allow to configure the behaviour of the syste
 allows to configure the default percentage that the Business API Ecosystem is going to retrieve in all the transactions.
 On the other hand, *config.usageChartURL* allows to configure the URL of the chart to be used to display product usage to
 customers in the web portal. They can be configured with environment variables with *BAE_LP_REVENUE_MODEL* and *BAE_LP_USAGE_CHART*
+
+Identity Management
+===================
+
+Additionally, the proxy is the component that acts as the front end of the Business API Ecosystem, both providing a web portal,
+and providing the endpoint for accessing to the different APIs. In this regard, the Proxy includes the IDP and login configuration.
+The BAE supports multiple IPD implementations. In particular:
+
+* FIWARE Keyrock
+* Keycloak
+* GitHub
+* FIWARE Keyrock + iShare protocol
+* OIDC with discovery server
+
+To configure the IPD integration thw setting *oauth2* is used. The following example shows an example configuration using Keyrock ::
+
+    config.oauth2 = {
+        'provider': 'fiware',
+        'server': 'https://account.lab.fiware.org',
+        'clientID': '<client_id>',
+        'clientSecret': '<client_secret>',
+        'callbackURL': 'http://<proxy_host>:<proxy_port>/auth/fiware/callback',
+        'roles': {
+            'admin': 'admin',
+            'customer': 'customer',
+            'seller': 'seller',
+            'orgAdmin': 'orgAdmin'
+        }
+    };
+
+
+In this settings, the value of *provider* is used to configure the IDP type. Then,
+it is needed to include the IDM instance being used (*server*), the client id given by the IdM (*clientID*),
+the client secret given by the IdM (*clientSecret*), and the callback URL configured in the IdM (*callbackURL*).
+
+In addition, the different roles allow to specify what users are admins of the system (*Admin*), what users can create products
+and offerings (*Seller*), and what users are admins of a particular organization, enabling to manage its information (*orgAdmin*).
+Note that while *admin* and *seller* roles are granted directly to the users in the Business API Ecosystem application, the *orgAdmin*
+role has to be granted to users within IdM organizations.
+
+.. note::
+    Admin, Seller, and orgAdmin roles are configured in the Proxy settings, so any name can be chosen for them in the IDM
+
+The OAuth2 settings can be configured using the environment as follows: ::
+
+    export BAE_LP_OAUTH2_PROVIDER=fiware
+    export BAE_LP_OAUTH2_SERVER=https://account.lab.fiware.org
+    export BAE_LP_OAUTH2_CLIENT_ID=client_id
+    export BAE_LP_OAUTH2_CLIENT_SECRET=client_secret
+    export BAE_LP_OAUTH2_CALLBACK=http://<proxy_host>:<proxy_port>/auth/fiware/callback
+    export BAE_LP_OAUTH2_ADMIN_ROLE=admin
+    export BAE_LP_OAUTH2_SELLER_ROLE=seller
+    export BAE_LP_OAUTH2_ORG_ADMIN_ROLE=orgAdmin
+
+
+For Keycloak provider some extra settings need to be provided. The following is an example of a Keycloak configuration: ::
+
+    config.oauth2 = {
+        provider: 'keycloak',
+        server: 'http://keycloak.docker:8080',
+        clientID: 'bae',
+        clientSecret: 'df68d1b9-f85f-4b5e-807c-c8be3ba27388',
+        callbackURL: 'http://proxy.docker:8004/auth/keycloak/callback',
+        realm: 'bae',
+        roles: {
+            admin: 'admin',
+            customer: 'customer',
+            seller: 'seller',
+            orgAdmin: 'manager'
+        }
+    }
+
+It can be seen that the *provider* setting is set to keycloak and that the *realm* setting is used to specify the Keycloak realm.
+Such setting can be configured using the environment using: ::
+
+    export BAE_LP_OIDC_REALM=bae
+
+When using the iShare protocol, the configuration requires the certificate issues by iShare to be provided in order to generate
+and sign the JWT used in such a protocol. Such info can be provided by the settings *tokenCrt* and *tokenKey* or via enviroment with: ::
+
+    export BAE_LP_OIDC_TOKEN_KEY=...
+    export BAE_LP_OIDC_TOKEN_CRT=...
+
+Finally, if the OIDC protocol is used the following settings need to be configured:
+
+* oidcScopes: Scopes requested in the OIDC request
+* oidcDiscoveryURI: Discovery endpoint for the OIDC protocol
+* oidcTokenEndpointAuthMethod: Method used for retriving the access token in the OIDC server
+
+Such settings can be configured with the environ using: ::
+
+    BAE_LP_OIDC_SCOPES
+    BAE_LP_OIDC_DISCOVERY_URI
+    BAE_LP_OIDC_TOKEN_AUTH_METHOD
+
+------------------------
+Configuring the TMF APIs
+------------------------
+
+When the TMF APIs are deployed from sources, the connection to the MySQL database is configured during the installation process
+setting up the jdbc connection as described in the *Installation and Administration* guide.
+
+On the other hand, the Docker image biz-ecosystem-apis, which is used to the deploy TMF APIs using Docker, uses two environment
+variables for configuring such connection. ::
+
+    MYSQL_ROOT_PASSWORD=my-secret-pw
+    MYSQL_HOST=mysql
+
+Finally, the TMF APIs can optionally use a configuration file called *settings.properties* which is located by default at */etc/default/apis*.
+This file include a setting *server* which allows to provide the URL used to access to the Business API Ecosystem and, in particular, by the APIs
+in order to generate *hrefs* with the proper reference. ::
+
+    server=https://store.lab.fiware.org/
+
+This setting can also be configured using the environment variable *BAE_SERVICE_HOST* ::
+
+    export BAE_SERVICE_HOST=https://store.lab.fiware.org/
+
+
+-------------------
+Configuring the RSS
+-------------------
+
+The RSS has its settings included in two files located at */etc/default/rss*. The file *database.properties*  contains
+by default the following fields: ::
+
+    database.url=jdbc:mysql://localhost:3306/RSS
+    database.username=root
+    database.password=root
+    database.driverClassName=com.mysql.jdbc.Driver
+
+This file contains the configuration required in order to connect to the database.
+
+* database.url: URL used to connect to the database, this URL includes the host and port of the database as well as the concrete database to be used
+* database.username: User to be used to connect to the database
+* database.password: Password of the database user
+* database.driverClassName: Driver class of the database. By default MySQL
+
+In addition, database settings can be configured using the environment. In particular, using the following variables: ::
+
+    export BAE_RSS_DATABASE_URL=jdbc:mysql://mysql:3306/RSS
+    export BAE_RSS_DATABASE_USERNAME=root
+    export BAE_RSS_DATABASE_PASSWORD=my-secret-pw
+    export BAE_RSS_DATABASE_DRIVERCLASSNAME=com.mysql.jdbc.Driver
+
+The file *oauth.properties* contains by default the following fields (It is recommended not to modify them) ::
+
+    config.grantedRole=admin
+    config.sellerRole=Seller
+    config.aggregatorRole=aggregator
+
+This file contains the name of the roles (registered in the idm) that are going to be used by the RSS.
+
+* config.grantedRole: Role in the IDM of the users with admin privileges
+* config.sellerRole: Role in the IDM of the users with seller privileges
+* config.aggregatorRole: Role of the users who are admins of an store instance. In the context of the Business API Ecosystem there is only a single store instance, so you can safely ignore this flag
+
+Those settings can also be configured using the environment as ::
+
+    export BAE_RSS_OAUTH_CONFIG_GRANTEDROLE=admin
+    export BAE_RSS_OAUTH_CONFIG_SELLERROLE=Seller
+    export BAE_RSS_OAUTH_CONFIG_AGGREGATORROLE=Aggregator
 
 ------------------
 Configuring Themes
