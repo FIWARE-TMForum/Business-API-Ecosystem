@@ -59,8 +59,6 @@ Index
     :caption: Documentation
 
     installation-administration-guide
-    docker-installation-guide
-    manual-installation-guide
     configuration-guide
     user-guide
     programmer-guide
