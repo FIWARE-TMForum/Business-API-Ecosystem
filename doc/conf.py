@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import os
-from recommonmark.parser import CommonMarkParser
 
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
 extensions = []
 templates_path = ['/home/docs/checkouts/readthedocs.org/readthedocs/templates/sphinx', 'templates', '_templates', '.templates']
-source_suffix = ['.rst', '.md']		
-source_parsers = {		
-            '.md': CommonMarkParser,		
-        }
+source_suffix = ['.rst']
 master_doc = 'index'
 project = u'biz-ecosystem'
 copyright = u'2016'
