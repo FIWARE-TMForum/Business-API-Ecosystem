@@ -5,11 +5,6 @@ Installation and Administration Guide
 This guide covers the installation of the Business API Ecosystem (BAE) version 8.1.0. The recommended procedure for the
 installation of the Business API Ecosystem is using Docker and the Docker images available in Docker Hub.
 
-Detailed info on how to install the BAE with docker can be found `here <doc:docker-installation-guide>`__
-
-If your system is not dockerized it is possible to deploy the BAE manually following the instructions `here <doc:manual-installation-guide>`__
-
-
 ------------------------
 Installation with Docker
 ------------------------
