@@ -2,7 +2,6 @@
 
 [![](https://nexus.lab.fiware.org/repository/raw/public/badges/chapters/data-monetization.svg)](https://www.fiware.org/developers/catalogue/)
 [![License badge](https://img.shields.io/github/license/FIWARE-TMForum/Business-API-Ecosystem.svg)](https://opensource.org/licenses/AGPL-3.0)
-[![Docker](https://img.shields.io/docker/pulls/fiware/business-api-ecosystem.svg)](https://hub.docker.com/r/fiware/business-api-ecosystem)
 [![](https://img.shields.io/badge/tag-fiware-orange.svg?logo=stackoverflow)](http://stackoverflow.com/questions/tagged/fiware)
 [![Support](https://img.shields.io/badge/support-askbot-yellowgreen.svg)](https://ask.fiware.org)
 <br>
@@ -19,8 +18,8 @@ This project is part of [FIWARE](https://www.fiware.org/). For more information
 check the FIWARE Catalogue entry for
 [Data Publication and Monetization](https://github.com/Fiware/catalogue/tree/master/data-publication).
 
- | :books: [Documentation](https://business-api-ecosystem.rtfd.io/)  | :mortar_board: [Academy](https://fiware-academy.readthedocs.io/en/latest/data-publication/business-api) | :whale: [Docker Hub](https://hub.docker.com/r/fiware/business-api-ecosystem) |  :dart: [Roadmap](https://github.com/FIWARE-TMForum/Business-API-Ecosystem/blob/master/roadmap.md)|
-|---|---|---|---|
+ | :books: [Documentation](https://business-api-ecosystem.rtfd.io/)  |  :dart: [Roadmap](https://github.com/FIWARE-TMForum/Business-API-Ecosystem/blob/master/roadmap.md)|
+|---|---|
 
 ## Contents
 
@@ -39,13 +38,13 @@ check the FIWARE Catalogue entry for
 This is the main repository of the Business API Ecosystem. This project is part
 of [FIWARE](https://www.fiware.org), and has been developed in collaboration
 with the [TM Forum](https://www.tmforum.org/). Check also the
-[FIWARE Catalogue entry for the Business API Ecosystem](https://catalogue.fiware.org/enablers/business-api-ecosystem-biz-ecosystem-ri)!
+[FIWARE Catalogue entry for the Business API Ecosystem](https://github.com/FIWARE/catalogue/tree/master/data-publication)!
 
 The Business API Ecosystem is not a single software repository, but it is
 composed of different projects which work coordinate to provide the complete
 functionality.
 
-Concretely, the Business API Ecosystem is made of the following components:
+In particular, the Business API Ecosystem is made of the following components:
 
 -   Reference implementations of TM Forum APIs.
 
@@ -93,11 +92,9 @@ APIs.
 
 The instructions to install the Business API Ecosystem can be found at the
 [Installation Guide](http://business-api-ecosystem.readthedocs.io/en/latest/installation-administration-guide.html).
-You can install the software in three different ways:
+You can install the software in two different ways:
 
--   Using the provided scripts
--   Using a
-    [Docker Container](https://hub.docker.com/r/fiware/business-api-ecosystem)
+-   Using Docker (recommended)
 -   Manually
 
 ## Usage
