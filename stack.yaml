@@ -1,6 +1,18 @@
 stacks:
-  - id: 2026.02.16
+  - id: 2026.02.16.1
     front: 2.6.0
     proxy: 11.6.0
     charging: 11.1.0
+    apis: 1.4.3
+  - id: 2026.02.16.2
+    description: "Notify order items + bank transfer support"
+    front: 2.7.0
+    proxy: 11.7.0
+    charging: 11.2.0
+    apis: 1.4.3
+  - id: 2026.02.16.3
+    description: "Support for tier pricing"
+    front: 2.8.0
+    proxy: 11.8.0
+    charging: 11.3.0
     apis: 1.4.3
