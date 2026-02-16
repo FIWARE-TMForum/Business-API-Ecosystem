@@ -1,0 +1,6 @@
+stacks:
+  - id: 2026.02.16
+    front: 2.6.0
+    proxy: 11.6.0
+    charging: 11.1.0
+    apis: 1.4.3
