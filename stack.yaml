@@ -16,3 +16,9 @@ stacks:
     proxy: 11.8.0
     charging: 11.3.0
     apis: 1.4.3
+  - id: 2026.02.19
+    description: "Link to the issuer tool"
+    front: 2.8.1
+    proxy: 11.8.1
+    charging: 11.3.0
+    apis: 1.4.3
