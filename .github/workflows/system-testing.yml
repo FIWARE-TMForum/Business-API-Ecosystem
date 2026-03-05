@@ -1,0 +1,153 @@
+name: Trigger E2E Testing Workflow
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize]
+    branches:
+      - master
+
+jobs:
+  trigger-system-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if system testing is activated
+        id: check_activation
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          ACTIVATE=$(echo "$PR_BODY" | grep '^SYSTEM_TESTING:' | sed 's/SYSTEM_TESTING: *//' | tr -d '[:space:]')
+          echo "System testing activation: '$ACTIVATE'"
+          if [[ "$ACTIVATE" == "ACTIVATE" ]]; then
+            echo "activated=true" >> $GITHUB_OUTPUT
+            echo "System testing is ACTIVATED"
+          else
+            echo "activated=false" >> $GITHUB_OUTPUT
+            echo "System testing NOT activated (add 'SYSTEM_TESTING: ACTIVATE' to PR body to enable)"
+          fi
+
+      - name: Trigger Repository Dispatch
+        if: steps.check_activation.outputs.activated == 'true'
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          echo "Parsing PR body for dependencies..."
+
+          # Parse PROXY dependency
+          PROXY_LOCATION=$(echo "$PR_BODY" | grep '^PROXY:' | sed 's/PROXY: *//' | tr -d '\r' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | xargs)
+          echo "Proxy location: $PROXY_LOCATION"
+
+          # Parse CHARGING dependency
+          CHARGING_LOCATION=$(echo "$PR_BODY" | grep '^CHARGING:' | sed 's/CHARGING: *//' | tr -d '\r' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | xargs)
+          echo "Charging location: $CHARGING_LOCATION"
+
+          # Parse FRONTEND dependency
+          FRONTEND_LOCATION=$(echo "$PR_BODY" | grep '^FRONTEND:' | sed 's/FRONTEND: *//' | tr -d '\r' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | xargs)
+          echo "Frontend location: $FRONTEND_LOCATION"
+
+          # Parse TM_VERSION
+          TM_VERSION=$(echo "$PR_BODY" | grep '^TM_VERSION:' | sed 's/TM_VERSION: *//' | xargs)
+          echo "TMForum API version: $TM_VERSION"
+
+          # Default values (using upstream FIWARE-TMForum repos)
+          PROXY_REPO="FIWARE-TMForum/business-ecosystem-logic-proxy"
+          PROXY_BRANCH="master"
+          CHARGING_REPO="FIWARE-TMForum/business-ecosystem-charging-backend"
+          CHARGING_BRANCH="master"
+          FRONTEND_REPO="Ficodes/BAE-Frontend"
+          FRONTEND_BRANCH="main"
+          TM_VERSION="${TM_VERSION:-1.3.18}"
+
+          # Process PROXY location if specified
+          if [[ -n "$PROXY_LOCATION" ]]; then
+            echo "Validating proxy repository..."
+            STATUS=$(curl -o /dev/null -s -w "%{http_code}" "$PROXY_LOCATION")
+            if [[ "$STATUS" -eq 200 ]]; then
+              echo "Proxy repository found"
+              PROXY_REPO=$(echo "$PROXY_LOCATION" | awk -F "/" '{print $4 "/" $5}')
+              PROXY_BRANCH=$(echo "$PROXY_LOCATION" | awk -F "/tree/" '{print $2}')
+              PROXY_BRANCH="${PROXY_BRANCH:-master}"
+              echo "Extracted - Repo: $PROXY_REPO, Branch: $PROXY_BRANCH"
+            else
+              echo "Proxy repository not found: $PROXY_LOCATION (HTTP $STATUS)"
+              exit 1
+            fi
+          fi
+
+          # Process CHARGING location if specified
+          if [[ -n "$CHARGING_LOCATION" ]]; then
+            echo "Validating charging repository..."
+            STATUS=$(curl -o /dev/null -s -w "%{http_code}" "$CHARGING_LOCATION")
+            if [[ "$STATUS" -eq 200 ]]; then
+              echo "Charging repository found"
+              CHARGING_REPO=$(echo "$CHARGING_LOCATION" | awk -F "/" '{print $4 "/" $5}')
+              CHARGING_BRANCH=$(echo "$CHARGING_LOCATION" | awk -F "/tree/" '{print $2}')
+              CHARGING_BRANCH="${CHARGING_BRANCH:-master}"
+              echo "Extracted - Repo: $CHARGING_REPO, Branch: $CHARGING_BRANCH"
+            else
+              echo "Charging repository not found: $CHARGING_LOCATION (HTTP $STATUS)"
+              exit 1
+            fi
+          fi
+
+          # Process FRONTEND location if specified
+          if [[ -n "$FRONTEND_LOCATION" ]]; then
+            echo "Validating frontend repository..."
+            STATUS=$(curl -o /dev/null -s -w "%{http_code}" "$FRONTEND_LOCATION")
+            if [[ "$STATUS" -eq 200 ]]; then
+              echo "Frontend repository found"
+              FRONTEND_REPO=$(echo "$FRONTEND_LOCATION" | awk -F "/" '{print $4 "/" $5}')
+              FRONTEND_BRANCH=$(echo "$FRONTEND_LOCATION" | awk -F "/tree/" '{print $2}')
+              FRONTEND_BRANCH="${FRONTEND_BRANCH:-main}"
+              echo "Extracted - Repo: $FRONTEND_REPO, Branch: $FRONTEND_BRANCH"
+            else
+              echo "Frontend repository not found: $FRONTEND_LOCATION (HTTP $STATUS)"
+              exit 1
+            fi
+          fi
+
+          echo ""
+          echo "E2E Test Configuration:"
+          echo "  Proxy:     $PROXY_REPO @ $PROXY_BRANCH"
+          echo "  Charging:  $CHARGING_REPO @ $CHARGING_BRANCH"
+          echo "  Frontend:  $FRONTEND_REPO @ $FRONTEND_BRANCH"
+          echo "  TM Version: $TM_VERSION"
+          echo "  PR URL:    ${{ github.event.pull_request.html_url }}"
+          echo ""
+
+          # Trigger E2E tests in E2E-DOME-BAE repository
+          echo "Triggering E2E tests..."
+          HTTP_STATUS=$(curl -X POST \
+            -H "Authorization: token ${{ secrets.ADMIN }}" \
+            -H "Accept: application/vnd.github.everest-preview+json" \
+            -H "Content-Type: application/json" \
+            -w "%{http_code}" \
+            -o /dev/null \
+            -s \
+            -d "{
+              \"event_type\": \"cross-repo-test\",
+              \"client_payload\": {
+                \"repository_A\": \"$PROXY_REPO\",
+                \"branch_A\": \"$PROXY_BRANCH\",
+                \"repository_B\": \"$CHARGING_REPO\",
+                \"branch_B\": \"$CHARGING_BRANCH\",
+                \"repository_frontend\": \"$FRONTEND_REPO\",
+                \"branch_frontend\": \"$FRONTEND_BRANCH\",
+                \"tm_version\": \"$TM_VERSION\",
+                \"pull_request_url\": \"${{ github.event.pull_request.html_url }}\"
+              }
+            }" \
+            https://api.github.com/repos/Ficodes/E2E-DOME-BAE/dispatches)
+
+          echo "HTTP Status: $HTTP_STATUS"
+
+          if [ "$HTTP_STATUS" -eq 204 ] || [ "$HTTP_STATUS" -eq 200 ]; then
+            echo "E2E tests triggered successfully!"
+          else
+            echo "Failed to trigger E2E tests. HTTP Status: $HTTP_STATUS"
+            if [ "$HTTP_STATUS" -eq 401 ]; then
+              echo "Error: Unauthorized. Check if the ADMIN token has the correct permissions."
+            elif [ "$HTTP_STATUS" -eq 404 ]; then
+              echo "Error: Repository not found or token doesn't have access."
+            fi
+            exit 1
+          fi
