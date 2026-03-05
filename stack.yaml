@@ -1,0 +1,60 @@
+stacks:
+  - id: 2026.02.16.1
+    front: 2.6.0
+    proxy: 11.6.0
+    charging: 11.1.0
+    apis: 1.4.3
+  - id: 2026.02.16.2
+    description: "Notify order items + bank transfer support"
+    front: 2.7.0
+    proxy: 11.7.0
+    charging: 11.2.0
+    apis: 1.4.3
+  - id: 2026.02.16.3
+    description: "Support for tier pricing"
+    front: 2.8.0
+    proxy: 11.8.0
+    charging: 11.3.0
+    apis: 1.4.3
+  - id: 2026.02.19
+    description: "Link to the issuer tool"
+    front: 2.8.1
+    proxy: 11.8.1
+    charging: 11.3.0
+    apis: 1.4.3
+  - id: 2026.02.20
+    description: "Tendering updates + search bug fixed"
+    front: 2.8.2
+    proxy: 11.8.3
+    charging: 11.3.0
+    apis: 1.4.3
+  - id: 2026.02.24
+    description: "Tendering updates + price slider bug fixed"
+    front: 2.8.4
+    proxy: 11.8.5
+    charging: 11.3.0
+    apis: 1.4.3
+  - id: 2026.02.25
+    description: "Bug fixed in adhoc offering party"
+    front: 2.8.5
+    proxy: 11.8.6
+    charging: 11.3.0
+    apis: 1.4.3
+  - id: 2026.02.26
+    description: "ACBRs with decimal tax value"
+    front: 2.8.6
+    proxy: 11.8.7
+    charging: 11.3.1
+    apis: 1.4.3
+  - id: 2026.03.04
+    description: "Update the support for metrics"
+    front: 2.9.0
+    proxy: 11.9.0
+    charging: 11.3.1
+    apis: 1.4.3
+  - id: 2026.03.05
+    description: "Proper support for dataspaces characteristics"
+    front: 2.10.0
+    proxy: 11.10.0
+    charging: 11.3.1
+    apis: 1.4.3
