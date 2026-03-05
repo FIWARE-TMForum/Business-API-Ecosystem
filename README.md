@@ -48,21 +48,11 @@ In particular, the Business API Ecosystem is made of the following components:
 
 -   Reference implementations of TM Forum APIs.
 
-    -   [Catalog Management API](https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2)
-    -   [Product Ordering Management API](https://github.com/FIWARE-TMForum/DSPRODUCTORDERING)
-    -   [Product Inventory Management API](https://github.com/FIWARE-TMForum/DSPRODUCTINVENTORY)
-    -   [Party Management API](https://github.com/FIWARE-TMForum/DSPARTYMANAGEMENT)
-    -   [Customer Management API](https://github.com/FIWARE-TMForum/DSCUSTOMER)
-    -   [Billing Management API](https://github.com/FIWARE-TMForum/DSBILLINGMANAGEMENT)
-    -   [Usage Management API](https://github.com/FIWARE-TMForum/DSUSAGEMANAGEMENT)
+    -   [TMForum APIs](https://github.com/FIWARE/tmforum-api)
 
 -   Rating, Charging, and Billing backend.
 
     -   [Charging Backend](https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend)
-
--   Revenue Settlement and Sharing System.
-
-    -   [RSS](https://github.com/FIWARE-TMForum/business-ecosystem-rss)
 
 -   Authentication, API Orchestrator, and Web portal.
     -   [Logic Proxy](https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy)
@@ -71,8 +61,7 @@ Any feedback is highly welcome, including bugs, typos or things you think should
 be included but aren't. To provide feedback you can use the general
 [GitHub issues](https://github.com/FIWARE-TMForum/Business-API-Ecosystem/issues/new),
 or provide it directly to the components using the
-[Charging Backend Issues](https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend/issues/new),
-[RSS Issues](https://github.com/FIWARE-TMForum/business-ecosystem-rss/issues/new),
+[Charging Backend Issues](https://github.com/FIWARE-TMForum/business-ecosystem-charging-backend/issues/new)
 or
 [Logic Proxy Issues](https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy/issues/new).
 
@@ -94,78 +83,9 @@ The instructions to install the Business API Ecosystem can be found at the
 [Installation Guide](http://business-api-ecosystem.readthedocs.io/en/latest/installation-administration-guide.html).
 You can install the software in two different ways:
 
--   Using Docker (recommended)
+-   Using Helm (recommended)
+-   Using docker
 -   Manually
-
-## Usage
-
-The Business API Ecosystem API is build up using the APIs of the different
-components each exposing its own resources.
-
-### Catalog API
-
-The Catalog API is available under /DSProductCatalog/api/ and its main resources
-are:
-
--   Categories
--   Catalogs
--   Product Specifications
--   Product Offerings
-
-### Ordering API
-
-The Ordering API is available under /DSProductOrdering/api/ and its main
-resources are:
-
--   Product Order
-
-### Inventory API
-
-The Inventory API is available under /DSProductInventory/api/ and its main
-resources are:
-
--   Product
-
-### Party API
-
-The Party API is available under /DSPartyManagement/api/ and its main resources
-are:
-
--   Individual
--   Organization
-
-### Customer API
-
-The Customer API is available under /DSCustomerManagement/api/ and its main
-resources are:
-
--   Customer
--   Customer Account
-
-### Billing API
-
-The Billing API is available under /DSBillingManagement/api/ and its main
-resources are:
-
--   Billing Account
--   Applied Billing Charge
-
-### Usage API
-
-The Usage API is available under /DSUsageManagement/api/ and its main resources
-are:
-
--   Usage
--   Usage Specification
-
-### RSS API
-
-The RSS API is available under /DSRevenueSharing/rss/ and its main resources
-are:
-
--   Revenue Sharing Model
--   Transaction
--   Revenue Sharing Report
 
 ## API
 
@@ -194,25 +114,6 @@ repositories
 
 You can also find this documentation on
 [ReadTheDocs](http://business-api-ecosystem.readthedocs.io)
-
-## Quality Assurance
-
-This project is part of [FIWARE](https://fiware.org/) and has been rated as
-follows:
-
--   **Version Tested:**
-    ![ ](https://img.shields.io/badge/dynamic/json.svg?label=Version&url=https://fiware.github.io/catalogue/json/biz_framework.json&query=$.version&colorB=blue)
--   **Documentation:**
-    ![ ](https://img.shields.io/badge/dynamic/json.svg?label=Completeness&url=https://fiware.github.io/catalogue/json/biz_framework.json&query=$.docCompleteness&colorB=blue)
-    ![ ](https://img.shields.io/badge/dynamic/json.svg?label=Usability&url=https://fiware.github.io/catalogue/json/biz_framework.json&query=$.docSoundness&colorB=blue)
--   **Responsiveness:**
-    ![ ](https://img.shields.io/badge/dynamic/json.svg?label=Time%20to%20Respond&url=https://fiware.github.io/catalogue/json/biz_framework.json&query=$.timeToCharge&colorB=blue)
-    ![ ](https://img.shields.io/badge/dynamic/json.svg?label=Time%20to%20Fix&url=https://fiware.github.io/catalogue/json/biz_framework.json&query=$.timeToFix&colorB=blue)
--   **FIWARE Testing:**
-    ![ ](https://img.shields.io/badge/dynamic/json.svg?label=Tests%20Passed&url=https://fiware.github.io/catalogue/json/biz_framework.json&query=$.failureRate&colorB=blue)
-    ![ ](https://img.shields.io/badge/dynamic/json.svg?label=Scalability&url=https://fiware.github.io/catalogue/json/biz_framework.json&query=$.scalability&colorB=blue)
-    ![ ](https://img.shields.io/badge/dynamic/json.svg?label=Performance&url=https://fiware.github.io/catalogue/json/biz_framework.json&query=$.performance&colorB=blue)
-    ![ ](https://img.shields.io/badge/dynamic/json.svg?label=Stability&url=https://fiware.github.io/catalogue/json/biz_framework.json&query=$.stability&colorB=blue)
 
 ---
 
