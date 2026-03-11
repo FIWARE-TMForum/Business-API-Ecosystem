@@ -1,0 +1,181 @@
+name: Sync README component versions
+
+on:
+  push:
+    paths:
+      - stack.yaml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync-readme-versions:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Parse first stack entry
+        run: |
+          set -euo pipefail
+
+          awk '
+            function trim(s) {
+              sub(/^[[:space:]]+/, "", s)
+              sub(/[[:space:]]+$/, "", s)
+              if (length(s) >= 2 && substr(s, 1, 1) == "\"" && substr(s, length(s), 1) == "\"") {
+                s = substr(s, 2, length(s) - 2)
+              }
+              return s
+            }
+
+            BEGIN {
+              in_stacks = 0
+              in_first_item = 0
+              first_item_indent = -1
+            }
+
+            {
+              line = $0
+
+              if (!in_stacks) {
+                if (line ~ /^[[:space:]]*stacks:[[:space:]]*$/) {
+                  in_stacks = 1
+                }
+                next
+              }
+
+              if (!in_first_item) {
+                if (line ~ /^[[:space:]]*-[[:space:]]*/) {
+                  in_first_item = 1
+                  first_item_indent = index(line, "-") - 1
+                  inline_content = line
+                  sub(/^[[:space:]]*-[[:space:]]*/, "", inline_content)
+
+                  if (inline_content ~ /^[A-Za-z0-9_-]+[[:space:]]*:/) {
+                    key = inline_content
+                    sub(/:.*/, "", key)
+                    key = trim(key)
+                    value = inline_content
+                    sub(/^[^:]*:[[:space:]]*/, "", value)
+                    sub(/[[:space:]]+#.*/, "", value)
+                    data[key] = trim(value)
+                  }
+                }
+                next
+              }
+
+              if (line ~ /^[[:space:]]*-[[:space:]]+/) {
+                current_indent = index(line, "-") - 1
+                if (current_indent <= first_item_indent) {
+                  exit
+                }
+              }
+
+              if (line ~ /^[[:space:]]*[A-Za-z0-9_-]+[[:space:]]*:/) {
+                key = line
+                sub(/^[[:space:]]*/, "", key)
+                sub(/:.*/, "", key)
+                key = trim(key)
+
+                value = line
+                sub(/^[[:space:]]*[^:]*:[[:space:]]*/, "", value)
+                sub(/[[:space:]]+#.*/, "", value)
+                data[key] = trim(value)
+              }
+            }
+
+            END {
+              required_keys[1] = "id"
+              required_keys[2] = "front"
+              required_keys[3] = "proxy"
+              required_keys[4] = "charging"
+              required_keys[5] = "apis"
+
+              for (i = 1; i <= 5; i++) {
+                key = required_keys[i]
+                if (!(key in data)) {
+                  printf("Missing key in first stack entry: %s\n", key) > "/dev/stderr"
+                  exit 1
+                }
+              }
+
+              print "STACK_ID=" data["id"]
+              print "FRONT_VERSION=" data["front"]
+              print "PROXY_VERSION=" data["proxy"]
+              print "CHARGING_VERSION=" data["charging"]
+              print "APIS_VERSION=" data["apis"]
+            }
+          ' stack.yaml >> "$GITHUB_ENV"
+
+      - name: Update README block
+        run: |
+          set -euo pipefail
+
+          grep -q '^<!-- stack-versions:start -->$' README.md
+          grep -q '^<!-- stack-versions:end -->$' README.md
+
+          cat > /tmp/generated-stack-versions.md <<EOF
+          ### Component versions
+          
+          The following versions are generated automatically from the first entry in [\`stack.yaml\`](stack.yaml) (\`stacks[0]\`, id \`${STACK_ID}\`):
+          
+          | Component | Stack key | Version |
+          |---|---|---|
+          | Web frontend | \`front\` | \`${FRONT_VERSION}\` |
+          | Business Ecosystem Logic Proxy | \`proxy\` | \`${PROXY_VERSION}\` |
+          | Business Ecosystem Charging Backend | \`charging\` | \`${CHARGING_VERSION}\` |
+          | TMForum APIs | \`apis\` | \`${APIS_VERSION}\` |
+          EOF
+
+          awk '
+            BEGIN {
+              start = "<!-- stack-versions:start -->"
+              end = "<!-- stack-versions:end -->"
+              in_block = 0
+              while ((getline line < "/tmp/generated-stack-versions.md") > 0) {
+                generated = generated line ORS
+              }
+              close("/tmp/generated-stack-versions.md")
+            }
+
+            {
+              if ($0 == start) {
+                print $0
+                printf "%s", generated
+                in_block = 1
+                next
+              }
+
+              if ($0 == end) {
+                print $0
+                in_block = 0
+                next
+              }
+
+              if (!in_block) {
+                print $0
+              }
+            }
+          ' README.md > README.md.tmp
+
+          mv README.md.tmp README.md
+
+      - name: Commit and push changes
+        run: |
+          set -euo pipefail
+
+          if git diff --quiet README.md; then
+            echo "README.md already up to date."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "docs: sync component versions from stack.yaml"
+          git push origin "${{ github.ref_name }}"
