@@ -57,6 +57,19 @@ In particular, the Business API Ecosystem is made of the following components:
 -   Authentication, API Orchestrator, and Web portal.
     -   [Logic Proxy](https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy)
 
+<!-- stack-versions:start -->
+### Component versions
+
+The following versions are generated automatically from the first entry in [`stack.yaml`](stack.yaml) (`stacks[0]`, id `2026.03.12`):
+
+| Component | Stack key | Version |
+|---|---|---|
+| Web frontend | `front` | `2.12.0` |
+| Business Ecosystem Logic Proxy | `proxy` | `11.12.0` |
+| Business Ecosystem Charging Backend | `charging` | `11.4.0` |
+| TMForum APIs | `apis` | `1.4.3` |
+<!-- stack-versions:end -->
+
 Any feedback is highly welcome, including bugs, typos or things you think should
 be included but aren't. To provide feedback you can use the general
 [GitHub issues](https://github.com/FIWARE-TMForum/Business-API-Ecosystem/issues/new),

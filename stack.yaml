@@ -1,7 +1,7 @@
 stacks:
-  - id: 2026.03.10
-    description: "Char management + VC improvement"
-    front: 2.11.1
-    proxy: 11.11.1
-    charging: 11.3.1
+  - id: 2026.03.12
+    description: "Support for modify and delete orders"
+    front: 2.12.0
+    proxy: 11.12.0
+    charging: 11.4.0
     apis: 1.4.3
