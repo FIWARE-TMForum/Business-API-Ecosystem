@@ -1,7 +1,7 @@
 stacks:
-  - id: 2026.03.27
-    description: "Compliance profile + updated dataspace + fixes"
-    front: 2.15.0
-    proxy: 11.15.0
-    charging: 11.4.0
-    apis: 1.4.3
+  - id: 2026.05.05
+    description: "Updated custom schemas, improved gui, improve support for DSC"
+    front: 2.19.0
+    proxy: 11.19.0
+    charging: 11.6.0
+    apis: 1.10.2
