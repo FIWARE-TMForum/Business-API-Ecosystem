@@ -1,7 +1,7 @@
 stacks:
-  - id: 2026.05.05
-    description: "Updated custom schemas, improved gui, improve support for DSC"
-    front: 2.19.0
-    proxy: 11.19.0
-    charging: 11.6.0
+  - id: 2026.05.12
+    description: "Fix bugs processing price plans and missing attestations"
+    front: 2.19.1
+    proxy: 11.19.1
+    charging: 11.6.1
     apis: 1.10.2
