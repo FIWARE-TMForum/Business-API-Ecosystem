@@ -1,7 +1,7 @@
 stacks:
-  - id: 2026.05.12
-    description: "Fix bugs processing price plans and missing attestations"
+  - id: 2026.05.14
+    description: "Fix bug processing FIWARE VC"
     front: 2.19.1
-    proxy: 11.19.1
+    proxy: 11.19.2
     charging: 11.6.1
     apis: 1.10.2
