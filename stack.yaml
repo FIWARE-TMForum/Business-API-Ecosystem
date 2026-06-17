@@ -1,7 +1,7 @@
 stacks:
-  - id: 2026.05.14
-    description: "Fix bug processing FIWARE VC"
-    front: 2.19.1
-    proxy: 11.19.2
-    charging: 11.6.1
+  - id: 2026.06.17
+    description: "Improved integration with dome billing + tendering"
+    front: 2.20.5
+    proxy: 11.20.4
+    charging: 11.7.0
     apis: 1.10.2
