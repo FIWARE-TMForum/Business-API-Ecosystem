@@ -1,7 +1,7 @@
 stacks:
-  - id: 2026.06.17
-    description: "Improved integration with dome billing + tendering"
-    front: 2.20.5
-    proxy: 11.20.4
-    charging: 11.7.0
+  - id: 2026.06.23
+    description: "New search page + filters + GUI for admin management"
+    front: 2.21.0
+    proxy: 11.21.0
+    charging: 11.7.1
     apis: 1.10.2
