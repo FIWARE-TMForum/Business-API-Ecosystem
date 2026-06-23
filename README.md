@@ -60,13 +60,13 @@ In particular, the Business API Ecosystem is made of the following components:
 <!-- stack-versions:start -->
 ### Component versions
 
-The following versions are generated automatically from the first entry in [`stack.yaml`](stack.yaml) (`stacks[0]`, id `2026.06.17`):
+The following versions are generated automatically from the first entry in [`stack.yaml`](stack.yaml) (`stacks[0]`, id `2026.06.23`):
 
 | Component | Stack key | Version |
 |---|---|---|
-| Web frontend | `front` | `2.20.5` |
-| Business Ecosystem Logic Proxy | `proxy` | `11.20.4` |
-| Business Ecosystem Charging Backend | `charging` | `11.7.0` |
+| Web frontend | `front` | `2.21.0` |
+| Business Ecosystem Logic Proxy | `proxy` | `11.21.0` |
+| Business Ecosystem Charging Backend | `charging` | `11.7.1` |
 | TMForum APIs | `apis` | `1.10.2` |
 <!-- stack-versions:end -->
 
