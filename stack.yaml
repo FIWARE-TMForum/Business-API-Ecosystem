@@ -1,7 +1,7 @@
 stacks:
-  - id: 2026.06.23
-    description: "New search page + filters + GUI for admin management"
-    front: 2.21.0
-    proxy: 11.21.0
+  - id: 2026.07.08
+    description: "Bug fixing + document API"
+    front: 2.21.4
+    proxy: 11.21.4
     charging: 11.7.1
     apis: 1.10.2
