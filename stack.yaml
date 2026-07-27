@@ -1,7 +1,7 @@
 stacks:
-  - id: 2026.07.08
-    description: "Bug fixing + document API"
-    front: 2.21.4
-    proxy: 11.21.4
-    charging: 11.7.1
+  - id: 2026.07.27
+    description: "Proper support for DSP"
+    front: 2.22.0
+    proxy: 11.22.0
+    charging: 11.8.2
     apis: 1.10.2
