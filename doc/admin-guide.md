@@ -200,8 +200,10 @@ Use the JSON object shown above, with a Boolean `analyticsEnabled` value and non
 
 **Administration → Search** configures the external search engine connection. It is separate from **Search & filters**, which controls the category and filter choices presented to users.
 
+The [TMF Search Engine](https://github.com/SEAMWARE/tmf-search-engine) provides searches over indexed product offerings and catalogs. Its [API usage guide](https://github.com/SEAMWARE/tmf-search-engine/blob/main/doc/api-usage-guide.md) describes the search endpoints and filter behavior.
+
 1. In **Search engine URL**, enter the search service's base URL reachable by the Logic Proxy.
-2. Set **Use query keyword** to match the search service's supported keyword format.
+2. When using TMF Search Engine, leave **Use query keyword** switched off. The service receives keywords in the URL path.
 3. Select **Save** and wait for the success message.
 4. Reload the marketplace and check a keyword search.
 
@@ -252,6 +254,10 @@ With source **configured**, use **Add option** to define each option's required 
 
 With source **categoryRoot**, define the options by creating child categories under the named root in **Categories**. Names must match the existing category roots exactly.
 
+Category-based filters match the categories attached to offerings. TMF Search Engine supports two ways to combine selected categories: **flat** matches any selected category; **grouped** matches any selection within a category root and requires a match across each selected root. For example, grouped filtering can combine a service category with a deployment model. The search service administrator configures this behavior using the same default catalog as the marketplace; see [Search engine integration](configuration-guide.md#search-engine-integration).
+
+Configured filters match additional indexed offering attributes. For example, a **Procurement type** filter can offer `online` and `tailored` options using the engine's supplied procurement mapper. Before adding a configured filter, agree its **Name** and option values with the search service administrator so they match the deployed filter definitions. The engine's [custom mapping guide](https://github.com/SEAMWARE/tmf-search-engine/blob/main/doc/custom-mapping-guide.md) explains how those definitions are configured.
+
 **Offer form placement** supports these values:
 
 | Value | Behavior |
@@ -283,18 +289,19 @@ Paste only the search-filter configuration object, without wrapping it in a `sea
       "offerFormPlacement": "categorySection"
     },
     {
-      "name": "region",
-      "label": "Region",
+      "name": "procurementType",
+      "label": "Procurement type",
       "source": "configured",
       "children": [
-        { "name": "EU", "label": "European Union" }
+        { "name": "online", "label": "Online purchase" },
+        { "name": "tailored", "label": "Tailored procurement" }
       ]
     }
   ]
 }
 ```
 
-Before using this example, create **Service categories** and **Deployment models** as category roots and confirm that the search service supports the `region` filter and its `EU` value.
+Before using this example, create **Service categories** and **Deployment models** as category roots. Have the search service administrator configure `procurementType` with the supplied `dome:map_procurement_type` mapper and index the offerings. The mapper assigns `tailored` when the offering's first price plan uses custom pricing, and `online` otherwise.
 
 > **Screenshot placeholder — `admin-search-filters`:** The rooted configuration form showing Primary root name, one categoryRoot filter with Offer form placement, one configured filter with options, and the JSON controls.
 
@@ -359,4 +366,4 @@ To delete an entry, select its delete action and confirm in the dialog. Check th
 
 > **Screenshot placeholder — `admin-content-manage`:** An example article or FAQ with edit/delete actions visible, plus the deletion confirmation dialog.
 
-<!-- Implementation reviewed: BAE-Frontend c3b1ff5c (src/app/pages/admin, src/app/pages/dome-blog, src/app/offerings/faq, src/app/data, src/app/services); business-ecosystem-logic-proxy fa34cb9e (controllers/admin.js, controllers/tmf-apis/catalog.js, controllers/domeBlog.js, controllers/contactUs.js, lib/search.js, server.js). Deployment defaults were inspected in the local config.js working copy. -->
+<!-- Implementation reviewed: BAE-Frontend c3b1ff5c (src/app/pages/admin, src/app/pages/dome-blog, src/app/offerings/faq, src/app/data, src/app/services); business-ecosystem-logic-proxy fa34cb9e (controllers/admin.js, controllers/tmf-apis/catalog.js, controllers/domeBlog.js, controllers/contactUs.js, lib/search.js, server.js); SEAMWARE/tmf-search-engine b7ab31f (src/app/api/routes.py, src/app/models/api.py, src/app/search, src/app/mappers/dome.py, doc). Deployment defaults were inspected in the local config.js working copy. -->

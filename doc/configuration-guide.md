@@ -47,6 +47,43 @@ Database connections, API endpoints, authentication providers, role mappings, se
 without an Administration control remain deployment configuration. In particular, enabling a feature in the interface
 does not configure its supporting service connection or credentials.
 
+### Search engine integration
+
+The Logic Proxy integrates with [TMF Search Engine](https://github.com/SEAMWARE/tmf-search-engine), which indexes TMF
+resources in Elasticsearch and provides product-offering and catalog searches. Set `BAE_LP_SEARCH_URL` to its base URL,
+or save the URL through **Administration → Search**. With this service, leave **Use query keyword** switched off so the
+proxy sends keywords through `/api/SearchProduct/<keyword>` and `/api/SearchCatalog/<keyword>`.
+
+Coordinate the marketplace's **Search & filters** settings with the following variables in the search engine deployment:
+
+| Search engine variable | Relationship to marketplace filters |
+| --- | --- |
+| `CATEGORY_FILTER_MODE` | `flat` combines all selected categories with OR. `grouped` combines values within the same category root with OR, and combines different roots with AND. |
+| `TMF_DEFAULT_CATALOG_ID` | In grouped mode, set this to the default catalog ID displayed in **Administration → Default catalog**. The engine builds its category groups from this catalog's root categories and descendants. |
+| `EXTRA_SEARCH_FILTERS` | Defines additional filter names and the mappers used to index their values. Match each configured frontend filter's **Name** to the corresponding engine definition. |
+
+The engine rebuilds the category-group lookup during indexing. When changing the category hierarchy, allow the indexer
+to refresh it before checking the resulting grouped searches. Primary category selection in the frontend and category
+combination in the search engine are configured independently: `catalogFirstLevel`/`rooted` controls the displayed
+hierarchy, while `flat`/`grouped` controls how selected category values are combined.
+
+For example, the configured **Procurement type** filter in the Administrator Guide uses this search engine definition:
+
+```json
+[
+  {
+    "name": "procurementType",
+    "mapper": "dome:map_procurement_type"
+  }
+]
+```
+
+Include this entry in the search engine's `EXTRA_SEARCH_FILTERS` array. Its mapper derives `online` or `tailored` from
+the offering's first price plan. After changing the filter definitions, run a full reindex as described in the engine's
+[configuration guide](https://github.com/SEAMWARE/tmf-search-engine/blob/main/doc/configuration-guide.md).
+The [custom mapping guide](https://github.com/SEAMWARE/tmf-search-engine/blob/main/doc/custom-mapping-guide.md) covers
+the supplied mappers and additional deployment-specific filters.
+
 ## Configuring the Charging Backend
 
 The Charging Backend creates some objects and connections in the different APIs while working, so the first step is
