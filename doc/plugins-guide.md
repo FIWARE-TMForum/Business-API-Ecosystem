@@ -285,8 +285,8 @@ Other accounting modules can be implemented and included to the proxy (see *Acco
 ```json
 {
     "host": "localhost",
-    "port": 8080,
-    "path": "/DSUsageManagement/api/usageManagement/v2",
+    "port": 8632,
+    "path": "/tmf-api/usageManagement/v4",
     "schedule": "00 00 * * *"
 }
 ```

@@ -1,7 +1,9 @@
 # Installation and Administration Guide
 
-This guide covers the installation of the Business API Ecosystem (BAE) version 8.1.0. The recommended procedure for the
-installation of the Business API Ecosystem is using Docker and the Docker images available in Docker Hub.
+This guide covers deployment of the Business API Ecosystem (BAE). Select compatible component versions from the
+project's [stack definition](https://github.com/FIWARE-TMForum/Business-API-Ecosystem/blob/master/stack.yaml).
+The TM Forum APIs are provided by [FIWARE/tmforum-api](https://github.com/FIWARE/tmforum-api), which supports
+individual API services and an all-in-one application backed by an NGSI-LD broker.
 
 ## Installation with Docker
 
@@ -13,91 +15,83 @@ The installation with Docker requires the following:
 As stated, the Business API Ecosystem is made up of a set of different components which work jointly in order to provide
 the functionality. In this regard the following images have been defined:
 
-- `fiware/biz-ecosystem-apis`: This image includes all the TMForum APIs and can be found in [Docker Hub](https://hub.docker.com/r/fiware/biz-ecosystem-apis/)
+- `quay.io/fiware/tmforum-all-in-one`: Includes the TM Forum APIs in one service. Individual API images use the name `quay.io/fiware/tmforum-<module>`, such as `quay.io/fiware/tmforum-product-catalog`. Select the tag corresponding to the stack's `apis` version.
 - `fiware/biz-ecosystem-charging-backend`: This image includes the Charging Backend component and can be found in [Docker Hub](https://hub.docker.com/r/fiware/biz-ecosystem-charging-backend/)
 - `fiware/biz-ecosystem-logic-proxy`: This image includes the Logic Proxy component and can be found in [Docker Hub](https://hub.docker.com/r/fiware/biz-ecosystem-logic-proxy/)
-- `fiware/biz-ecosystem-rss`: This image includes the Revenue Sharing Component and can be found in [Docker Hub](https://hub.docker.com/r/fiware/biz-ecosystem-rss/)
+- `fiware/biz-ecosystem-rss`: Optional separate Revenue Sharing Component, available in [Docker Hub](https://hub.docker.com/r/fiware/biz-ecosystem-rss/).
 
-### Local BAE deployment
+### TM Forum API deployment with Docker Compose
 
-The easiest way to deploy the Business API Ecosystem with Docker is using *Docker Compose*. There has been created
-a docker compose file that allows to deploy the Business API Ecosystem locally.
-Such a file can be found [here](https://github.com/FIWARE-TMForum/local-bae).
-
-The local BAE repository deploys all the BAE components as well as a Keyrock instance that can be used as IDM.
-By default, local BAE requires an external network called `bae` that will be used by the different BAE components
-for communications. That network can be created with the following command:
-
-```bash
-docker network create bae
-```
-
-As an alternative, local BAE can be configured using the bridge driver, meaning that the different components
-will be assigned a port in the host machine and a local IP to access them. The bridge mode can be enabled
-uncommenting driver and IP configuration:
+Include the API service and an NGSI-LD broker in the deployment network. The broker needs its own persistence;
+follow the deployment instructions for the selected broker, such as Orion-LD or Scorpio.
+The following service definition illustrates an all-in-one API connected to an Orion-LD service named `orion-ld`
+on an existing Docker network named `bae`:
 
 ```yaml
+services:
+  tmf:
+    image: quay.io/fiware/tmforum-all-in-one:1.15.1
+    ports:
+      - "8632:8632"
+    environment:
+      MICRONAUT_ENVIRONMENTS: in-memory,orion-ld
+      MICRONAUT_HTTP_SERVICES_NGSI_URL: http://orion-ld:1026
+      MICRONAUT_HTTP_SERVICES_NGSI_PATH: ngsi-ld/v1
+      GENERAL_SERVER_HOST: http://tmf:8632
+      API_EXTENSION_ENABLED: "true"
+    networks:
+      - bae
+
 networks:
-    bae:
-        name: bae
-        external: false
-        driver: bridge
-        ipam:
-        config:
-          - subnet: 10.2.0.0/16
+  bae:
+    external: true
 ```
 
-The BAE can be launched with:
+The broker and marketplace backend services must join the same network. `GENERAL_SERVER_HOST` is the API origin
+reachable by the broker for subscription callbacks. Set the broker URL and profile to match the deployed broker.
+The `in-memory` profile configures the application's local caches.
+`API_EXTENSION_ENABLED=true` enables the customer-billing extension used to create and update applied billing rates.
+
+Configure the Logic Proxy endpoint hosts, ports, and paths, and the Charging Backend service URLs to use this API service.
+For example, Product Catalog Management is available at `http://tmf:8632/tmf-api/productCatalogManagement/v4`
+inside this network. See [Configuring the TMF APIs](configuration-guide.md#configuring-the-tmf-apis) for the other
+API base paths and [Backend API endpoints](configuration-guide.md#backend-api-endpoints) for the proxy settings.
+
+After preparing the deployment's Compose file, network, broker, and component configuration, start the services with:
 
 ```bash
 docker compose up -d
 ```
 
-And terminated with:
+Stop the deployment with:
 
 ```bash
 docker compose down
 ```
 
-The local BAE repository includes database initializations that will create a Marketplace application within Keyrock
-and having some pre-configured settings. In this regard, the local BAE will be ready to use in a local environment
-without further configuration.
-
-As soon as the Logic Proxy component of the BAE is healthy, the marketplace page can be accessed at port 8004 of the
-host machine. The login can be done through the pre-configured Keyrock IDP using the initial test credentials:
-
-```
-Username: admin@test.com
-Password: admin
-```
-
-New users can be created directly in the Keyrock instance available in the port 8080 of the host machine.
-
-The configuration of the BAE can be updated using environment variables by updating the `.env` file or the
-environment files included in `envs/` directory. For details on the different configuration options please
-refer to the [Configuration Guide](configuration-guide.md).
+Deploy the frontend, Logic Proxy, Charging Backend, their MongoDB services, and the identity provider alongside the
+API services. Use the [Configuration Guide](configuration-guide.md) for their connection settings and the
+[Administrator Guide](admin-guide.md) for settings managed through the interface.
 
 ### Data storage
 
 The different images used as part of the Business API Ecosystem provide several volumes. Following
 it is described the different options available in each image.
 
-The **biz-ecosystem-logic-proxy** image defines 2 volumes. In particular:
+When using the Logic Proxy's bundled portal, its theme and generated static directories are:
 
-- `/business-ecosystem-logic-proxy/themes`: This volume includes the different themes that can be used to customize the portal
-- `/business-ecosystem-logic-proxy/static`: This volume includes the static files ready to be rendered including the selected theme and js files
+- `/opt/business-ecosystem-logic-proxy/themes`: This volume includes the different themes that can be used to customize the portal
+- `/opt/business-ecosystem-logic-proxy/static`: This volume includes the static files ready to be rendered including the selected theme and js files
 
-Additionally, the **biz-ecosystem-logic-proxy** image defines two environment variables intended to optimize the production deployment of the BAE Logic proxy:
+The bundled portal's static-file collection is controlled by `COLLECT` (`True` by default). For production startup
+and the separate Angular frontend, see [Enabling Production](configuration-guide.md#enabling-production).
 
-- `NODE_ENV`: Specifies whether the system is in *development* or in *production* (default: development)
-- `COLLECT`: Specifies if the container should execute the collect static command to generate static files or use the existing on start up (default: True)
+Mount persistent storage for the following Charging Backend directories:
 
-On the other hand, the **biz-ecosystem-charging-backend** image defines 4 volumes. In particular:
-
-- `/business-ecosystem-charging-backend/src/media/bills`: This directory contains the PDF invoices generated by the Business Ecosystem Charging Backend
-- `/business-ecosystem-charging-backend/src/media/assets`: This directory contains the different digital assets uploaded by sellers to the Business Ecosystem Charging Backend
-- `/business-ecosystem-charging-backend/src/plugins`: This directory is used for providing asset plugins (see section *Installing Asset Plugins*)
-- `/business-ecosystem-charging-backend/src/wstore/asset_manager/resource_plugins/plugins`: This directory includes the code of the plugins already installed
+- `/opt/business-ecosystem-charging-backend/src/media/bills`: This directory contains the PDF invoices generated by the Business Ecosystem Charging Backend
+- `/opt/business-ecosystem-charging-backend/src/media/assets`: This directory contains the different digital assets uploaded by sellers to the Business Ecosystem Charging Backend
+- `/opt/business-ecosystem-charging-backend/src/plugins`: This directory is used for providing asset plugins (see section *Installing Asset Plugins*)
+- `/opt/business-ecosystem-charging-backend/src/wstore/asset_manager/resource_plugins/plugins`: This directory includes the code of the plugins already installed
 
 ### Installing Asset Plugins
 
@@ -105,7 +99,7 @@ As you may know, the Business API Ecosystem is able to sell different types of d
 by loading asset plugins in its Charging Backend. In this context, it is possible to install
 asset plugins in the current Docker image as follows:
 
-1. Copy the plugin file into the host directory of the volume `/business-ecosystem-charging-backend/src/plugins`
+1. Copy the plugin file into the host directory of the volume `/opt/business-ecosystem-charging-backend/src/plugins`
 
 2. Access the running container:
 
@@ -116,7 +110,7 @@ asset plugins in the current Docker image as follows:
 3. Go to the installation directory:
 
    ```bash
-   cd /business-ecosystem-charging-backend/src
+   cd /opt/business-ecosystem-charging-backend/src
    ```
 
 4. Load the plugin:
@@ -139,7 +133,15 @@ As described in the GEri overview, the Business API Ecosystem is not a single so
 work together for providing business capabilities. In this regard, this section contains the basic dependencies of
 the different components that made up the Business API Ecosystem.
 
-#### TM Forum APIs and RSS requirements
+#### TM Forum API requirements
+
+- JDK 17 for the stack's API release (`1.15.1`).
+- Maven for building from source.
+- An NGSI-LD broker, such as Orion-LD or Scorpio, with its required database.
+
+#### Optional RSS requirements
+
+The separate Revenue Sharing Service has its own runtime and database:
 
 - Java 8
 - Glassfish 4.1
@@ -154,90 +156,40 @@ the different components that made up the Business API Ecosystem.
 #### Logic Proxy requirements
 
 - NodeJS 16+ (Including NPM)
-- Elasticsearch 7.5+
+- MongoDB
+
+Search is provided by the separate [TMF Search Engine](https://github.com/SEAMWARE/tmf-search-engine).
+Follow that project's deployment instructions for its Elasticsearch dependency and indexing services.
 
 ### Installation
 
 #### Installing TM Forum APIs
 
-The different reference implementations of the TM Forum APIs used in the Business API Ecosystem are available in GitHub:
-
-- [Catalog Management API](https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2)
-- [Product Ordering Management API](https://github.com/FIWARE-TMForum/DSPRODUCTORDERING)
-- [Product Inventory Management API](https://github.com/FIWARE-TMForum/DSPRODUCTINVENTORY)
-- [Party Management API](https://github.com/FIWARE-TMForum/DSPARTYMANAGEMENT)
-- [Customer Management API](https://github.com/FIWARE-TMForum/DSCUSTOMER)
-- [Billing Management API](https://github.com/FIWARE-TMForum/DSBILLINGMANAGEMENT)
-- [Usage Management API](https://github.com/FIWARE-TMForum/DSUSAGEMANAGEMENT)
-
-The installation for all of them is similar. The first step is cloning the repository and moving to the correct release:
+Clone the [FIWARE TM Forum API repository](https://github.com/FIWARE/tmforum-api) and select the release specified
+by the stack's `apis` entry. For the current stack:
 
 ```bash
-$ git clone https://github.com/FIWARE-TMForum/DSPRODUCTCATALOG2.git
-$ cd DSPRODUCTCATALOG2
+git clone https://github.com/FIWARE/tmforum-api.git
+cd tmforum-api
+git checkout 1.15.1
+mvn clean install -Pbuild-only
 ```
 
-Once the software has been downloaded, it is needed to create the connection to the database. To do that, the first step
-is editing the `src/main/resources/META-INF/persistence.xml` to have something similar to the following:
+The `build-only` profile builds the artifacts without starting the project's Kubernetes integration-test environment.
+Each API module produces a JAR with runtime dependencies in its `target/lib/` directory. The `all-in-one` module
+provides all APIs in one application. Keep the JAR and its `lib/` directory together when installing the artifacts.
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-    <persistence-unit name="DSProductCatalogPU" transaction-type="JTA">
-        <jta-data-source>jdbc/pcatv2</jta-data-source>
-        <exclude-unlisted-classes>false</exclude-unlisted-classes>
-        <properties>
-            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
-        </properties>
-    </persistence-unit>
-</persistence>
-```
+Configure the broker URL, broker profile, callback origin, and API base paths as described in
+[Configuring the TMF APIs](configuration-guide.md#configuring-the-tmf-apis).
+The all-in-one application listens on port `8632` by default and exposes each API under its own `/tmf-api/.../v4` path.
+Use those paths in the Logic Proxy and Charging Backend configuration.
 
-Note that you should provide in the tag `jta-data-source` the name you want for your database connection resource, taking into account
-that it must be unique for each API.
-
-The next step is creating the database for your API.
-
-```bash
-$ mysql -u <user> -p<passwd> "CREATE DATABASE IF NOT EXISTS <database>"
-```
-
-> **Note:** You have to provide your own credentials and the selected database name to the previous command.
-
-Once the database has been created, the next step is creating the connection pool in Glassfish. To do that, you can
-use the following command:
-
-```bash
-$ asadmin create-jdbc-connection-pool --restype java.sql.Driver --driverclassname com.mysql.jdbc.Driver --property user=<user>:password=<passwd>:URL=jdbc:mysql://<host>:<port>/<database> <poolname>
-```
-
-> **Note:** You have to provide your own database credentials, the database host, the database port, the database name of the one created previously, and a name for your pool.
-
-The last step for creating the database connection is creating the connection resource. To do that, execute the following command:
-
-```bash
-$ asadmin create-jdbc-resource --connectionpoolid <poolname> <jndiname>
-```
-
-> **Note:** You have to provide the name of the pool you have previously created and a name for your resource, which has to be the same as the included in the `jta-data-source` tag of the `persistence.xml` file of the API.
-
-When the database connection has been created, the next step is compiling the API sources with Maven:
-
-```bash
-$ mvn install
-```
-
-Finally, the last step is deploying the generated war file in Glassfish:
-
-```bash
-$ asadmin deploy --contextroot <root> --name <root> target/<WAR.war>
-```
-
-> **Note:** You have to provide the wanted context root for the API, a name for it, and the path to the war file.
+The repository's [OpenAPI specifications](https://github.com/FIWARE/tmforum-api/tree/main/api/tm-forum) describe
+the API resources and schemas. Select the same release when consulting the specifications.
 
 #### Installing the RSS
 
-The RSS sources can be found in [GitHub](https://github.com/FIWARE-TMForum/business-ecosystem-rss).
+The optional separate RSS sources can be found in [GitHub](https://github.com/FIWARE-TMForum/business-ecosystem-rss).
 
 The first step for installing the RSS component is downloading it and moving to the correct release:
 
@@ -355,28 +307,46 @@ $ mkdir src/media/assets
 $ chown -R <your_user>:<your_user> src/media
 ```
 
-Additionally, the Business API Ecosystem uses Elasticsearch indexes for efficiency and pagination. You can populate the indexes
-at any time using the `fill_indexes.js` script provided with the Logic Proxy.
-
-```bash
-$ node fill_indexes.js
-```
+The Logic Proxy stores its application data and saved marketplace settings in MongoDB. Search indexing is managed
+by the separate [TMF Search Engine](https://github.com/SEAMWARE/tmf-search-engine). Follow its
+[configuration guide](https://github.com/SEAMWARE/tmf-search-engine/blob/main/doc/configuration-guide.md)
+for connecting it to the TM Forum APIs and Elasticsearch, and configure the marketplace's search endpoint as described
+in [Search engine integration](configuration-guide.md#search-engine-integration).
 
 ### Running the Business API Ecosystem
 
-#### Running the APIs and the RSS
+#### Running the TM Forum APIs
 
-Both the TM Forum APIs and the RSS are deployed in Glassfish; in this regard, the only step for running them is starting
-Glassfish:
+Start the NGSI-LD broker and its database first. From the API repository, start the built all-in-one application:
 
 ```bash
-$ asadmin start-domain
+export MICRONAUT_ENVIRONMENTS=in-memory,orion-ld
+export MICRONAUT_HTTP_SERVICES_NGSI_URL=http://localhost:1026
+export MICRONAUT_HTTP_SERVICES_NGSI_PATH=ngsi-ld/v1
+export GENERAL_SERVER_HOST=http://localhost:8632
+export API_EXTENSION_ENABLED=true
+java -jar all-in-one/target/all-in-one-0.1.jar
+```
+
+These example URLs assume the API and broker run on the same host. Set the broker URL and `GENERAL_SERVER_HOST`
+to addresses reachable by their respective callers. The JAR filename reflects the Maven version in the checked-out
+release; use the generated filename when building a different release.
+
+For individual API services, start each module's JAR with its own port, callback origin, and base path.
+Use the [Configuration Guide](configuration-guide.md#configuring-the-tmf-apis) to align these values with the marketplace.
+
+#### Running the optional RSS
+
+For deployments using the separate RSS, start its Glassfish domain:
+
+```bash
+asadmin start-domain
 ```
 
 #### Running the Charging Backend
 
-The Charging Backend creates some objects and connections on startup; in this way, the Glassfish APIs must be up and running
-before starting it.
+Start the TM Forum API services and MongoDB before starting the Charging Backend, which creates objects and connections
+during startup.
 
 **Using Django runserver**
 
