@@ -121,6 +121,7 @@ repositories
 
 ## Advanced Topics
 
+-   [Administrator Guide](doc/admin-guide.md)
 -   [User Guide](doc/user-guide.md)
 -   [Programmer Guide](doc/programmer-guide.md)
 -   [Installation & Administration Guide](doc/installation-administration-guide.md)

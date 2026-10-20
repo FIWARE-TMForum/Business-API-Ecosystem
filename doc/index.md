@@ -21,7 +21,8 @@ The current documentation covers the Business API Ecosystem version 8.1.0, corre
 ## Index
 
 - [Installation and Administration Guide](installation-administration-guide.md): The guide for maintainers that explains how to install the BAE.
-- [Configuration Guide](configuration-guide.md): The guide for administrations which explains the different configuration options.
+- [Configuration Guide](configuration-guide.md): Deployment settings, environment variables, and their relationship to settings managed through Administration.
+- [Administrator Guide](admin-guide.md): The guide for marketplace administrators managing categories, business settings, features, and public content through the web interface.
 - [User Guide](user-guide.md): The guide for users that explains how to use it.
 - [Programmer Guide](programmer-guide.md): The guide for programmers that explains how to develop plugins.
 - [Plugins Guide](plugins-guide.md): The guide for admins that cover the available plugins.
@@ -33,6 +34,7 @@ The current documentation covers the Business API Ecosystem version 8.1.0, corre
 
 installation-administration-guide
 configuration-guide
+admin-guide
 user-guide
 programmer-guide
 plugins-guide

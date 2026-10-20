@@ -1,13 +1,51 @@
 # Configuration Guide
 
 This guide covers the different configuration options that are available in order to setup a working Business API
-Ecosystem instance. The different Business API Ecosystem components can be configured using two different mechanisms,
-settings files and environment variables.
+Ecosystem instance. Deployment configuration is provided through settings files and environment variables. Marketplace
+administrators can also manage selected settings through the web interface, as described in the [Administrator Guide](admin-guide.md).
+Saved interface settings can override the corresponding deployment defaults; see [Settings managed through Administration](#settings-managed-through-administration).
 
 At this step, the different components of the Business API Ecosystem are installed. In the case of the TMForum APIs and
 the RSS, this installation process has already required to configure their database connection before their deployment,
 so they are already configured. Nevertheless, this section contains an explanation of the function of the different
 settings of the RSS properties files.
+
+(settings-managed-through-administration)=
+## Settings managed through Administration
+
+The current frontend provides the following configuration screens. Use the [Administrator Guide](admin-guide.md) for
+the field descriptions and save procedures. The environment variables below provide Logic Proxy deployment defaults;
+saved settings from the corresponding screen take precedence for those values.
+
+| Administration screen | Settings | Related environment defaults |
+| --- | --- | --- |
+| Search | Search engine URL | `BAE_LP_SEARCH_URL` |
+| Analytics | Analytics URL and availability | `BAE_LP_ANALYTICS_URL`, `BAE_LP_ANALYTICS_ENABLED` |
+| Analytics | Business Insights Non-LEAR dashboard ID | `BAE_LP_ANALYTICS_DASHBOARD_BUSINESS_INSIGHTS_NON_LEAR` |
+| Analytics | Business Insights LEAR dashboard ID | `BAE_LP_ANALYTICS_DASHBOARD_BUSINESS_INSIGHTS_LEAR` |
+| Analytics | Usage Monitor dashboard ID | `BAE_LP_ANALYTICS_DASHBOARD_USAGE_MONITOR` |
+| Analytics | Guest-token path | `BAE_LP_ANALYTICS_SUPERSET_GUEST_TOKEN_PATH` |
+| Features | Quotes | `BAE_LP_QUOTE_ENABLED` |
+| Features | Purchases | `BAE_LP_PURCHASE_ENABLED` |
+| Features | Tendering | `BAE_LP_TENDERING_ENABLED` |
+| Features | Data space | `BAE_LP_DATASPACE_ENABLED` |
+| Features | DSP | `BAE_LP_DSP_ENABLED` |
+| Features | Catalog management | `BAE_LP_CATALOG_MANAGEMENT_ENABLED` |
+| Features | Launch validation | `BAE_LP_LAUNCH_VALIDATION_ENABLED` |
+| Features | Tender dev actions | `BAE_LP_TENDER_DEV_BUTTON_ENABLED` |
+
+Search's **Use query keyword** option and **Search & filters** are also saved through Administration, without
+corresponding environment overrides in the inspected implementation. The default catalog ID is stored when the
+administrator saves the default catalog. The Logic Proxy persists these settings in its MongoDB database and reloads
+them for runtime configuration. Changing an environment variable or restarting the proxy does not replace a saved
+override; change it through the corresponding Administration screen.
+
+The **Email** screen submits SMTP settings and contact-request destination addresses to the Charging Backend. Its UI
+procedure is described under [Email](admin-guide.md#email); the deployment email variables remain documented below.
+
+Database connections, API endpoints, authentication providers, role mappings, service credentials, and other settings
+without an Administration control remain deployment configuration. In particular, enabling a feature in the interface
+does not configure its supporting service connection or credentials.
 
 ## Configuring the Charging Backend
 
@@ -435,7 +473,7 @@ export BAE_LP_ENDPOINT_CATALOG_SECURED=false
 
 The same pattern is supported for the configured endpoint groups: `CATALOG`, `RESOURCE`, `SERVICE`, `ORDERING`, `INVENTORY`,
 `SERVICE_INVENTORY`, `RESOURCE_INVENTORY`, `CHARGING`, `RSS`, `PARTY`, `BILLING`, `CUSTOMER`, `USAGE`, `CUSTOMER_BILL`,
-`QUOTE`, `REVENUE`, `INVOICING`, `SEARCH`, and `AI`.
+`QUOTE`, `REVENUE`, `INVOICING`, and `SEARCH`.
 
 For reference, the endpoint-specific environment variables are:
 
@@ -554,17 +592,6 @@ Feature flags:
 - `BAE_LP_TENDERING_ENABLED`
 - `BAE_LP_PURCHASE_ENABLED`
 - `BAE_LP_DATASPACE_ENABLED`
-
-AI settings:
-
-- `BAE_LP_AI_ENABLED`
-- `BAE_LP_AI_API_KEY`
-- `BAE_LP_AI_API_PATH`
-- `BAE_LP_AI_SEARCH_PROFILE`
-- `BAE_LP_ENDPOINT_AI_PATH`
-- `BAE_LP_ENDPOINT_AI_PORT`
-- `BAE_LP_ENDPOINT_AI_HOST`
-- `BAE_LP_ENDPOINT_AI_SECURED`
 
 ## Identity Management
 

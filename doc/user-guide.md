@@ -3,6 +3,11 @@
 This user guide contains a description of the different tasks that can be performed in the Business API Ecosystem using
 its web interface. This section is organized so the actions related to a particular user role are grouped together.
 
+(admin)=
+(manage-categories)=
+(manage-idps)=
+Marketplace administration is covered separately in the [Administrator Guide](admin-guide.md).
+
 ## Using Organizations
 
 The Business API Ecosystem supports organizations as defined by the FIWARE IdM. These organizations
@@ -73,65 +78,6 @@ To create a contact medium, fill in the fields and click on *Create*:
 You can *Edit* or *Remove* the contact medium by clicking on the corresponding button:
 
 ![](./images/user/profile11.png)
-
-## Admin
-
-If the external IDPs feature is enabled, admins should login in the system with the local IDPs by directly accessing
-to the login URL in the browser:
-
-```
-https://[marketurl]/login
-```
-
-If the external IDP is disabled, the login button will use the local IDP.
-
-If the user of the Business API Ecosystem is an admin, he will be able to access the *Administration* section of the
-web portal. This section is located in the user menu.
-
-![](./images/user/cat1.png)
-
-### Manage Categories
-
-Admin users are authorized to create the system categories that can be used by *Sellers* to categorize their catalogs,
-products, and offerings.
-
-To create categories, go to the *Administration* section, and click on *New*:
-
-![](./images/user/cat2.png)
-
-Then, provide a name and an optional description for the category. Once the information has been included, click on *Next*, and then on *Create*:
-
-![](./images/user/cat3.png)
-
-![](./images/user/cat4.png)
-
-Categories in the Business API Ecosystem can be nested, so you can choose a parent category if you want while creating.
-
-![](./images/user/cat5.png)
-
-Existing categories can be updated. To edit a category click on the category name.
-
-![](./images/user/cat6.png)
-
-Then edit the corresponding fields and click on *Update*.
-
-![](./images/user/cat7.png)
-
-### Manage IDPs
-
-If the external IDPs option is enabled, *admins* are authorized to register them using the *Administration* section.
-
-To list existing IDPs access to *IDPs*:
-
-![](./images/admin/idps1.png)
-
-![](./images/admin/idps2.png)
-
-To register a new IDP click in *New*. In the displayed form, fill the *IDP EORI* with the EORI given to the IDP
-by the trust provider (i.e iShare). Provide a name and an optional description and fill *Server* with the URL
-of the IDP.
-
-![](./images/admin/idps3.png)
 
 ## Seller
 
