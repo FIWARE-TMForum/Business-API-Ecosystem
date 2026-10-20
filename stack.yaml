@@ -1,7 +1,7 @@
 stacks:
-  - id: 2026.07.27
-    description: "Proper support for DSP"
-    front: 2.22.0
-    proxy: 11.22.0
-    charging: 11.8.2
-    apis: 1.10.2
+  - id: 2026.10.20
+    description: "New GUIs for provider forms and catalog pages"
+    front: 2.25.0
+    proxy: 11.25.0
+    charging: 11.9.1
+    apis: 1.15.1
