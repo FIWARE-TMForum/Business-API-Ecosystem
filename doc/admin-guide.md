@@ -1,6 +1,6 @@
 # Administrator Guide
 
-This guide explains how marketplace administrators manage the Business API Ecosystem through the web interface. It covers the **Administration** area and the controls for publishing Blog, News & Events, and FAQ content.
+This guide explains how marketplace administrators manage the Business API Ecosystem through the default **BAE theme** web interface. It covers the **Administration** area and the controls for publishing Blog, News & Events, and FAQ content.
 
 Installation, service connections, authentication providers, and deployment defaults are covered in the [Installation and Administration Guide](installation-administration-guide.md) and the [Configuration Guide](configuration-guide.md). Seller and customer workflows are covered in the [User Guide](user-guide.md).
 
@@ -114,7 +114,8 @@ The credential is stored as the product specification's `Compliance:VC` characte
 
 **Administration → Revenue sharing** opens **Operator revenue sharing**. The current screen displays a static summary with example data.
 
-Seller revenue-sharing models are a separate workflow described in the [User Guide](user-guide.md).
+Providers can view their revenue-sharing information through **Profile → Revenue sharing**, as described in the
+[User Guide](user-guide.md#revenue-sharing-and-external-account-services).
 
 (admin-email)=
 ## Email

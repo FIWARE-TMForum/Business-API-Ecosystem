@@ -20,10 +20,12 @@ Use the component versions listed in the project's [stack definition](https://gi
 
 ## Index
 
+The User Guide and Administrator Guide describe the default **BAE theme** interface.
+
 - [Installation and Administration Guide](installation-administration-guide.md): The guide for maintainers that explains how to install the BAE.
 - [Configuration Guide](configuration-guide.md): Deployment settings, environment variables, and their relationship to settings managed through Administration.
 - [Administrator Guide](admin-guide.md): The guide for marketplace administrators managing categories, business settings, features, and public content through the web interface.
-- [User Guide](user-guide.md): The guide for users that explains how to use it.
+- [User Guide](user-guide.md): Profiles, purchasing, inventory, provider specifications and offers, pricing, quotes, and tenders in the web interface.
 - [Programmer Guide](programmer-guide.md): The guide for programmers that explains how to develop plugins.
 - [Plugins Guide](plugins-guide.md): The guide for admins that cover the available plugins.
 
