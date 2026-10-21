@@ -4,9 +4,10 @@ import os
 
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
-extensions = []
+extensions = ['myst_parser']
+myst_heading_anchors = 3
 templates_path = ['/home/docs/checkouts/readthedocs.org/readthedocs/templates/sphinx', 'templates', '_templates', '.templates']
-source_suffix = ['.rst']
+source_suffix = {'.md': 'markdown'}
 master_doc = 'index'
 project = u'biz-ecosystem'
 copyright = u'2016'

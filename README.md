@@ -46,7 +46,7 @@ functionality.
 
 In particular, the Business API Ecosystem is made of the following components:
 
--   Reference implementations of TM Forum APIs.
+-   FIWARE implementation of the TM Forum APIs, backed by NGSI-LD.
 
     -   [TMForum APIs](https://github.com/FIWARE/tmforum-api)
 
@@ -80,9 +80,9 @@ or
 
 ### Description
 
-The Business API Ecosystem is a joint component made up of the FIWARE Business
-Framework and a set of APIs (and its reference implementations) provided by the
-TMForum. This component allows the monetization of different kind of assets
+The Business API Ecosystem combines the FIWARE Business Framework with
+[FIWARE's implementation of the TM Forum APIs](https://github.com/FIWARE/tmforum-api).
+This component allows the monetization of different kind of assets
 (both digital and physical) during the whole service life cycle, from offering
 creation to its charging, accounting and revenue settlement and sharing. The
 Business API Ecosystem exposes its complete functionality through TMForum
@@ -102,10 +102,12 @@ You can install the software in two different ways:
 
 ## API
 
-For further documentation, you can check the API Reference available at:
-
--   [Apiary](http://docs.fiwaretmfbizecosystem.apiary.io)
--   [Github Pages](https://fiware-tmforum.github.io/Business-API-Ecosystem/)
+The TM Forum API implementation and its OpenAPI specifications are maintained in
+[FIWARE/tmforum-api](https://github.com/FIWARE/tmforum-api). The specifications are
+organized by API under [`api/tm-forum/`](https://github.com/FIWARE/tmforum-api/tree/main/api/tm-forum).
+Select the release matching the `apis` version in [`stack.yaml`](stack.yaml).
+See the [Configuration Guide](doc/configuration-guide.md#configuring-the-tmf-apis)
+for the API base paths and their connection to the Logic Proxy and Charging Backend.
 
 ## Testing
 
@@ -121,9 +123,10 @@ repositories
 
 ## Advanced Topics
 
--   [User Guide](doc/user-guide.rst)
--   [Programmer Guide](doc/programmer-guide.rst)
--   [Installation & Administration Guide](doc/installation-administration-guide.rst)
+-   [Administrator Guide](doc/admin-guide.md)
+-   [User Guide](doc/user-guide.md)
+-   [Programmer Guide](doc/programmer-guide.md)
+-   [Installation & Administration Guide](doc/installation-administration-guide.md)
 
 You can also find this documentation on
 [ReadTheDocs](http://business-api-ecosystem.readthedocs.io)
